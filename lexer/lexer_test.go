@@ -38,12 +38,12 @@ func TestGetNextToken(t *testing.T) {
 				let numTwo = 20;
 
 				let add = fn(x, y){
-					x + y
+					x + y;
 				}
 
 				let result = add(numOne, numTwo)
 			*/
-			"let numOne = 10;\n\nlet numTwo = 20;\n\nlet add = fn(x, y)\n{\n\tx + y}\n\nlet result = add(numOne, numTwo)",
+			"let numOne = 10;\n\nlet numTwo = 20;\n\nlet add = fn(x, y)\n{\n\tx + y\n}\n\nlet result = add(numOne, numTwo)",
 			[]struct {
 				expectedType    token.TokenType
 				expectedLiteral string
@@ -62,6 +62,26 @@ func TestGetNextToken(t *testing.T) {
 				{token.IDENT, "add"},
 				{token.ASSIGN, "="},
 				{token.FUNC, "fn"},
+				{token.LPAR, "("},
+				{token.IDENT, "x"},
+				{token.COMMA, ","},
+				{token.IDENT, "y"},
+				{token.RPAR, ")"},
+				{token.LBRACE, "{"},
+				{token.IDENT, "x"},
+				{token.PLUS, "+"},
+				{token.IDENT, "y"},
+				{token.SEMICOLON, ";"},
+				{token.RBRACE, "}"},
+				{token.LET, "let"},
+				{token.IDENT, "result"},
+				{token.ASSIGN, "="},
+				{token.IDENT, "add"},
+				{token.LPAR, "("},
+				{token.IDENT, "numOne"},
+				{token.COMMA, ","},
+				{token.IDENT, "numTwo"},
+				{token.RPAR, ")"},
 			}},
 	}
 
