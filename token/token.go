@@ -7,6 +7,8 @@ type Token struct {
 	Literal string
 }
 
+// TODO: Look into using integers or bytes instead of strings for better perfomance
+
 const (
 	EOF       = "EOF"
 	ILLEGAL   = "ILLEGAL"
