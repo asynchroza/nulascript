@@ -32,16 +32,18 @@ func TestGetNextToken(t *testing.T) {
 				{token.PIPE, "|"},
 			},
 		}, {
-			`let numOne = 10;
-let numTwo = 20;
+			/*
+				let numOne = 10;
 
-let add = fn(x, y){
-	x + y
-}
+				let numTwo = 20;
 
-let result = add(numOne, numTwo)
-`,
+				let add = fn(x, y){
+					x + y
+				}
 
+				let result = add(numOne, numTwo)
+			*/
+			"let numOne = 10;\n\nlet numTwo = 20;\n\nlet add = fn(x, y)\n{\n\tx + y}\n\nlet result = add(numOne, numTwo)",
 			[]struct {
 				expectedType    token.TokenType
 				expectedLiteral string
