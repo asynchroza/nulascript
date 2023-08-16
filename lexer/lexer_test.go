@@ -31,7 +31,36 @@ func TestGetNextToken(t *testing.T) {
 				{token.DEREF, "&"},
 				{token.PIPE, "|"},
 			},
-		},
+		}, {
+			`let numOne = 10;
+let numTwo = 20;
+
+let add = fn(x, y){
+	x + y
+}
+
+let result = add(numOne, numTwo)
+`,
+
+			[]struct {
+				expectedType    token.TokenType
+				expectedLiteral string
+			}{
+				{token.LET, "let"},
+				{token.IDENT, "numOne"},
+				{token.ASSIGN, "="},
+				{token.INT, "10"},
+				{token.SEMICOLON, ";"},
+				{token.LET, "let"},
+				{token.IDENT, "numTwo"},
+				{token.ASSIGN, "="},
+				{token.INT, "20"},
+				{token.SEMICOLON, ";"},
+				{token.LET, "let"},
+				{token.IDENT, "add"},
+				{token.ASSIGN, "="},
+				{token.FUNC, "fn"},
+			}},
 	}
 
 	for _, testCase := range testCases {
