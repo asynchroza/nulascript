@@ -9,10 +9,15 @@ type Lexer struct {
 	ch      byte // char byte under examination
 }
 
-func NewLexer(input string) *Lexer {
+func NewLexer(input string) lexerinterface {
 	var l *Lexer = &Lexer{input: input}
 	l.readChar()
 	return l
+}
+
+// properly encapsulate the lexer
+type lexerinterface interface {
+	GetNextToken() token.Token
 }
 
 func (l *Lexer) readChar() {
