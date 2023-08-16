@@ -28,15 +28,15 @@ func TestGetNextToken(t *testing.T) {
 
 	l := NewLexer(input)
 
-	for _, testToken := range tokenTests {
+	for iter, testToken := range tokenTests {
 		var incomingToken token.Token = l.GetNextToken()
 
 		if incomingToken.Type != testToken.expectedType {
-			t.Fatalf("EXPECTED TOKEN: %q, RECEIVED TOKEN: %q", testToken.expectedType, incomingToken.Type)
+			t.Fatalf("[%d]: EXPECTED TOKEN: %q, RECEIVED TOKEN: %q", iter, testToken.expectedType, incomingToken.Type)
 		}
 
 		if incomingToken.Literal != testToken.expectedLiteral {
-			t.Fatalf("EXPECTED LITERAL: %q, RECEIVED LITERAL: %q", testToken.expectedLiteral, incomingToken.Literal)
+			t.Fatalf("[%d]: EXPECTED LITERAL: %q, RECEIVED LITERAL: %q", iter, testToken.expectedLiteral, incomingToken.Literal)
 		}
 	}
 }
