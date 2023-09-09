@@ -22,13 +22,23 @@ type lexerinterface interface {
 
 func (l *Lexer) readChar() {
 	if l.readPos >= len(l.input) {
-		l.ch = 0
+		l.ch = 0 // EOF
 	} else {
 		l.ch = l.input[l.readPos]
 	}
 
 	l.pos = l.readPos
 	l.readPos = l.readPos + 1
+}
+
+func (l *Lexer) readIdentifier() string {
+	position := l.pos
+
+	for isLetter(l.ch) {
+		l.readChar()
+	}
+
+	return l.input[position:l.pos]
 }
 
 func (l *Lexer) GetNextToken() token.Token {
@@ -62,6 +72,10 @@ func (l *Lexer) GetNextToken() token.Token {
 	case 0:
 		currentToken.Literal = ""
 		currentToken.Type = token.EOF
+	default:
+		if isLetter(l.ch) {
+			l.readIdentifier()
+		}
 	}
 
 	l.readChar()
@@ -70,4 +84,8 @@ func (l *Lexer) GetNextToken() token.Token {
 
 func newToken(tokenType token.TokenType, ch byte) token.Token {
 	return token.Token{Type: tokenType, Literal: string(ch)}
+}
+
+func isLetter(ch byte) bool {
+	return 'a' <= ch && ch <= 'z' || 'A' <= ch && ch <= 'Z'
 }
