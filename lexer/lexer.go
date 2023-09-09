@@ -74,7 +74,9 @@ func (l *Lexer) GetNextToken() token.Token {
 		currentToken.Type = token.EOF
 	default:
 		if isLetter(l.ch) {
-			l.readIdentifier()
+			currentToken.Literal = l.readIdentifier()
+		} else {
+			currentToken = newToken(token.ILLEGAL, l.ch)
 		}
 	}
 
@@ -87,5 +89,6 @@ func newToken(tokenType token.TokenType, ch byte) token.Token {
 }
 
 func isLetter(ch byte) bool {
+	// add || ch == '_' if you want to make the language snake_case
 	return 'a' <= ch && ch <= 'z' || 'A' <= ch && ch <= 'Z'
 }
