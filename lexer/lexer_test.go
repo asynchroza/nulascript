@@ -132,6 +132,14 @@ func TestGetNextToken(t *testing.T) {
 				{token.SEMICOLON, ";"},
 				{token.RBRACE, "}"},
 			},
+		}, {
+			"125 != 125;\n125 == 125;",
+			[]struct {
+				expectedType    token.TokenType
+				expectedLiteral string
+			}{
+				{token.INT, "125"},
+			},
 		}}
 
 	for _, testCase := range testCases {
@@ -141,7 +149,7 @@ func TestGetNextToken(t *testing.T) {
 			var incomingToken token.Token = l.GetNextToken()
 
 			if incomingToken.Type != testToken.expectedType {
-				t.Fatalf("[%d]: EXPECTED TOKEN: %q, RECEIVED TOKEN: %q", iter, testToken.expectedType, incomingToken.Type)
+				t.Fatalf("[%d][]: EXPECTED TOKEN: %q, RECEIVED TOKEN: %q", iter, testToken.expectedType, incomingToken.Type)
 			}
 
 			if incomingToken.Literal != testToken.expectedLiteral {

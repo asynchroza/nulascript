@@ -58,6 +58,15 @@ func (l *Lexer) skipOverWhitespace() {
 	}
 }
 
+func (l *Lexer) peekNextChar() byte {
+	if l.readPos >= len(l.input) {
+		// out of bounds, return EOF
+		return 0
+	}
+
+	return l.input[l.readPos]
+}
+
 func (l *Lexer) GetNextToken() token.Token {
 	var currentToken token.Token
 
@@ -65,7 +74,13 @@ func (l *Lexer) GetNextToken() token.Token {
 
 	switch l.ch {
 	case '=':
-		currentToken = newToken(token.ASSIGN, l.ch)
+		if l.peekNextChar() == '=' {
+			ch := l.ch
+			l.readChar()
+			currentToken = token.Token{Type: token.EQUAL, Literal: string(ch) + string(l.ch)}
+		} else {
+			currentToken = newToken(token.ASSIGN, l.ch)
+		}
 	case '+':
 		currentToken = newToken(token.PLUS, l.ch)
 	case '-':
@@ -89,6 +104,11 @@ func (l *Lexer) GetNextToken() token.Token {
 	case '|':
 		currentToken = newToken(token.PIPE, l.ch)
 	case '!':
+		if l.peekNextChar() == '=' {
+			ch := l.ch
+			l.readChar()
+			currentToken = token.Token{Type: token.NOT_EQUAL, Literal: string(ch) + string(l.ch)}
+		}
 		currentToken = newToken(token.BANG, l.ch)
 	case '/':
 		currentToken = newToken(token.SLASH, l.ch)

@@ -37,6 +37,8 @@ const (
 	TRUE      = "TRUE"
 	FALSE     = "FALSE"
 	RETURN    = "RETURN"
+	EQUAL     = "EQUAL"
+	NOT_EQUAL = "NOT_EQUAL"
 )
 
 var keywords = map[string]TokenType{
@@ -50,8 +52,8 @@ var keywords = map[string]TokenType{
 }
 
 func LookupIdent(ident string) TokenType {
-	if tok, ok := keywords[ident]; ok {
-		return tok
+	if token, ok := keywords[ident]; ok {
+		return token
 	}
 
 	return IDENT
