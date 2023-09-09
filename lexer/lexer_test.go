@@ -101,6 +101,37 @@ func TestGetNextToken(t *testing.T) {
 				{token.INT, "5"},
 				{token.SEMICOLON, ";"},
 			},
+		}, {
+			/*
+								if (12 > 10) {
+				       				return true;
+				   				} else {
+				       				return false;
+								}
+			*/
+			"if (12 > 10) {\n\treturn true;\n} else {\n\treturn false;\n}",
+			[]struct {
+				expectedType    token.TokenType
+				expectedLiteral string
+			}{
+				{token.IF, "if"},
+				{token.LPAR, "("},
+				{token.INT, "12"},
+				{token.GT, ">"},
+				{token.INT, "10"},
+				{token.RPAR, ")"},
+				{token.LBRACE, "{"},
+				{token.RETURN, "return"},
+				{token.TRUE, "true"},
+				{token.SEMICOLON, ";"},
+				{token.RBRACE, "}"},
+				{token.ELSE, "else"},
+				{token.LBRACE, "{"},
+				{token.RETURN, "return"},
+				{token.FALSE, "false"},
+				{token.SEMICOLON, ";"},
+				{token.RBRACE, "}"},
+			},
 		}}
 
 	for _, testCase := range testCases {

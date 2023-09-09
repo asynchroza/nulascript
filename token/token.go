@@ -27,16 +27,26 @@ const (
 	DEREF     = "&"
 	PIPE      = "|"
 	FUNC      = "FUNCTION"
-	LET       = "LET"
 	BANG      = "!"
 	SLASH     = "/"
 	LT        = "<" // Larger than
 	GT        = ">" // Greater than
+	LET       = "LET"
+	IF        = "IF"
+	ELSE      = "ELSE"
+	TRUE      = "TRUE"
+	FALSE     = "FALSE"
+	RETURN    = "RETURN"
 )
 
 var keywords = map[string]TokenType{
-	"fn":  FUNC,
-	"let": LET,
+	"fn":     FUNC,
+	"let":    LET,
+	"true":   TRUE,
+	"false":  FALSE,
+	"if":     IF,
+	"else":   ELSE,
+	"return": RETURN,
 }
 
 func LookupIdent(ident string) TokenType {
