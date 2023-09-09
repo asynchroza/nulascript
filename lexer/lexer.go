@@ -15,7 +15,7 @@ func NewLexer(input string) lexerinterface {
 	return l
 }
 
-// properly encapsulate the lexer
+// Used for properly encapsulating the lexer
 type lexerinterface interface {
 	GetNextToken() token.Token
 }
@@ -31,18 +31,37 @@ func (l *Lexer) readChar() {
 	l.readPos = l.readPos + 1
 }
 
-func (l *Lexer) readIdentifier() string {
+// Reads token which extend more than one character such as IDENTIFIERS and NUMBERS
+func (l *Lexer) readExtendedToken(tokenType token.TokenType) string {
 	position := l.pos
 
-	for isLetter(l.ch) {
+	var isCharFunc func(char byte) bool
+
+	switch tokenType {
+	case token.INT:
+		isCharFunc = isDigit
+	case token.IDENT:
+		isCharFunc = isLetter
+	}
+
+	for isCharFunc(l.ch) {
 		l.readChar()
 	}
 
 	return l.input[position:l.pos]
 }
 
+// Skip over whitespace characters until you land on a token
+func (l *Lexer) skipOverWhitespace() {
+	for l.ch == ' ' || l.ch == '\t' || l.ch == '\n' || l.ch == '\r' {
+		l.readChar()
+	}
+}
+
 func (l *Lexer) GetNextToken() token.Token {
 	var currentToken token.Token
+
+	l.skipOverWhitespace()
 
 	switch l.ch {
 	case '=':
@@ -74,7 +93,13 @@ func (l *Lexer) GetNextToken() token.Token {
 		currentToken.Type = token.EOF
 	default:
 		if isLetter(l.ch) {
-			currentToken.Literal = l.readIdentifier()
+			currentToken.Literal = l.readExtendedToken(token.IDENT)
+			currentToken.Type = token.LookupIdent(currentToken.Literal)
+			return currentToken // reading position and position are after the last character of current identifier
+		} else if isDigit(l.ch) {
+			currentToken.Type = token.INT
+			currentToken.Literal = l.readExtendedToken(currentToken.Type)
+			return currentToken
 		} else {
 			currentToken = newToken(token.ILLEGAL, l.ch)
 		}
@@ -88,7 +113,13 @@ func newToken(tokenType token.TokenType, ch byte) token.Token {
 	return token.Token{Type: tokenType, Literal: string(ch)}
 }
 
+// Check if current character is a letter.
+// If you want to make the language snake_case,
+// you need to consider underscores as alphabetic characters
 func isLetter(ch byte) bool {
-	// add || ch == '_' if you want to make the language snake_case
 	return 'a' <= ch && ch <= 'z' || 'A' <= ch && ch <= 'Z'
+}
+
+func isDigit(ch byte) bool {
+	return '0' <= ch && ch <= '9'
 }

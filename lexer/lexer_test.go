@@ -43,7 +43,7 @@ func TestGetNextToken(t *testing.T) {
 
 				let result = add(numOne, numTwo)
 			*/
-			"let numOne = 10;\n\nlet numTwo = 20;\n\nlet add = fn(x, y)\n{\n\tx + y\n}\n\nlet result = add(numOne, numTwo)",
+			"let numOne = 10;\n\nlet numTwo = 20;\n\nlet add = fn(x, y)\n{\n\tx + y;\n}\n\nlet result = add(numOne, numTwo)",
 			[]struct {
 				expectedType    token.TokenType
 				expectedLiteral string
