@@ -27,7 +27,7 @@ func TestGetNextToken(t *testing.T) {
 				{token.RPAR, ")"},
 				{token.LBRACE, "{"},
 				{token.RBRACE, "}"},
-				{token.POINTER, "*"},
+				{token.ASTERISK, "*"},
 				{token.DEREF, "&"},
 				{token.PIPE, "|"},
 			},
@@ -83,7 +83,25 @@ func TestGetNextToken(t *testing.T) {
 				{token.IDENT, "numTwo"},
 				{token.RPAR, ")"},
 			}},
-	}
+		{"!-/*5;\n5 < 10 > 5;",
+			[]struct {
+				expectedType    token.TokenType
+				expectedLiteral string
+			}{
+				{token.BANG, "!"},
+				{token.MINUS, "-"},
+				{token.SLASH, "/"},
+				{token.ASTERISK, "*"},
+				{token.INT, "5"},
+				{token.SEMICOLON, ";"},
+				{token.INT, "5"},
+				{token.LT, "<"},
+				{token.INT, "10"},
+				{token.GT, ">"},
+				{token.INT, "5"},
+				{token.SEMICOLON, ";"},
+			},
+		}}
 
 	for _, testCase := range testCases {
 		l := NewLexer(testCase.input)

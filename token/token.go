@@ -23,11 +23,15 @@ const (
 	RPAR      = ")"
 	LBRACE    = "{"
 	RBRACE    = "}"
-	POINTER   = "*"
+	ASTERISK  = "*"
 	DEREF     = "&"
 	PIPE      = "|"
 	FUNC      = "FUNCTION"
 	LET       = "LET"
+	BANG      = "!"
+	SLASH     = "/"
+	LT        = "<" // Larger than
+	GT        = ">" // Greater than
 )
 
 var keywords = map[string]TokenType{
