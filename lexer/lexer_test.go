@@ -139,6 +139,13 @@ func TestGetNextToken(t *testing.T) {
 				expectedLiteral string
 			}{
 				{token.INT, "125"},
+				{token.NOT_EQUAL, "!="},
+				{token.INT, "125"},
+				{token.SEMICOLON, ";"},
+				{token.INT, "125"},
+				{token.EQUAL, "=="},
+				{token.INT, "125"},
+				{token.SEMICOLON, ";"},
 			},
 		}}
 
@@ -149,7 +156,7 @@ func TestGetNextToken(t *testing.T) {
 			var incomingToken token.Token = l.GetNextToken()
 
 			if incomingToken.Type != testToken.expectedType {
-				t.Fatalf("[%d][]: EXPECTED TOKEN: %q, RECEIVED TOKEN: %q", iter, testToken.expectedType, incomingToken.Type)
+				t.Fatalf("[%d]: EXPECTED TOKEN: %q, RECEIVED TOKEN: %q", iter, testToken.expectedType, incomingToken.Type)
 			}
 
 			if incomingToken.Literal != testToken.expectedLiteral {

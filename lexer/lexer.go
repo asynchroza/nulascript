@@ -1,6 +1,8 @@
 package lexer
 
-import "nulascript/token"
+import (
+	"nulascript/token"
+)
 
 type Lexer struct {
 	input   string
@@ -108,8 +110,9 @@ func (l *Lexer) GetNextToken() token.Token {
 			ch := l.ch
 			l.readChar()
 			currentToken = token.Token{Type: token.NOT_EQUAL, Literal: string(ch) + string(l.ch)}
+		} else {
+			currentToken = newToken(token.BANG, l.ch)
 		}
-		currentToken = newToken(token.BANG, l.ch)
 	case '/':
 		currentToken = newToken(token.SLASH, l.ch)
 	case '<':
