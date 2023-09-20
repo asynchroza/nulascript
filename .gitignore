@@ -1,1 +1,8 @@
 googletest
+lib
+CMakeFiles
+bin
+.vscode
+ctests/*
+!ctests/tests.cc
+!ctests/CMakeLists.txt
