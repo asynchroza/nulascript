@@ -1,0 +1,25 @@
+{
+  "name": "nula",
+  "displayName": "",
+  "description": "nulascript",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.82.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "contributes": {
+    "languages": [{
+      "id": "nulascript",
+      "aliases": ["nulascript", "nulascript"],
+      "extensions": [".nula",".nl"],
+      "configuration": "./language-configuration.json"
+    }],
+    "grammars": [{
+      "language": "nulascript",
+      "scopeName": "main.nula",
+      "path": "./syntaxes/nulascript.tmLanguage.json"
+    }]
+  }
+}
