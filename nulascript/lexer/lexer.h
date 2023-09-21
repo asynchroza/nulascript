@@ -16,6 +16,7 @@ private:
     char peekNextChar();
     Token newToken(TokenType tokenType, char tokenLiteral);
     Token newToken(TokenType tokenType, const char* tokenLiteral);
+    Token handleComparisonOperators(char opChar, TokenType shortType, TokenType extendedType);
     bool isLetter(char ch);
     bool isDigit(char ch);
 

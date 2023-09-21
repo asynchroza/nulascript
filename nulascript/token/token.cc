@@ -9,6 +9,8 @@ TokenLookup::TokenLookup() {
         {"if", IF},
         {"else", ELSE},
         {"return", RETURN},
+        {"eq", EQUAL},
+        {"not", NOT_EQUAL}
     };
 }
 

@@ -69,16 +69,25 @@ TEST(LexerSuite, LexerTest)
                 {TokenType::RPAR, ")"},
             },
         },
-        {"100 != 100; 100 == 100;", 
+        {"100 not 100; 100 eq 100; 100 >= 100; 100 <= 100;", 
             {
                 {TokenType::INT, "100"}, 
-                {TokenType::NOT_EQUAL, "!="}, 
+                {TokenType::NOT_EQUAL, "not"}, 
                 {TokenType::INT, "100"}, 
                 {TokenType::SEMICOLON, ";"},
                 {TokenType::INT, "100"},
-                {TokenType::EQUAL, "=="},
+                {TokenType::EQUAL, "eq"},
                 {TokenType::INT, "100"},
-                {TokenType::SEMICOLON, ";"}
+                {TokenType::SEMICOLON, ";"},
+                {TokenType::INT, "100"},
+                {TokenType::GOE, ">="},
+                {TokenType::INT, "100"},
+                {TokenType::SEMICOLON, ";"},
+                {TokenType::INT, "100"},
+                {TokenType::LOE, "<="},
+                {TokenType::INT, "100"},
+                {TokenType::SEMICOLON, ";"},
+
             }
         },
         {

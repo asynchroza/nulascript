@@ -59,14 +59,14 @@ Token Lexer::getNextToken() {
 
     switch (ch) {
         case '=':
-            if (peekNextChar() == '=') {
-                char savedCh = ch;
-                readChar();
-                char tokenLiteral[3] = {savedCh, ch, '\0'};
-                currentToken = newToken(TokenType::EQUAL, tokenLiteral);
-            } else {
-                currentToken = newToken(TokenType::ASSIGN, ch);
-            }
+            // if (peekNextChar() == '=') {
+            //     char savedCh = ch;
+            //     readChar();
+            //     char tokenLiteral[3] = {savedCh, ch, '\0'};
+            //     currentToken = newToken(TokenType::EQUAL, tokenLiteral);
+            // } else {
+            currentToken = newToken(TokenType::ASSIGN, ch);
+            // }
             break;
         case '+':
             currentToken = newToken(TokenType::PLUS, ch);
@@ -102,23 +102,16 @@ Token Lexer::getNextToken() {
             currentToken = newToken(TokenType::PIPE, ch);
             break;
         case '!':
-            if (peekNextChar() == '=') {
-                char savedCh = ch;
-                readChar();
-                char tokenLiteral[3] = {savedCh, ch, '\0'};
-                currentToken = newToken(TokenType::NOT_EQUAL, tokenLiteral);
-            } else {
-                currentToken = newToken(TokenType::BANG, ch);
-            }
+            currentToken = newToken(TokenType::BANG, ch);
             break;
         case '/':
             currentToken = newToken(TokenType::SLASH, ch);
             break;
         case '<':
-            currentToken = newToken(TokenType::LT, ch);
+            currentToken = handleComparisonOperators(ch, TokenType::LT, TokenType::LOE);
             break;
         case '>':
-            currentToken = newToken(TokenType::GT, ch);
+            currentToken = handleComparisonOperators(ch, TokenType::GT, TokenType::GOE);
             break;
         case 0:
             currentToken.literal = "";
@@ -156,4 +149,16 @@ bool Lexer::isLetter(char ch) {
 
 bool Lexer::isDigit(char ch) {
     return ('0' <= ch && ch <= '9');
+}
+
+Token Lexer::handleComparisonOperators(char opChar, TokenType shortType, TokenType extendedType) {
+    // reduce branching by not conditionally checking and inferring the extended type
+    if (peekNextChar() == '=') {
+        char savedCh = ch;
+        readChar();
+        char tokenLiteral[3] = {savedCh, ch, '\0'};
+        return newToken(extendedType, tokenLiteral);
+    }
+
+    return newToken(shortType, ch);
 }
