@@ -1,7 +1,6 @@
 #include "gtest/gtest.h"
 #include "token.h"
 #include "lexer.h"
-#include <iostream>
 
 #define MULTILINE_STRING(s) #s
 
@@ -70,7 +69,47 @@ TEST(LexerSuite, LexerTest)
                 {TokenType::RPAR, ")"},
             },
         },
-        {"100 != 100; 100 == 100;", {{TokenType::INT, "100"}, {TokenType::NOT_EQUAL, "!="}}}};
+        {"100 != 100; 100 == 100;", 
+            {
+                {TokenType::INT, "100"}, 
+                {TokenType::NOT_EQUAL, "!="}, 
+                {TokenType::INT, "100"}, 
+                {TokenType::SEMICOLON, ";"},
+                {TokenType::INT, "100"},
+                {TokenType::EQUAL, "=="},
+                {TokenType::INT, "100"},
+                {TokenType::SEMICOLON, ";"}
+            }
+        },
+        {
+            MULTILINE_STRING(
+                if (12 > 10) {
+                    return true;
+                } else {
+                    return false;
+                }
+            ),
+            {
+                {TokenType::IF, "if"},
+				{TokenType::LPAR, "("},
+				{TokenType::INT, "12"},
+				{TokenType::GT, ">"},
+				{TokenType::INT, "10"},
+				{TokenType::RPAR, ")"},
+				{TokenType::LBRACE, "{"},
+				{TokenType::RETURN, "return"},
+				{TokenType::TRUE, "true"},
+				{TokenType::SEMICOLON, ";"},
+				{TokenType::RBRACE, "}"},
+				{TokenType::ELSE, "else"},
+				{TokenType::LBRACE, "{"},
+				{TokenType::RETURN, "return"},
+				{TokenType::FALSE, "false"},
+				{TokenType::SEMICOLON, ";"},
+				{TokenType::RBRACE, "}"},
+            }
+        }
+        };
 
     for (const auto &testCase : testCases)
     {
@@ -78,11 +117,9 @@ TEST(LexerSuite, LexerTest)
 
         for (const auto &expectedToken : testCase.second)
         {
-            // std::cout<<expectedToken.literal<<std::endl;
             Token actualToken = lexer.getNextToken();
-            // std::cout<<actualToken.literal<<std::endl;
 
-            EXPECT_EQ(expectedToken.type, actualToken.type);
+            EXPECT_EQ(expectedToken.type, actualToken.type) << "Expected token literal is " + expectedToken.literal;
             EXPECT_EQ(expectedToken.literal, actualToken.literal);
         }
     }
