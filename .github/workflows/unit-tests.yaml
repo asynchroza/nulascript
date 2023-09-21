@@ -1,4 +1,4 @@
-name: Test Nulascript
+name: Unit Tests Nulascript
 on: 
   push:
     paths:
