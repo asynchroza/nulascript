@@ -2,7 +2,8 @@ googletest
 lib
 CMakeFiles
 bin
-.vscode
+.vscode/*
+!vscode/launch.json
 ctests/*
 !ctests/tests.cc
 !ctests/CMakeLists.txt
