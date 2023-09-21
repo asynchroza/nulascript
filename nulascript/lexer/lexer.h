@@ -7,18 +7,19 @@
 class Lexer {
 public:
     Lexer(const std::string& input);
-    Token GetNextToken();
+    Token getNextToken();
 
 private:
-    void ReadChar();
-    std::string ReadExtendedToken(TokenType tokenType);
-    void SkipOverWhitespace();
-    char PeekNextChar();
-    Token NewToken(TokenType tokenType, char ch);
-    bool IsLetter(char ch);
-    bool IsDigit(char ch);
+    void readChar();
+    std::string readExtendedToken(TokenType tokenType);
+    void skipOverWhitespace();
+    char peekNextChar();
+    Token newToken(TokenType tokenType, char ch);
+    bool isLetter(char ch);
+    bool isDigit(char ch);
 
 private:
+    TokenLookup tokenLookup;
     std::string input;
     int pos;
     int readPos;

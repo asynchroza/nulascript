@@ -12,7 +12,7 @@ TokenLookup::TokenLookup() {
     };
 }
 
-TokenType TokenLookup::LookupIdent(const std::string& ident) {
+TokenType TokenLookup::lookupIdent(const std::string& ident) {
     auto it = keywords.find(ident);
     if (it != keywords.end()) {
         return it->second;

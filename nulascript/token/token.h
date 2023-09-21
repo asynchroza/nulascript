@@ -37,14 +37,14 @@ enum TokenType {
 };
 
 struct Token {
-    TokenType Type;
-    std::string Literal;
+    TokenType type;
+    std::string literal;
 };
 
 class TokenLookup {
 public:
     TokenLookup();
-    static TokenType LookupIdent(const std::string& ident);
+    TokenType lookupIdent(const std::string& ident);
 
 private:
     std::unordered_map<std::string, TokenType> keywords;

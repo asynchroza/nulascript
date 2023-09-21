@@ -3,10 +3,11 @@
 
 Lexer::Lexer(const std::string& input)
     : input(input), pos(0), readPos(0), ch(0) {
-    ReadChar();
+    tokenLookup = TokenLookup();
+    readChar();
 }
 
-void Lexer::ReadChar() {
+void Lexer::readChar() {
     if (readPos >= static_cast<int>(input.size())) {
         ch = 0; // EOF
     } else {
@@ -17,34 +18,34 @@ void Lexer::ReadChar() {
     readPos = readPos + 1;
 }
 
-std::string Lexer::ReadExtendedToken(TokenType tokenType) {
+std::string Lexer::readExtendedToken(TokenType tokenType) {
     int position = pos;
 
     bool (Lexer::*isCharFunc)(char) = nullptr;
 
     switch (tokenType) {
         case TokenType::INT:
-            isCharFunc = &Lexer::IsDigit;
+            isCharFunc = &Lexer::isDigit;
             break;
         case TokenType::IDENT:
-            isCharFunc = &Lexer::IsLetter;
+            isCharFunc = &Lexer::isLetter;
             break;
     }
 
     while ((this->*isCharFunc)(ch)) {
-        ReadChar();
+        readChar();
     }
 
     return input.substr(position, pos - position);
 }
 
-void Lexer::SkipOverWhitespace() {
+void Lexer::skipOverWhitespace() {
     while (ch == ' ' || ch == '\t' || ch == '\n' || ch == '\r') {
-        ReadChar();
+        readChar();
     }
 }
 
-char Lexer::PeekNextChar() {
+char Lexer::peekNextChar() {
     if (readPos >= static_cast<int>(input.size())) {
         return 0; // EOF
     }
@@ -52,102 +53,102 @@ char Lexer::PeekNextChar() {
     return input[readPos];
 }
 
-Token Lexer::GetNextToken() {
+Token Lexer::getNextToken() {
     Token currentToken;
 
-    SkipOverWhitespace();
+    skipOverWhitespace();
 
     switch (ch) {
         case '=':
-            if (PeekNextChar() == '=') {
+            if (peekNextChar() == '=') {
                 char savedCh = ch;
-                ReadChar();
-                currentToken = NewToken(TokenType::EQUAL, savedCh + ch);
+                readChar();
+                currentToken = newToken(TokenType::EQUAL, savedCh + ch);
             } else {
-                currentToken = NewToken(TokenType::ASSIGN, ch);
+                currentToken = newToken(TokenType::ASSIGN, ch);
             }
             break;
         case '+':
-            currentToken = NewToken(TokenType::PLUS, ch);
+            currentToken = newToken(TokenType::PLUS, ch);
             break;
         case '-':
-            currentToken = NewToken(TokenType::MINUS, ch);
+            currentToken = newToken(TokenType::MINUS, ch);
             break;
         case ',':
-            currentToken = NewToken(TokenType::COMMA, ch);
+            currentToken = newToken(TokenType::COMMA, ch);
             break;
         case ';':
-            currentToken = NewToken(TokenType::SEMICOLON, ch);
+            currentToken = newToken(TokenType::SEMICOLON, ch);
             break;
         case '(':
-            currentToken = NewToken(TokenType::LPAR, ch);
+            currentToken = newToken(TokenType::LPAR, ch);
             break;
         case ')':
-            currentToken = NewToken(TokenType::RPAR, ch);
+            currentToken = newToken(TokenType::RPAR, ch);
             break;
         case '{':
-            currentToken = NewToken(TokenType::LBRACE, ch);
+            currentToken = newToken(TokenType::LBRACE, ch);
             break;
         case '}':
-            currentToken = NewToken(TokenType::RBRACE, ch);
+            currentToken = newToken(TokenType::RBRACE, ch);
             break;
         case '*':
-            currentToken = NewToken(TokenType::ASTERISK, ch);
+            currentToken = newToken(TokenType::ASTERISK, ch);
             break;
         case '&':
-            currentToken = NewToken(TokenType::DEREF, ch);
+            currentToken = newToken(TokenType::DEREF, ch);
             break;
         case '|':
-            currentToken = NewToken(TokenType::PIPE, ch);
+            currentToken = newToken(TokenType::PIPE, ch);
             break;
         case '!':
-            if (PeekNextChar() == '=') {
+            if (peekNextChar() == '=') {
                 char savedCh = ch;
-                ReadChar();
-                currentToken = NewToken(TokenType::NOT_EQUAL, savedCh + ch);
+                readChar();
+                currentToken = newToken(TokenType::NOT_EQUAL, savedCh + ch);
             } else {
-                currentToken = NewToken(TokenType::BANG, ch);
+                currentToken = newToken(TokenType::BANG, ch);
             }
             break;
         case '/':
-            currentToken = NewToken(TokenType::SLASH, ch);
+            currentToken = newToken(TokenType::SLASH, ch);
             break;
         case '<':
-            currentToken = NewToken(TokenType::LT, ch);
+            currentToken = newToken(TokenType::LT, ch);
             break;
         case '>':
-            currentToken = NewToken(TokenType::GT, ch);
+            currentToken = newToken(TokenType::GT, ch);
             break;
         case 0:
-            currentToken.Literal = "";
-            currentToken.Type = TokenType::EOF_TYPE;
+            currentToken.literal = "";
+            currentToken.type = TokenType::EOF_TYPE;
             break;
         default:
-            if (IsLetter(ch)) {
-                currentToken.Literal = ReadExtendedToken(TokenType::IDENT);
-                currentToken.Type = TokenLookup::LookupIdent(currentToken.Literal);
+            if (isLetter(ch)) {
+                currentToken.literal = readExtendedToken(TokenType::IDENT);
+                currentToken.type = tokenLookup.lookupIdent(currentToken.literal);
                 return currentToken; // reading position and position are after the last character of the current identifier
-            } else if (IsDigit(ch)) {
-                currentToken.Type = TokenType::INT;
-                currentToken.Literal = ReadExtendedToken(currentToken.Type);
+            } else if (isDigit(ch)) {
+                currentToken.type = TokenType::INT;
+                currentToken.literal = readExtendedToken(currentToken.type);
                 return currentToken;
             } else {
-                currentToken = NewToken(TokenType::ILLEGAL, ch);
+                currentToken = newToken(TokenType::ILLEGAL, ch);
             }
     }
 
-    ReadChar();
+    readChar();
     return currentToken;
 }
 
-Token Lexer::NewToken(TokenType tokenType, char ch) {
+Token Lexer::newToken(TokenType tokenType, char ch) {
     return Token{tokenType, std::string(1, ch)};
 }
 
-bool Lexer::IsLetter(char ch) {
+bool Lexer::isLetter(char ch) {
     return ('a' <= ch && ch <= 'z') || ('A' <= ch && ch <= 'Z');
 }
 
-bool Lexer::IsDigit(char ch) {
+bool Lexer::isDigit(char ch) {
     return ('0' <= ch && ch <= '9');
 }
