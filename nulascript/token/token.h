@@ -44,7 +44,7 @@ struct Token {
 class TokenLookup {
 public:
     TokenLookup();
-    TokenType LookupIdent(const std::string& ident);
+    static TokenType LookupIdent(const std::string& ident);
 
 private:
     std::unordered_map<std::string, TokenType> keywords;
