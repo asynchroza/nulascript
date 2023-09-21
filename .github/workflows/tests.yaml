@@ -1,5 +1,9 @@
 name: Test Nulascript
-on: push
+on: 
+  push:
+    paths:
+      - 'nulascript/**'
+      - 'ctests/**'
 jobs:
   tests:
     runs-on: ubuntu-latest
