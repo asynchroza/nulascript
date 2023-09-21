@@ -59,14 +59,7 @@ Token Lexer::getNextToken() {
 
     switch (ch) {
         case '=':
-            // if (peekNextChar() == '=') {
-            //     char savedCh = ch;
-            //     readChar();
-            //     char tokenLiteral[3] = {savedCh, ch, '\0'};
-            //     currentToken = newToken(TokenType::EQUAL, tokenLiteral);
-            // } else {
             currentToken = newToken(TokenType::ASSIGN, ch);
-            // }
             break;
         case '+':
             currentToken = newToken(TokenType::PLUS, ch);
