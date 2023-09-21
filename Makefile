@@ -1,6 +1,6 @@
 PHONY: run-tests
 run-tests:
-	cd ctests && cmake . && cmake --build . && ./tests
+	cd ctests && cmake . && cmake --build . && ./tests --gtest_break_on_failure
 
 PHONY: install-gtest
 install-gtest:
