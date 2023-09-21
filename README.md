@@ -1,6 +1,6 @@
 # nulascript
 
-[![Test Nulascript](https://github.com/asynchroza/nulascript/actions/workflows/tests.yaml/badge.svg)](https://github.com/asynchroza/nulascript/actions/workflows/tests.yaml)
+[![Unit Tests Nulascript](https://github.com/asynchroza/nulascript/actions/workflows/unit-tests.yaml/badge.svg)](https://github.com/asynchroza/nulascript/actions/workflows/unit-tests.yaml)
 
 ### How to test:
 
