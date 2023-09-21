@@ -30,3 +30,10 @@ if (100 <= 200) {
     return true;
 }
 ```
+
+#### Operators:
+```javascript
+let a = !true  // bang operator negates the value
+
+TBA
+```
