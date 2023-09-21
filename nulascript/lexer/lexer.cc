@@ -2,8 +2,7 @@
 #include "token.h"
 
 Lexer::Lexer(const std::string& input)
-    : input(input), pos(0), readPos(0), ch(0) {
-    tokenLookup = TokenLookup();
+    : input(input), pos(0), readPos(0), ch(0), tokenLookup(TokenLookup()) {
     readChar();
 }
 
@@ -63,7 +62,8 @@ Token Lexer::getNextToken() {
             if (peekNextChar() == '=') {
                 char savedCh = ch;
                 readChar();
-                currentToken = newToken(TokenType::EQUAL, savedCh + ch);
+                char tokenLiteral[3] = {savedCh, ch, '\0'};
+                currentToken = newToken(TokenType::EQUAL, tokenLiteral);
             } else {
                 currentToken = newToken(TokenType::ASSIGN, ch);
             }
@@ -105,7 +105,8 @@ Token Lexer::getNextToken() {
             if (peekNextChar() == '=') {
                 char savedCh = ch;
                 readChar();
-                currentToken = newToken(TokenType::NOT_EQUAL, savedCh + ch);
+                char tokenLiteral[3] = {savedCh, ch, '\0'};
+                currentToken = newToken(TokenType::NOT_EQUAL, tokenLiteral);
             } else {
                 currentToken = newToken(TokenType::BANG, ch);
             }
@@ -143,6 +144,10 @@ Token Lexer::getNextToken() {
 
 Token Lexer::newToken(TokenType tokenType, char ch) {
     return Token{tokenType, std::string(1, ch)};
+}
+
+Token Lexer::newToken(TokenType tokenType, const char* tokenLiteral) {
+    return Token{tokenType, std::string(tokenLiteral)};
 }
 
 bool Lexer::isLetter(char ch) {

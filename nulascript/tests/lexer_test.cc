@@ -1,10 +1,12 @@
 #include "gtest/gtest.h"
 #include "token.h"
 #include "lexer.h"
+#include <iostream>
 
 #define MULTILINE_STRING(s) #s
 
-TEST(LexerSuite, LexerTest) {
+TEST(LexerSuite, LexerTest)
+{
     std::vector<std::pair<std::string, std::vector<Token>>> testCases = {
         {
             "=+-,;(){}*&|",
@@ -25,60 +27,63 @@ TEST(LexerSuite, LexerTest) {
         },
         {
             MULTILINE_STRING(let numOne = 10;
-            let numTwo = 20;
-			let add = fn(x, y){
-				x + y;
-			}
+                             let numTwo = 20;
+                             let add = fn(x, y) {
+                                 x + y;
+                             }
 
-			let result = add(numOne, numTwo);),
+                             let result = add(numOne, numTwo);),
             {
                 {TokenType::LET, "let"},
-				{TokenType::IDENT, "numOne"},
-				{TokenType::ASSIGN, "="},
-				{TokenType::INT, "10"},
-				{TokenType::SEMICOLON, ";"},
-				{TokenType::LET, "let"},
-				{TokenType::IDENT, "numTwo"},
-				{TokenType::ASSIGN, "="},
-				{TokenType::INT, "20"},
-				{TokenType::SEMICOLON, ";"},
-				{TokenType::LET, "let"},
-				{TokenType::IDENT, "add"},
-				{TokenType::ASSIGN, "="},
-				{TokenType::FUNC, "fn"},
-				{TokenType::LPAR, "("},
-				{TokenType::IDENT, "x"},
-				{TokenType::COMMA, ","},
-				{TokenType::IDENT, "y"},
-				{TokenType::RPAR, ")"},
-				{TokenType::LBRACE, "{"},
-				{TokenType::IDENT, "x"},
-				{TokenType::PLUS, "+"},
-				{TokenType::IDENT, "y"},
-				{TokenType::SEMICOLON, ";"},
-				{TokenType::RBRACE, "}"},
-				{TokenType::LET, "let"},
-				{TokenType::IDENT, "result"},
-				{TokenType::ASSIGN, "="},
-				{TokenType::IDENT, "add"},
-				{TokenType::LPAR, "("},
-				{TokenType::IDENT, "numOne"},
-				{TokenType::COMMA, ","},
-				{TokenType::IDENT, "numTwo"},
-				{TokenType::RPAR, ")"},
-            }
-        }
-    };
+                {TokenType::IDENT, "numOne"},
+                {TokenType::ASSIGN, "="},
+                {TokenType::INT, "10"},
+                {TokenType::SEMICOLON, ";"},
+                {TokenType::LET, "let"},
+                {TokenType::IDENT, "numTwo"},
+                {TokenType::ASSIGN, "="},
+                {TokenType::INT, "20"},
+                {TokenType::SEMICOLON, ";"},
+                {TokenType::LET, "let"},
+                {TokenType::IDENT, "add"},
+                {TokenType::ASSIGN, "="},
+                {TokenType::FUNC, "fn"},
+                {TokenType::LPAR, "("},
+                {TokenType::IDENT, "x"},
+                {TokenType::COMMA, ","},
+                {TokenType::IDENT, "y"},
+                {TokenType::RPAR, ")"},
+                {TokenType::LBRACE, "{"},
+                {TokenType::IDENT, "x"},
+                {TokenType::PLUS, "+"},
+                {TokenType::IDENT, "y"},
+                {TokenType::SEMICOLON, ";"},
+                {TokenType::RBRACE, "}"},
+                {TokenType::LET, "let"},
+                {TokenType::IDENT, "result"},
+                {TokenType::ASSIGN, "="},
+                {TokenType::IDENT, "add"},
+                {TokenType::LPAR, "("},
+                {TokenType::IDENT, "numOne"},
+                {TokenType::COMMA, ","},
+                {TokenType::IDENT, "numTwo"},
+                {TokenType::RPAR, ")"},
+            },
+        },
+        {"100 != 100; 100 == 100;", {{TokenType::INT, "100"}, {TokenType::NOT_EQUAL, "!="}}}};
 
-    for (const auto& testCase : testCases) {
-            Lexer lexer(testCase.first);
+    for (const auto &testCase : testCases)
+    {
+        Lexer lexer(testCase.first);
 
-        for (const auto& expectedToken : testCase.second) {
+        for (const auto &expectedToken : testCase.second)
+        {
+            // std::cout<<expectedToken.literal<<std::endl;
             Token actualToken = lexer.getNextToken();
+            // std::cout<<actualToken.literal<<std::endl;
 
             EXPECT_EQ(expectedToken.type, actualToken.type);
             EXPECT_EQ(expectedToken.literal, actualToken.literal);
         }
     }
-
 }

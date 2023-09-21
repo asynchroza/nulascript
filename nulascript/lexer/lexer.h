@@ -14,7 +14,8 @@ private:
     std::string readExtendedToken(TokenType tokenType);
     void skipOverWhitespace();
     char peekNextChar();
-    Token newToken(TokenType tokenType, char ch);
+    Token newToken(TokenType tokenType, char tokenLiteral);
+    Token newToken(TokenType tokenType, const char* tokenLiteral);
     bool isLetter(char ch);
     bool isDigit(char ch);
 
