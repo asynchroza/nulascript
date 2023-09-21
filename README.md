@@ -5,7 +5,7 @@
 ### How to test:
 
 1. `make install-gtest` - pulls googletest locally
-2. `make run-tests` - links googletest, build and run the tests executable
+2. `make run-tests` - links googletest, builds and runs the tests executable
 
 ### Syntax:
 #### Conditional Statements:
