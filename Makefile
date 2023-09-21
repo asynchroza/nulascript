@@ -1,6 +1,9 @@
 PHONY: run-tests
 run-tests:
-	cd ctests && cmake . && cmake --build . && ./tests
+	cd ctests; \
+	cmake .; \
+	cmake --build .; \
+	./tests
 
 PHONY: install-gtest
 install-gtest:
