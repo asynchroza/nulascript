@@ -6,3 +6,5 @@ bin
 ctests/*
 !ctests/tests.cc
 !ctests/CMakeLists.txt
+nulascript/repl/build/*
+!nulascript/repl/build/CMakeLists.txt
