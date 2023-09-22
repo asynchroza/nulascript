@@ -15,4 +15,4 @@ endforeach()
 file(GLOB SOURCE_FILES "../../*/*.cc")
 list(FILTER SOURCE_FILES EXCLUDE REGEX ".*test.*\\.cc$")
 
-add_executable(repl ${SOURCE_FILES} "../main.cc")
+add_executable(repl ${SOURCE_FILES} "main.cc")

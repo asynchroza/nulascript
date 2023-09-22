@@ -8,3 +8,4 @@ ctests/*
 !ctests/CMakeLists.txt
 nulascript/repl/build/*
 !nulascript/repl/build/CMakeLists.txt
+!nulascript/repl/build/main.cc
