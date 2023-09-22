@@ -12,15 +12,15 @@
 ```javascript
 // equals
 if (100 is 100) {
-    return true;
+    return ...;
 } 
 
 // doesn't equal
 if (100 is not 200) {
-    return false;
+    return ...;
 }
 
-/* "not" keyword is interchangeable for !
+/* "not" keyword is interchangeable for '!'
 all of the below evaluate to true:
 
    true is not !true
@@ -30,18 +30,19 @@ all of the below evaluate to true:
 
 // equal or greater than
 if (100 >= 200) {
-    return false;
+    return ...;
 }
 
 // equal or less than
 if (100 <= 200) {
-    return true;
+    return ...;
 }
 ```
 
 #### Operators:
 ```javascript
-let a = not true  // bang operator negates the value
+let a = not true;   // assigned value is false
+let a = !true;      // assigned value is false
 
 TBA
 ```
