@@ -16,7 +16,7 @@ void REPL::start() {
 
         Lexer l (line);
         for (Token token = l.getNextToken(); token.type != TokenType::EOF_TYPE; token = l.getNextToken()) {
-            std::cout << token.literal << std::endl;
+            std::cout << "Literal is " + token.literal + " and Type is " + std::to_string(token.type) << std::endl;
         }
     }
 }
