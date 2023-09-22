@@ -4,7 +4,7 @@ on:
     paths:
       - 'nulascript/**'
 jobs:
-  tests:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -14,4 +14,4 @@ jobs:
         run: sudo apt update && sudo apt install -y cmake make
 
       - name: Run REPL
-        run: make run-repl & sleep 30 && kill $!
+        run: make run-repl & sleep 5
