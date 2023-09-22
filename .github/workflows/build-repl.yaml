@@ -1,0 +1,17 @@
+name: Build Nulascript REPL
+on: 
+  push:
+    paths:
+      - 'nulascript/**'
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install CMake
+        run: sudo apt update && sudo apt install -y cmake make
+
+      - name: Run REPL
+        run: make run-repl & sleep 30 && kill $!
