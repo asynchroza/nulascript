@@ -95,7 +95,7 @@ Token Lexer::getNextToken() {
             currentToken = newToken(TokenType::PIPE, ch);
             break;
         case '!':
-            currentToken = newToken(TokenType::BANG, ch);
+            currentToken = newToken(TokenType::BANG_OR_NOT, ch);
             break;
         case '/':
             currentToken = newToken(TokenType::SLASH, ch);

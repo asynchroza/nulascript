@@ -22,7 +22,7 @@ enum TokenType {
     DEREF,
     PIPE,
     FUNC,
-    BANG,
+    BANG_OR_NOT,
     SLASH,
     LT,
     LOE,
@@ -34,8 +34,7 @@ enum TokenType {
     TRUE,
     FALSE,
     RETURN,
-    EQUAL,
-    NOT_EQUAL,
+    IS,
 };
 
 struct Token {

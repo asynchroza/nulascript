@@ -9,8 +9,9 @@ TokenLookup::TokenLookup() {
         {"if", IF},
         {"else", ELSE},
         {"return", RETURN},
-        {"eq", EQUAL},
-        {"not", NOT_EQUAL}
+        {"is", IS},
+        {"not", BANG_OR_NOT},
+        // TODO: ^ Interchanged for '!' - negates value. Read as "not equal" when coupled with "is" identifier - "a is not b"
     };
 }
 

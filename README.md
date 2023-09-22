@@ -11,12 +11,12 @@
 #### Conditional Statements:
 ```javascript
 // equals
-if (100 eq 100) {
+if (100 is 100) {
     return true;
 } 
 
 // doesn't equal
-if (100 not 200) {
+if (100 is not 200) {
     return false;
 }
 
@@ -33,7 +33,7 @@ if (100 <= 200) {
 
 #### Operators:
 ```javascript
-let a = !true  // bang operator negates the value
+let a = not true  // bang operator negates the value
 
 TBA
 ```
