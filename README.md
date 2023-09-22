@@ -20,6 +20,14 @@ if (100 is not 200) {
     return false;
 }
 
+/* "not" keyword is interchangeable for !
+all of the below evaluate to true:
+
+   true is not !true
+   true is not not true
+   true is ! ! true
+*/
+
 // equal or greater than
 if (100 >= 200) {
     return false;
