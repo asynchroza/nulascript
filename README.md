@@ -4,10 +4,11 @@
 
 [![Build Nulascript REPL](https://github.com/asynchroza/nulascript/actions/workflows/build-repl.yaml/badge.svg)](https://github.com/asynchroza/nulascript/actions/workflows/build-repl.yaml)
 
-### How to test:
+### Commands:
 
-1. `make install-gtest` - pulls googletest locally
-2. `make run-tests` - links googletest, builds and runs the tests executable
+- `make install-gtest` - pulls googletest locally
+- `make run-tests` - links googletest, builds and runs the tests executable
+- `make run-repl` - builds and runs the REPL
 
 ### Syntax:
 #### Conditional Statements:
