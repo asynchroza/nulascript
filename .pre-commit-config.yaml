@@ -5,3 +5,7 @@ repos:
       - id: clang-format
         args: [--style=file]
 
+  - repo: https://github.com/mrtazz/checkmake.git
+    rev: 0.2.2
+    hooks:
+      - id: checkmake
