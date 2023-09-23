@@ -10,19 +10,5 @@ std::string Program::tokenLiteral() {
     return "";
 }
 
-class Identifier : public Expression {
-  public:
-    Token token;
-    std::string value;
-
-    std::string tokenLiteral() override { return token.literal; }
-};
-
-class LetStatement : public Statement {
-  public:
-    Token token;
-    Identifier *name;
-    Expression *value;
-
-    std::string tokenLiteral() override { return token.literal; }
-};
+std::string Identifier::tokenLiteral() { return token.literal; }
+std::string LetStatement::tokenLiteral() { return token.literal; }
