@@ -32,6 +32,7 @@ class Identifier : public Expression {
     Token token;
     std::string value;
 
+  public:
     std::string tokenLiteral() override;
 };
 
@@ -42,6 +43,7 @@ class LetStatement : public Statement {
     Identifier *name;
     Expression *value;
 
+  public:
     std::string tokenLiteral() override;
 };
 
