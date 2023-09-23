@@ -4,6 +4,9 @@
 
 [![Build Nulascript REPL](https://github.com/asynchroza/nulascript/actions/workflows/build-repl.yaml/badge.svg)](https://github.com/asynchroza/nulascript/actions/workflows/build-repl.yaml)
 
+## About the language:
+- Recursive descent parser (Pratt parser - "top down operator precedence")
+
 ### Commands:
 
 - `make install-gtest` - pulls googletest locally
