@@ -7,15 +7,15 @@
 
 class Parser {
   public:
-    Lexer *l;
+    Lexer* l;
 
     Token currentToken;
     Token peekToken;
 
   public:
-    Parser(Lexer *l);
+    Parser(Lexer* l);
     void getNextToken();
-    Program *parseProgram();
+    Program* parseProgram();
 };
 
 #endif
