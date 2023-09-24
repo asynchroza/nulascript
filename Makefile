@@ -14,7 +14,8 @@ test:
 
 .PHONY: run-tests
 run-tests:
-	cd ctests && cmake . && cmake --build . && ./tests --gtest_break_on_failure
+	cd ctests && cmake . && cmake --build . && ./tests 
+	# --gtest_break_on_failure
 
 .PHONY: run-repl
 run-repl:

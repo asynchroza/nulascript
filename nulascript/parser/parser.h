@@ -13,7 +13,7 @@ class Parser {
     Token peekToken;
 
   public:
-    Parser(Lexer* l);
+    Parser(Lexer& l);
     void getNextToken();
     Program* parseProgram();
 };

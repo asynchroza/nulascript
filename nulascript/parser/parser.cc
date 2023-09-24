@@ -5,11 +5,11 @@ void Parser::getNextToken() {
     peekToken = l->getNextToken();
 }
 
-Parser::Parser(Lexer *l) {
-    this->l = l;
+Parser::Parser(Lexer& l) {
+    this->l = &l;
 
     getNextToken();
     getNextToken();
 }
 
-Program *Parser::parseProgram() { return nullptr; }
+Program* Parser::parseProgram() { return nullptr; }

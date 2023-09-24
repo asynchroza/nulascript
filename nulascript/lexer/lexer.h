@@ -1,26 +1,28 @@
 #ifndef LEXER_H
 #define LEXER_H
 
-#include <string>
 #include "token.h"
+#include <string>
 
 class Lexer {
-public:
+  public:
+    // avoid copying large inputs
     Lexer(const std::string& input);
     Token getNextToken();
 
-private:
+  private:
     void readChar();
     std::string readExtendedToken(TokenType tokenType);
     void skipOverWhitespace();
     char peekNextChar();
     Token newToken(TokenType tokenType, char tokenLiteral);
     Token newToken(TokenType tokenType, const char* tokenLiteral);
-    Token handleComparisonOperators(char opChar, TokenType shortType, TokenType extendedType);
+    Token handleComparisonOperators(char opChar, TokenType shortType,
+                                    TokenType extendedType);
     bool isLetter(char ch);
     bool isDigit(char ch);
 
-private:
+  private:
     TokenLookup tokenLookup;
     std::string input;
     int pos;
