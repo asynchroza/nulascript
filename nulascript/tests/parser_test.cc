@@ -1,3 +1,4 @@
+#include "iostream"
 #include "lexer.h"
 #include "parser.h"
 #include "token.h"
@@ -47,14 +48,20 @@ TEST(ParserSuite, ParserTest) {
         FAIL() << "Parsing the program returns a null pointer";
     }
 
-    if (program->statements.size() != 2) {
-        FAIL() << "Parsed program doesn't match the number of input statements";
+    int expectedStatements = 2;
+    // std::cout << program->statements.at(0)->tokenLiteral();
+
+    if (program->statements.size() != expectedStatements) {
+        FAIL() << "Parsed program doesn't match the number of input "
+                  "statements: Got "
+               << program->statements.size() << ", Expected "
+               << expectedStatements;
     }
 
     std::vector<std::string> tests = {"one", "two"};
 
     for (int i = 0; i < tests.size(); i++) {
-        Statement* statement = &program->statements[i];
+        Statement* statement = program->statements[i];
         if (!testLetStatement(statement, tests[i])) {
             return;
         }

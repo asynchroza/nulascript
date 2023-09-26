@@ -15,7 +15,13 @@ class Parser {
   public:
     Parser(Lexer& l);
     void getNextToken();
+
     Program* parseProgram();
+    Statement* parseStatement();
+    LetStatement* parseLetStatement();
+    bool isEqualToCurrentTokenType(TokenType tokenType);
+    bool isEqualToPeekedTokenType(TokenType tokenType);
+    bool peekAndLoadExpectedToken(TokenType tokenType);
 };
 
 #endif

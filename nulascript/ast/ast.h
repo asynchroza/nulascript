@@ -22,7 +22,7 @@ class Expression : public Node {
 
 class Program : public Node {
   public:
-    std::vector<Statement> statements;
+    std::vector<Statement*> statements;
     std::string tokenLiteral() override;
 };
 
@@ -40,10 +40,11 @@ class Identifier : public Expression {
 class LetStatement : public Statement {
   public:
     Token token;
-    Identifier *name;
-    Expression *value;
+    Identifier* name;
+    Expression* value;
 
   public:
+    LetStatement(Token token);
     std::string tokenLiteral() override;
 };
 
