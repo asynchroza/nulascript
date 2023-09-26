@@ -8,33 +8,35 @@
 #define MULTILINE_STRING(s) #s
 
 bool testLetStatement(Statement* statement, std::string ident) {
-    if (LetStatement* castedStatement =
-            dynamic_cast<LetStatement*>(statement)) {
-        if (castedStatement->tokenLiteral() != "let") {
-            std::cout
-                << "Declaration statement is not using correct keyword: 'let'";
-            return false;
-        }
+    std::cout << "HERE" << std::endl;
+    // ! segfault when dynamically casting to LetStatement
+    LetStatement* castedStatement = dynamic_cast<LetStatement*>(statement);
 
-        if (castedStatement->name->value != ident) {
-            std::cout << "LetStatement doesn't have correct name->value " +
-                             ident + "; Got " + castedStatement->name->value +
-                             " instead.";
-            return false;
-        }
-
-        if (castedStatement->name->tokenLiteral() != ident) {
-            std::cout << "LetStatement name's token literal doesn't match " +
-                             ident + "; Got " +
-                             castedStatement->name->tokenLiteral() + ".";
-            return false;
-        }
-
-        return true;
+    if (!castedStatement) {
+        std::cout << "Object is not of type LetStatement";
+        return false;
     }
 
-    std::cout << "Did not receive LetStatement";
-    return false;
+    if (castedStatement->tokenLiteral() != "let") {
+        std::cout
+            << "Declaration statement is not using correct keyword: 'let'";
+        return false;
+    }
+
+    if (castedStatement->name->value != ident) {
+        std::cout << "LetStatement doesn't have correct name->value " + ident +
+                         "; Got " + castedStatement->name->value + " instead.";
+        return false;
+    }
+
+    if (castedStatement->name->tokenLiteral() != ident) {
+        std::cout << "LetStatement name's token literal doesn't match " +
+                         ident + "; Got " +
+                         castedStatement->name->tokenLiteral() + ".";
+        return false;
+    }
+
+    return true;
 }
 
 TEST(ParserSuite, ParserTest) {
@@ -63,7 +65,7 @@ TEST(ParserSuite, ParserTest) {
     for (int i = 0; i < tests.size(); i++) {
         Statement* statement = program->statements[i];
         if (!testLetStatement(statement, tests[i])) {
-            return;
+            FAIL();
         }
     }
 }

@@ -36,7 +36,7 @@ bool Parser::peekAndLoadExpectedToken(TokenType tokenType) {
 }
 
 LetStatement* Parser::parseLetStatement() {
-    auto statement = LetStatement(currentToken);
+    return new LetStatement(currentToken);
 }
 
 Statement* Parser::parseStatement() {
@@ -49,15 +49,17 @@ Statement* Parser::parseStatement() {
 }
 
 Program* Parser::parseProgram() {
-    auto program = Program();
+    auto program = new Program();
 
     while (currentToken.type != TokenType::EOF_TYPE) {
         Statement* statement = this->parseStatement();
 
         if (statement != nullptr) {
-            program.statements.push_back(statement);
+            program->statements.push_back(statement);
         }
 
         getNextToken();
     }
+
+    return program;
 }
