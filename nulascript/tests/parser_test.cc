@@ -8,8 +8,6 @@
 #define MULTILINE_STRING(s) #s
 
 bool testLetStatement(Statement* statement, std::string ident) {
-    std::cout << "HERE" << std::endl;
-    // ! segfault when dynamically casting to LetStatement
     LetStatement* castedStatement = dynamic_cast<LetStatement*>(statement);
 
     if (!castedStatement) {
@@ -46,12 +44,11 @@ TEST(ParserSuite, ParserTest) {
     Parser p(l);
     Program* program = p.parseProgram();
 
-    if (program == nullptr) {
+    if (!program) {
         FAIL() << "Parsing the program returns a null pointer";
     }
 
     int expectedStatements = 2;
-    // std::cout << program->statements.at(0)->tokenLiteral();
 
     if (program->statements.size() != expectedStatements) {
         FAIL() << "Parsed program doesn't match the number of input "
@@ -64,6 +61,12 @@ TEST(ParserSuite, ParserTest) {
 
     for (int i = 0; i < tests.size(); i++) {
         Statement* statement = program->statements[i];
+
+        // ! downcasting here works as expected
+        LetStatement* stmt = dynamic_cast<LetStatement*>(statement);
+
+        // ! but the downcasting results in a segfault when done in
+        // testLetStatement
         if (!testLetStatement(statement, tests[i])) {
             FAIL();
         }

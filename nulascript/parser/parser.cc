@@ -49,12 +49,12 @@ Statement* Parser::parseStatement() {
 }
 
 Program* Parser::parseProgram() {
-    auto program = new Program();
+    Program* program = new Program();
 
     while (currentToken.type != TokenType::EOF_TYPE) {
         Statement* statement = this->parseStatement();
 
-        if (statement != nullptr) {
+        if (statement) {
             program->statements.push_back(statement);
         }
 

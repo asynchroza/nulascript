@@ -4,7 +4,6 @@
 
 std::string Program::tokenLiteral() {
     if (!statements.empty()) {
-        // TODO: Look into using <stack>
         return statements.at(0)->tokenLiteral();
     }
 
