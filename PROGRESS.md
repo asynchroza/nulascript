@@ -10,3 +10,11 @@
 
 ## Sunday, September 24th - 2023
 * Added the first failing test case for identifying LetStatements
+
+## Tuesday, September 26th - 2023
+* Added peeking functionality in parser
+* Pinpointed segfault issue in tests
+
+## Wednesday, September 27th - 2023
+* Resolve segfault issue
+* Updated failure messages in tests to be more readable
