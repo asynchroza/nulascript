@@ -11,6 +11,7 @@ std::string Program::tokenLiteral() {
 }
 
 LetStatement::LetStatement(Token token) : token(token) {}
+Identifier::Identifier(Token token) : token(token) {}
 
 std::string Identifier::tokenLiteral() { return token.literal; }
 std::string LetStatement::tokenLiteral() { return token.literal; }

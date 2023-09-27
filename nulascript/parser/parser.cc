@@ -36,7 +36,24 @@ bool Parser::peekAndLoadExpectedToken(TokenType tokenType) {
 }
 
 LetStatement* Parser::parseLetStatement() {
-    return new LetStatement(currentToken);
+    LetStatement* letStatement = new LetStatement(currentToken);
+
+    if (!peekAndLoadExpectedToken(TokenType::IDENT)) {
+        return nullptr;
+    }
+
+    letStatement->name = new Identifier(currentToken);
+
+    if (!peekAndLoadExpectedToken(TokenType::ASSIGN)) {
+        return nullptr;
+    }
+
+    // TODO: Skip expressions
+    while (!isEqualToCurrentTokenType(TokenType::SEMICOLON)) {
+        getNextToken();
+    }
+
+    return letStatement;
 }
 
 Statement* Parser::parseStatement() {

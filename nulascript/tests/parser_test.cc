@@ -21,9 +21,10 @@ bool testLetStatement(Statement* statement, std::string ident) {
         return false;
     }
 
-    if (castedStatement->name->value != ident) {
+    if (castedStatement->name->token.literal != ident) {
         std::cout << "LetStatement doesn't have correct name->value " + ident +
-                         "; Got " + castedStatement->name->value + " instead.";
+                         "; Got " + castedStatement->name->token.literal +
+                         " instead.";
         return false;
     }
 
@@ -35,6 +36,10 @@ bool testLetStatement(Statement* statement, std::string ident) {
     }
 
     return true;
+}
+
+void testCasting(Statement* stmt) {
+    auto st = dynamic_cast<LetStatement*>(stmt);
 }
 
 TEST(ParserSuite, ParserTest) {
@@ -62,11 +67,6 @@ TEST(ParserSuite, ParserTest) {
     for (int i = 0; i < tests.size(); i++) {
         Statement* statement = program->statements[i];
 
-        // ! downcasting here works as expected
-        LetStatement* stmt = dynamic_cast<LetStatement*>(statement);
-
-        // ! but the downcasting results in a segfault when done in
-        // testLetStatement
         if (!testLetStatement(statement, tests[i])) {
             FAIL();
         }

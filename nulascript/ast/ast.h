@@ -30,9 +30,10 @@ class Program : public Node {
 class Identifier : public Expression {
   public:
     Token token;
-    std::string value;
+    // std::string value;
 
   public:
+    Identifier(Token token);
     std::string tokenLiteral() override;
 };
 

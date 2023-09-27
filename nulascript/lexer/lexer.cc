@@ -23,12 +23,12 @@ std::string Lexer::readExtendedToken(TokenType tokenType) {
     bool (Lexer::*isCharFunc)(char) = nullptr;
 
     switch (tokenType) {
-        case TokenType::INT:
-            isCharFunc = &Lexer::isDigit;
-            break;
-        case TokenType::IDENT:
-            isCharFunc = &Lexer::isLetter;
-            break;
+    case TokenType::INT:
+        isCharFunc = &Lexer::isDigit;
+        break;
+    case TokenType::IDENT:
+        isCharFunc = &Lexer::isLetter;
+        break;
     }
 
     while ((this->*isCharFunc)(ch)) {
@@ -45,6 +45,7 @@ void Lexer::skipOverWhitespace() {
 }
 
 char Lexer::peekNextChar() {
+    // ? is casting needed here
     if (readPos >= static_cast<int>(input.size())) {
         return 0; // EOF
     }
@@ -58,70 +59,73 @@ Token Lexer::getNextToken() {
     skipOverWhitespace();
 
     switch (ch) {
-        case '=':
-            currentToken = newToken(TokenType::ASSIGN, ch);
-            break;
-        case '+':
-            currentToken = newToken(TokenType::PLUS, ch);
-            break;
-        case '-':
-            currentToken = newToken(TokenType::MINUS, ch);
-            break;
-        case ',':
-            currentToken = newToken(TokenType::COMMA, ch);
-            break;
-        case ';':
-            currentToken = newToken(TokenType::SEMICOLON, ch);
-            break;
-        case '(':
-            currentToken = newToken(TokenType::LPAR, ch);
-            break;
-        case ')':
-            currentToken = newToken(TokenType::RPAR, ch);
-            break;
-        case '{':
-            currentToken = newToken(TokenType::LBRACE, ch);
-            break;
-        case '}':
-            currentToken = newToken(TokenType::RBRACE, ch);
-            break;
-        case '*':
-            currentToken = newToken(TokenType::ASTERISK, ch);
-            break;
-        case '&':
-            currentToken = newToken(TokenType::DEREF, ch);
-            break;
-        case '|':
-            currentToken = newToken(TokenType::PIPE, ch);
-            break;
-        case '!':
-            currentToken = newToken(TokenType::BANG_OR_NOT, ch);
-            break;
-        case '/':
-            currentToken = newToken(TokenType::SLASH, ch);
-            break;
-        case '<':
-            currentToken = handleComparisonOperators(ch, TokenType::LT, TokenType::LOE);
-            break;
-        case '>':
-            currentToken = handleComparisonOperators(ch, TokenType::GT, TokenType::GOE);
-            break;
-        case 0:
-            currentToken.literal = "";
-            currentToken.type = TokenType::EOF_TYPE;
-            break;
-        default:
-            if (isLetter(ch)) {
-                currentToken.literal = readExtendedToken(TokenType::IDENT);
-                currentToken.type = tokenLookup.lookupIdent(currentToken.literal);
-                return currentToken; // reading position and position are after the last character of the current identifier
-            } else if (isDigit(ch)) {
-                currentToken.type = TokenType::INT;
-                currentToken.literal = readExtendedToken(currentToken.type);
-                return currentToken;
-            } else {
-                currentToken = newToken(TokenType::ILLEGAL, ch);
-            }
+    case '=':
+        currentToken = newToken(TokenType::ASSIGN, ch);
+        break;
+    case '+':
+        currentToken = newToken(TokenType::PLUS, ch);
+        break;
+    case '-':
+        currentToken = newToken(TokenType::MINUS, ch);
+        break;
+    case ',':
+        currentToken = newToken(TokenType::COMMA, ch);
+        break;
+    case ';':
+        currentToken = newToken(TokenType::SEMICOLON, ch);
+        break;
+    case '(':
+        currentToken = newToken(TokenType::LPAR, ch);
+        break;
+    case ')':
+        currentToken = newToken(TokenType::RPAR, ch);
+        break;
+    case '{':
+        currentToken = newToken(TokenType::LBRACE, ch);
+        break;
+    case '}':
+        currentToken = newToken(TokenType::RBRACE, ch);
+        break;
+    case '*':
+        currentToken = newToken(TokenType::ASTERISK, ch);
+        break;
+    case '&':
+        currentToken = newToken(TokenType::DEREF, ch);
+        break;
+    case '|':
+        currentToken = newToken(TokenType::PIPE, ch);
+        break;
+    case '!':
+        currentToken = newToken(TokenType::BANG_OR_NOT, ch);
+        break;
+    case '/':
+        currentToken = newToken(TokenType::SLASH, ch);
+        break;
+    case '<':
+        currentToken =
+            handleComparisonOperators(ch, TokenType::LT, TokenType::LOE);
+        break;
+    case '>':
+        currentToken =
+            handleComparisonOperators(ch, TokenType::GT, TokenType::GOE);
+        break;
+    case 0:
+        currentToken.literal = "";
+        currentToken.type = TokenType::EOF_TYPE;
+        break;
+    default:
+        if (isLetter(ch)) {
+            currentToken.literal = readExtendedToken(TokenType::IDENT);
+            currentToken.type = tokenLookup.lookupIdent(currentToken.literal);
+            return currentToken; // reading position and position are after the
+                                 // last character of the current identifier
+        } else if (isDigit(ch)) {
+            currentToken.type = TokenType::INT;
+            currentToken.literal = readExtendedToken(currentToken.type);
+            return currentToken;
+        } else {
+            currentToken = newToken(TokenType::ILLEGAL, ch);
+        }
     }
 
     readChar();
@@ -140,12 +144,12 @@ bool Lexer::isLetter(char ch) {
     return ('a' <= ch && ch <= 'z') || ('A' <= ch && ch <= 'Z');
 }
 
-bool Lexer::isDigit(char ch) {
-    return ('0' <= ch && ch <= '9');
-}
+bool Lexer::isDigit(char ch) { return ('0' <= ch && ch <= '9'); }
 
-Token Lexer::handleComparisonOperators(char opChar, TokenType shortType, TokenType extendedType) {
-    // reduce branching by not conditionally checking and inferring the extended type
+Token Lexer::handleComparisonOperators(char opChar, TokenType shortType,
+                                       TokenType extendedType) {
+    // reduce branching by not conditionally checking and inferring the extended
+    // type
     if (peekNextChar() == '=') {
         char savedCh = ch;
         readChar();
