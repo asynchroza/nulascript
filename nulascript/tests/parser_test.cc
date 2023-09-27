@@ -11,27 +11,30 @@ bool testLetStatement(Statement* statement, std::string ident) {
     LetStatement* castedStatement = dynamic_cast<LetStatement*>(statement);
 
     if (!castedStatement) {
-        std::cout << "Object is not of type LetStatement";
+        std::cout << "Object is not of type LetStatement" << std::endl;
         return false;
     }
 
     if (castedStatement->tokenLiteral() != "let") {
-        std::cout
-            << "Declaration statement is not using correct keyword: 'let'";
+        std::cout << "Declaration statement is not using correct keyword: 'let'"
+                  << std::endl;
         return false;
     }
 
     if (castedStatement->name->token.literal != ident) {
-        std::cout << "LetStatement doesn't have correct name->value " + ident +
-                         "; Got " + castedStatement->name->token.literal +
-                         " instead.";
+        std::cout
+            << "LetStatement's identifier has incorrect literal: Expected " +
+                   ident + "; Got " + castedStatement->name->token.literal +
+                   " instead."
+            << std::endl;
         return false;
     }
 
     if (castedStatement->name->tokenLiteral() != ident) {
         std::cout << "LetStatement name's token literal doesn't match " +
                          ident + "; Got " +
-                         castedStatement->name->tokenLiteral() + ".";
+                         castedStatement->name->tokenLiteral() + "."
+                  << std::endl;
         return false;
     }
 
@@ -50,7 +53,7 @@ TEST(ParserSuite, ParserTest) {
     Program* program = p.parseProgram();
 
     if (!program) {
-        FAIL() << "Parsing the program returns a null pointer";
+        FAIL() << "Parsing the program returns a null pointer" << std::endl;
     }
 
     int expectedStatements = 2;
@@ -59,7 +62,7 @@ TEST(ParserSuite, ParserTest) {
         FAIL() << "Parsed program doesn't match the number of input "
                   "statements: Got "
                << program->statements.size() << ", Expected "
-               << expectedStatements;
+               << expectedStatements << std::endl;
     }
 
     std::vector<std::string> tests = {"one", "two"};
