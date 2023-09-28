@@ -46,7 +46,8 @@ void testCasting(Statement* stmt) {
 }
 
 TEST(ParserSuite, ParserTest) {
-    std::string input = MULTILINE_STRING(let one = 1; let two = 2;);
+    std::string input =
+        MULTILINE_STRING(let one = 1; let two = 2; let 123; let something 128;);
 
     Lexer l(input);
     Parser p(l);
@@ -74,4 +75,22 @@ TEST(ParserSuite, ParserTest) {
             FAIL();
         }
     }
+
+    std::vector<std::string> expectedErrors = {
+        "Expected token::type 2; Got token::type 3",
+        "Expected token::type 4; Got token::type 3"};
+    std::vector<std::string> actualErrors = p.getErrors();
+    bool shouldFail = false;
+
+    for (int i = 0; i < expectedErrors.size(); i++) {
+        if (actualErrors[i] != expectedErrors[i]) {
+            std::cout << "GOT - \"" << actualErrors[i] << "\"; EXPECTED - \""
+                      << expectedErrors[i] << "\"" << std::endl;
+            shouldFail = true;
+        }
+    }
+
+    // display all non-matching error messages before failing
+    if (shouldFail)
+        FAIL();
 }

@@ -6,11 +6,13 @@
 #include <token.h>
 
 class Parser {
-  public:
+  private:
     Lexer* l;
 
     Token currentToken;
     Token peekToken;
+
+    std::vector<std::string> errors;
 
   public:
     Parser(Lexer& l);
@@ -22,6 +24,12 @@ class Parser {
     bool isEqualToCurrentTokenType(TokenType tokenType);
     bool isEqualToPeekedTokenType(TokenType tokenType);
     bool peekAndLoadExpectedToken(TokenType tokenType);
+
+    std::vector<std::string> getErrors();
+    void appendError(std::string e);
+    void appendPeekError(TokenType token);
+
+  private:
 };
 
 #endif

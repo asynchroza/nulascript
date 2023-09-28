@@ -14,6 +14,16 @@ Parser::Parser(Lexer& l) {
     getNextToken();
 }
 
+std::vector<std::string> Parser::getErrors() { return errors; }
+
+void Parser::appendError(std::string e) { errors.push_back(e); }
+
+void Parser::appendPeekError(TokenType tokenType) {
+    std::string error = "Expected token::type " + std::to_string(tokenType) +
+                        "; Got token::type " + std::to_string(peekToken.type);
+    appendError(error);
+}
+
 bool Parser::isEqualToCurrentTokenType(TokenType tokenType) {
     return currentToken.type == tokenType;
 }
@@ -32,6 +42,7 @@ bool Parser::peekAndLoadExpectedToken(TokenType tokenType) {
         return true;
     }
 
+    appendPeekError(tokenType);
     return false;
 }
 
