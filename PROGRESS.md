@@ -18,3 +18,6 @@
 ## Wednesday, September 27th - 2023
 * Resolve segfault issue
 * Updated failure messages in tests to be more readable
+
+## Thursday, September 28th - 2023
+* Add better parser error messages
