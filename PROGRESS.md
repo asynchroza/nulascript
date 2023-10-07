@@ -21,3 +21,6 @@
 
 ## Thursday, September 28th - 2023
 * Add better parser error messages
+
+## Saturday, October 7th - 2023
+* Add return statement and test skeleton

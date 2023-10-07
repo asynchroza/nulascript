@@ -49,4 +49,14 @@ class LetStatement : public Statement {
     std::string tokenLiteral() override;
 };
 
+class ReturnStatement : public Statement {
+  public:
+    Token token;
+    Expression* returnValue;
+
+  public:
+    ReturnStatement(Token token, Expression* returnValue);
+    std::string tokenLiteral() override;
+};
+
 #endif

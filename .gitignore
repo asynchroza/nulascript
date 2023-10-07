@@ -2,6 +2,7 @@ googletest
 lib
 CMakeFiles
 bin
+build
 .vscode
 ctests/*
 !ctests/tests.cc
