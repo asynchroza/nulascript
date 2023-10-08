@@ -56,6 +56,8 @@ class ReturnStatement : public Statement {
 
   public:
     ReturnStatement(Token token, Expression* returnValue);
+    // ! this should be eventually removed
+    ReturnStatement(Token token);
     std::string tokenLiteral() override;
 };
 

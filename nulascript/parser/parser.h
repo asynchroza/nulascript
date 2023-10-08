@@ -21,6 +21,7 @@ class Parser {
     Program* parseProgram();
     Statement* parseStatement();
     LetStatement* parseLetStatement();
+    ReturnStatement* parseReturnStatement();
     bool isEqualToCurrentTokenType(TokenType tokenType);
     bool isEqualToPeekedTokenType(TokenType tokenType);
     bool peekAndLoadExpectedToken(TokenType tokenType);

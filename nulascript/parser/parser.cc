@@ -59,7 +59,7 @@ LetStatement* Parser::parseLetStatement() {
         return nullptr;
     }
 
-    // TODO: Skip expressions
+    // TODO: -> It's skipping all expressions now
     while (!isEqualToCurrentTokenType(TokenType::SEMICOLON)) {
         getNextToken();
     }
@@ -67,10 +67,25 @@ LetStatement* Parser::parseLetStatement() {
     return letStatement;
 }
 
+ReturnStatement* Parser::parseReturnStatement() {
+    ReturnStatement* returnStatement = new ReturnStatement(currentToken);
+
+    getNextToken();
+
+    // TODO: -> It's skipping all expressions now
+    while (!isEqualToCurrentTokenType(TokenType::SEMICOLON)) {
+        getNextToken();
+    }
+
+    return returnStatement;
+}
+
 Statement* Parser::parseStatement() {
     switch (currentToken.type) {
     case TokenType::LET:
         return parseLetStatement();
+    case TokenType::RETURN:
+        return parseReturnStatement();
     default:
         return nullptr;
     }

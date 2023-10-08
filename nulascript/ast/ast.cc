@@ -14,6 +14,7 @@ LetStatement::LetStatement(Token token) : token(token) {}
 Identifier::Identifier(Token token) : token(token) {}
 ReturnStatement::ReturnStatement(Token token, Expression* returnValue)
     : token(token), returnValue(returnValue) {}
+ReturnStatement::ReturnStatement(Token token) : token(token) {}
 
 std::string Identifier::tokenLiteral() { return token.literal; }
 std::string LetStatement::tokenLiteral() { return token.literal; }
