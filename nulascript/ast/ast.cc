@@ -33,7 +33,8 @@ std::string LetStatement::toString() {
         representation += value->toString();
     }
 
-    return "";
+    representation += ";";
+    return representation;
 }
 
 // Identifier
@@ -41,10 +42,38 @@ Identifier::Identifier(Token token) : token(token) {}
 
 std::string Identifier::tokenLiteral() { return token.literal; }
 
-std::string ReturnStatement::tokenLiteral() { return token.literal; }
+std::string Identifier::toString() { return value; }
 
 // ReturnStatement
 ReturnStatement::ReturnStatement(Token token) : token(token) {}
 
 ReturnStatement::ReturnStatement(Token token, Expression* returnValue)
     : token(token), returnValue(returnValue) {}
+
+std::string ReturnStatement::tokenLiteral() { return token.literal; }
+
+std::string ReturnStatement::toString() {
+    std::string representation = "";
+
+    representation += tokenLiteral() + " ";
+
+    if (returnValue) {
+        representation += returnValue->toString();
+    }
+
+    representation += ";";
+    return representation;
+}
+
+// ExpressionStatement
+ExpressionStatement::ExpressionStatement(Token token) : token(token){};
+
+std::string ExpressionStatement::tokenLiteral() { return ""; }
+
+std::string ExpressionStatement::toString() {
+    if (expression) {
+        return expression->toString();
+    }
+
+    return "";
+}

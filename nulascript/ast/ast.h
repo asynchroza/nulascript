@@ -32,11 +32,12 @@ class Program : public Node {
 class Identifier : public Expression {
   public:
     Token token;
-    // std::string value;
+    std::string value;
 
   public:
     Identifier(Token token);
     std::string tokenLiteral() override;
+    std::string toString() override;
 };
 
 // ? should statementNode be virtual and overriden in child statements?
@@ -62,6 +63,7 @@ class ReturnStatement : public Statement {
     // ! this should be eventually removed
     ReturnStatement(Token token);
     std::string tokenLiteral() override;
+    std::string toString() override;
 };
 
 class ExpressionStatement : public Statement {
@@ -70,7 +72,10 @@ class ExpressionStatement : public Statement {
     Expression* expression;
 
   public:
+    ExpressionStatement(Token token);
+    // ExpressionStatement(Token token, Expression* expression)
     std::string tokenLiteral() override;
+    std::string toString() override;
 };
 
 #endif
