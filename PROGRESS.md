@@ -24,3 +24,6 @@
 
 ## Saturday, October 7th - 2023
 * Add return statement and test skeleton
+
+## Saturday, October 8th - 2023
+* Implement return statement parsing
