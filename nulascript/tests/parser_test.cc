@@ -161,3 +161,20 @@ TEST(ParserSuite, TestReturnStatement) {
         }
     }
 }
+
+TEST(ParserSuite, TestAstToString) {
+    // clang-format off
+    std::string input = MULTILINE_STRING(
+        let a = 5;
+        return a;
+    );
+
+    std::string expectedResult = "let  = ;\nreturn ;\n";
+    // clang-format on
+
+    Lexer l(input);
+    Parser p(l);
+    Program* program = p.parseProgram();
+
+    ASSERT_EQ(program->toString(), expectedResult);
+}
