@@ -2,7 +2,8 @@ name: Build Nulascript REPL
 on: 
   push:
     paths:
-      - 'nulascript/**'
+      - 'nulascript/lexer/**'
+      - 'nulascript/token/**'
 jobs:
   build:
     runs-on: ubuntu-latest

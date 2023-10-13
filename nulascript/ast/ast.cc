@@ -1,4 +1,5 @@
 #include <ast.h>
+#include <iostream>
 #include <string>
 #include <token.h>
 
@@ -21,7 +22,8 @@ std::string Program::toString() {
 }
 
 // LetStatement
-LetStatement::LetStatement(Token token) : token(token) {}
+LetStatement::LetStatement(Token token)
+    : token(token), name(nullptr), value(nullptr) {}
 
 std::string LetStatement::tokenLiteral() { return token.literal; }
 
@@ -30,6 +32,7 @@ std::string LetStatement::toString() {
     representation += tokenLiteral() + " " + name->toString() + " = ";
 
     if (value) {
+        std::cout << "[DEBUG] LetStatement Value is not NULL_PTR" << std::endl;
         representation += value->toString();
     }
 
@@ -38,14 +41,15 @@ std::string LetStatement::toString() {
 }
 
 // Identifier
-Identifier::Identifier(Token token) : token(token) {}
+Identifier::Identifier(Token token) : token(token), value(token.literal) {}
 
 std::string Identifier::tokenLiteral() { return token.literal; }
 
 std::string Identifier::toString() { return value; }
 
 // ReturnStatement
-ReturnStatement::ReturnStatement(Token token) : token(token) {}
+ReturnStatement::ReturnStatement(Token token)
+    : token(token), returnValue(nullptr) {}
 
 ReturnStatement::ReturnStatement(Token token, Expression* returnValue)
     : token(token), returnValue(returnValue) {}
@@ -54,10 +58,11 @@ std::string ReturnStatement::tokenLiteral() { return token.literal; }
 
 std::string ReturnStatement::toString() {
     std::string representation = "";
-
     representation += tokenLiteral() + " ";
 
     if (returnValue) {
+        std::cout << "[DEBUG] ReturnStatement returnValue is not NULL_PTR"
+                  << std::endl;
         representation += returnValue->toString();
     }
 

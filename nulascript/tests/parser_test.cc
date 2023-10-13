@@ -169,7 +169,7 @@ TEST(ParserSuite, TestAstToString) {
         return a;
     );
 
-    std::string expectedResult = "let  = ;\nreturn ;\n";
+    std::string expectedResult = "let a = ;\nreturn ;\n";
     // clang-format on
 
     Lexer l(input);

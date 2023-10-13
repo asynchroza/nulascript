@@ -68,7 +68,8 @@ LetStatement* Parser::parseLetStatement() {
 }
 
 ReturnStatement* Parser::parseReturnStatement() {
-    ReturnStatement* returnStatement = new ReturnStatement(currentToken);
+    ReturnStatement* returnStatement =
+        new ReturnStatement(currentToken, nullptr);
 
     getNextToken();
 
