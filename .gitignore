@@ -10,3 +10,4 @@ ctests/*
 nulascript/repl/build/*
 !nulascript/repl/build/CMakeLists.txt
 !nulascript/repl/build/main.cc
+~$thesis.docx
