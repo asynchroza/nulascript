@@ -7,7 +7,7 @@ Lexer::Lexer(const std::string& input)
 }
 
 void Lexer::readChar() {
-    if (readPos >= static_cast<int>(input.size())) {
+    if (readPos >= input.size()) {
         ch = 0; // EOF
     } else {
         ch = input[readPos];
