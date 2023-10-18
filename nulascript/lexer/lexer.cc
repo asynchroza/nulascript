@@ -45,8 +45,7 @@ void Lexer::skipOverWhitespace() {
 }
 
 char Lexer::peekNextChar() {
-    // ? is casting needed here
-    if (readPos >= static_cast<int>(input.size())) {
+    if (readPos >= input.size()) {
         return 0; // EOF
     }
 
