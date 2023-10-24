@@ -44,6 +44,17 @@ class Identifier : public Expression {
     std::string toString() override;
 };
 
+class Integer : public Expression {
+  public:
+    Token token;
+    int64_t value;
+
+  public:
+    Integer(Token token);
+    std::string tokenLiteral() override;
+    std::string toString() override;
+};
+
 // ? should statementNode be virtual and overriden in child statements?
 class LetStatement : public Statement {
   public:

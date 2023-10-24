@@ -2,8 +2,6 @@
 #include <parser.h>
 #include <token.h>
 
-Identifier* Parser::parseIdentifier() { return new Identifier(currentToken); }
-
 void Parser::getNextToken() {
     currentToken = peekToken;
     peekToken = l->getNextToken();
@@ -95,6 +93,8 @@ Parser::Parser(Lexer& l) {
 
     registerPrefixFunction(TokenType::IDENT,
                            [&]() -> Expression* { return parseIdentifier(); });
+    registerPrefixFunction(TokenType::INT,
+                           [&]() -> Expression* { return parseInteger(); });
 }
 
 ExpressionStatement* Parser::parseExpressionStatement() {
@@ -144,4 +144,18 @@ void Parser::registerPrefixFunction(TokenType tokenType,
 void Parser::registerInfixFunction(TokenType tokenType,
                                    ParseInfixFunction parseInfixFunction) {
     infixParsingFunctions[tokenType] = parseInfixFunction;
+}
+
+Identifier* Parser::parseIdentifier() { return new Identifier(currentToken); }
+
+Integer* Parser::parseInteger() {
+    try {
+        int64_t literal = stoi(currentToken.literal);
+        auto lit = new Integer(currentToken);
+        lit->value = literal;
+        return lit;
+    } catch (...) {
+        appendError("Couldn't parse literal to integer");
+        return nullptr;
+    }
 }

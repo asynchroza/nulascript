@@ -212,3 +212,37 @@ TEST(ParserSuite, TestIdentifierExpression) {
         FAIL() << "Identifier has an incorrect token literal";
     }
 }
+
+TEST(ParserSuite, TestIntegerLiteralExpression) {
+    std::string input = "10;";
+
+    Lexer l(input);
+    Parser p(l);
+    Program* program = p.parseProgram();
+
+    if (program->statements.size() != 1) {
+        FAIL() << "Program got " << program->statements.size()
+               << " statements instead of 1";
+    }
+
+    if (!isCastableToDerivative(program->statements[0],
+                                typeid(ExpressionStatement))) {
+        FAIL() << "Statement is not of type ExpressionStatement";
+    }
+
+    if (!isCastableToDerivative(program->statements[0], typeid(Integer))) {
+        FAIL() << "Statement is not of type IntegerLiteral";
+    }
+
+    auto expression =
+        dynamic_cast<ExpressionStatement*>(program->statements[0]);
+    auto literal = dynamic_cast<Integer*>(expression->expression);
+
+    if (literal->value != 10) {
+        FAIL() << "IntegerLiteral has an incorrect value";
+    }
+
+    if (literal->tokenLiteral() != "10") {
+        FAIL() << "IntegerLiteral has an incorrect token literal";
+    }
+}

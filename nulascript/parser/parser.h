@@ -44,6 +44,7 @@ class Parser {
     LetStatement* parseLetStatement();
     ReturnStatement* parseReturnStatement();
     ExpressionStatement* parseExpressionStatement();
+    Integer* parseInteger();
     Identifier* parseIdentifier();
     bool isEqualToCurrentTokenType(TokenType tokenType);
     bool isEqualToPeekedTokenType(TokenType tokenType);

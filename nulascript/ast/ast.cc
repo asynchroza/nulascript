@@ -48,6 +48,12 @@ std::string Identifier::tokenLiteral() { return token.literal; }
 
 std::string Identifier::toString() { return value; }
 
+// Integer
+Integer::Integer(Token token) : token(token), value(stoi(token.literal)) {}
+
+std::string Integer::tokenLiteral() { return token.literal; }
+std::string Integer::toString() { return token.literal; }
+
 // ReturnStatement
 ReturnStatement::ReturnStatement(Token token)
     : token(token), returnValue(nullptr) {}
