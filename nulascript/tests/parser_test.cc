@@ -178,3 +178,35 @@ TEST(ParserSuite, TestAstToString) {
 
     ASSERT_EQ(program->toString(), expectedResult);
 }
+
+TEST(ParserSuite, TestIdentifierExpression) {
+    std::string input = "someIdentifier";
+
+    Lexer l(input);
+    Parser p(l);
+    Program* program = p.parseProgram();
+
+    if (program->statements.size() != 1) {
+        FAIL() << "Program got " << program->statements.size()
+               << " statements instead of 1";
+    }
+
+    if (!isCastableToDerivative(program->statements[0],
+                                typeid(ExpressionStatement))) {
+        FAIL() << "Statement is not of type ExpressionStatement";
+    }
+
+    if (!isCastableToDerivative(program->statements[0], typeid(Identifier))) {
+        FAIL() << "Statement is not of type Identifier";
+    }
+
+    auto ident = dynamic_cast<Identifier*>(program->statements[0]);
+
+    if (ident->value != input) {
+        FAIL() << "Identifier has an incorrect value";
+    }
+
+    if (ident->tokenLiteral() != input) {
+        FAIL() << "Identifier has an incorrect token literal";
+    }
+}

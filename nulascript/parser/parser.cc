@@ -106,3 +106,14 @@ Program* Parser::parseProgram() {
 
     return program;
 }
+
+// ! not explained in thesis
+void Parser::registerPrefixFunction(TokenType tokenType,
+                                    ParsePrefixFunction parsePrefixFunction) {
+    prefixParsingFunctions[tokenType] = parsePrefixFunction;
+}
+
+void Parser::registerInfixFunction(TokenType tokenType,
+                                   ParseInfixFunction parseInfixFunction) {
+    infixParsingFunctions[tokenType] = parseInfixFunction;
+}
