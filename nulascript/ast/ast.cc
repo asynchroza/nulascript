@@ -54,6 +54,12 @@ Integer::Integer(Token token) : token(token), value(stoi(token.literal)) {}
 std::string Integer::tokenLiteral() { return token.literal; }
 std::string Integer::toString() { return token.literal; }
 
+// Prefix
+Prefix::Prefix(Token token, Expression* expression)
+    : token(token), right(expression), op(token.literal) {}
+std::string Prefix::tokenLiteral() { return token.literal; }
+std::string Prefix::toString() { return op + right->toString(); }
+
 // ReturnStatement
 ReturnStatement::ReturnStatement(Token token)
     : token(token), returnValue(nullptr) {}

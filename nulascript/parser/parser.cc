@@ -77,6 +77,8 @@ Expression* Parser::parseExpression(Precedence p) {
     auto it = prefixParsingFunctions.find(currentToken.type);
 
     if (it == prefixParsingFunctions.end()) {
+        appendError("No parsing function was found for prefix of type: " +
+                    std::to_string(currentToken.type));
         return nullptr;
     }
 

@@ -246,3 +246,64 @@ TEST(ParserSuite, TestIntegerLiteralExpression) {
         FAIL() << "IntegerLiteral has an incorrect token literal";
     }
 }
+
+TEST(ParserSuite, TestPrefixOperator) {
+    union ValueUnion {
+        int64_t* integerValue;
+        std::string* stringValue;
+    };
+
+    struct PrefixTest {
+        std::string input;
+        std::string op;
+        ValueUnion vU;
+    };
+
+    ValueUnion stringVU;
+    ValueUnion integerVU;
+    integerVU.integerValue = new int64_t(69);
+    integerVU.stringValue = nullptr;
+    stringVU.stringValue = new std::string("something");
+    stringVU.integerValue = nullptr;
+
+    std::vector<PrefixTest> prefixTests = {
+        {"!something;", "!", stringVU},
+        {"-69;", "-", integerVU},
+    };
+
+    for (const PrefixTest& t_case : prefixTests) {
+        Lexer l(t_case.input);
+        Parser p(l);
+        Program* program = p.parseProgram();
+
+        if (p.getErrors().size() != 0) {
+            logParserErrors(p.getErrors());
+
+            FAIL();
+        }
+
+        ASSERT_EQ(program->statements.size(), 1)
+            << "program.Statements does not contain 1 statement. got="
+            << program->statements.size();
+
+        ExpressionStatement* statement =
+            dynamic_cast<ExpressionStatement*>(program->statements[0]);
+
+        if (!statement) {
+            FAIL() << "program->statements[0] is not ExpressionStatement. got="
+                   << typeid(program->statements[0]).name();
+        }
+
+        Prefix* expression = dynamic_cast<Prefix*>(statement->expression);
+        if (!expression) {
+            FAIL() << "statement is not Prefix. got="
+                   << typeid(statement->expression).name();
+        }
+
+        ASSERT_EQ(expression->op, t_case.op)
+            << "expression->operator is not '" << t_case.op
+            << "'. got=" << expression->op;
+
+        // ASSERT_EQ()
+    }
+}
