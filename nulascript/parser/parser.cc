@@ -97,6 +97,10 @@ Parser::Parser(Lexer& l) {
                            [&]() -> Expression* { return parseIdentifier(); });
     registerPrefixFunction(TokenType::INT,
                            [&]() -> Expression* { return parseInteger(); });
+    registerPrefixFunction(TokenType::BANG_OR_NOT,
+                           [&]() -> Expression* { return parsePrefix(); });
+    registerPrefixFunction(TokenType::MINUS,
+                           [&]() -> Expression* { return parsePrefix(); });
 }
 
 ExpressionStatement* Parser::parseExpressionStatement() {
@@ -160,4 +164,14 @@ Integer* Parser::parseInteger() {
         appendError("Couldn't parse literal to integer");
         return nullptr;
     }
+}
+
+// "!something" where ! is the Prefix expression and something is the right
+// expression
+Prefix* Parser::parsePrefix() {
+    Prefix* expression = new Prefix(currentToken);
+    getNextToken();
+    expression->right = parseExpression(Precedence::PREFIX);
+
+    return expression;
 }

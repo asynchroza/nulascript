@@ -57,6 +57,7 @@ std::string Integer::toString() { return token.literal; }
 // Prefix
 Prefix::Prefix(Token token, Expression* expression)
     : token(token), right(expression), op(token.literal) {}
+Prefix::Prefix(Token token) : token(token), op(token.literal) {}
 std::string Prefix::tokenLiteral() { return token.literal; }
 std::string Prefix::toString() { return op + right->toString(); }
 

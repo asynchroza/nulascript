@@ -256,19 +256,12 @@ TEST(ParserSuite, TestPrefixOperator) {
     struct PrefixTest {
         std::string input;
         std::string op;
-        ValueUnion vU;
+        std::string literal;
     };
 
-    ValueUnion stringVU;
-    ValueUnion integerVU;
-    integerVU.integerValue = new int64_t(69);
-    integerVU.stringValue = nullptr;
-    stringVU.stringValue = new std::string("something");
-    stringVU.integerValue = nullptr;
-
     std::vector<PrefixTest> prefixTests = {
-        {"!something;", "!", stringVU},
-        {"-69;", "-", integerVU},
+        {"-69;", "-", "69"},
+        {"!something;", "!", "something"},
     };
 
     for (const PrefixTest& t_case : prefixTests) {
@@ -304,6 +297,8 @@ TEST(ParserSuite, TestPrefixOperator) {
             << "expression->operator is not '" << t_case.op
             << "'. got=" << expression->op;
 
-        // ASSERT_EQ()
+        ASSERT_EQ(expression->right->tokenLiteral(), t_case.literal)
+            << "expression->right->tokenLiteral() is not '" << t_case.literal
+            << "', got=" << expression->right->tokenLiteral();
     }
 }

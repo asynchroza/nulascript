@@ -63,6 +63,7 @@ class Prefix : public Expression {
 
   public:
     Prefix(Token token, Expression* expression);
+    Prefix(Token token);
     std::string tokenLiteral() override;
     std::string toString() override;
 };
