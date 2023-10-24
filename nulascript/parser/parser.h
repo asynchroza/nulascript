@@ -7,9 +7,19 @@
 #include <map>
 #include <token.h>
 
+enum class Precedence {
+    LOWEST,
+    EQUALS,
+    LESSGREATER,
+    SUM,
+    PRODUCT,
+    PREFIX,
+    CALL
+};
+
 // ! this is not explained in thesis
 // ? should this be Expression or ExpressionStatement
-using ParsePrefixFunction = std::function<ExpressionStatement()>;
+using ParsePrefixFunction = std::function<Expression*()>;
 using ParseInfixFunction =
     std::function<ExpressionStatement(ExpressionStatement)>;
 
@@ -30,8 +40,11 @@ class Parser {
 
     Program* parseProgram();
     Statement* parseStatement();
+    Expression* parseExpression(Precedence p);
     LetStatement* parseLetStatement();
     ReturnStatement* parseReturnStatement();
+    ExpressionStatement* parseExpressionStatement();
+    Identifier* parseIdentifier();
     bool isEqualToCurrentTokenType(TokenType tokenType);
     bool isEqualToPeekedTokenType(TokenType tokenType);
     bool peekAndLoadExpectedToken(TokenType tokenType);

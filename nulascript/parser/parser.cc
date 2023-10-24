@@ -2,6 +2,8 @@
 #include <parser.h>
 #include <token.h>
 
+Identifier* Parser::parseIdentifier() { return new Identifier(currentToken); }
+
 void Parser::getNextToken() {
     currentToken = peekToken;
     peekToken = l->getNextToken();
@@ -12,6 +14,9 @@ Parser::Parser(Lexer& l) {
 
     getNextToken();
     getNextToken();
+
+    registerPrefixFunction(TokenType::IDENT,
+                           [&]() -> Expression* { return parseIdentifier(); });
 }
 
 std::vector<std::string> Parser::getErrors() { return errors; }
@@ -80,6 +85,29 @@ ReturnStatement* Parser::parseReturnStatement() {
     return returnStatement;
 }
 
+Expression* Parser::parseExpression(Precedence p) {
+    auto it = prefixParsingFunctions.find(currentToken.type);
+
+    if (it == prefixParsingFunctions.end()) {
+        return nullptr;
+    }
+
+    // for clarity
+    auto leftExpression = it->second();
+    return leftExpression;
+}
+
+ExpressionStatement* Parser::parseExpressionStatement() {
+    auto statement = new ExpressionStatement(currentToken);
+
+    statement->expression = parseExpression(Precedence::LOWEST);
+    if (isEqualToPeekedTokenType(TokenType::SEMICOLON)) {
+        getNextToken();
+    }
+
+    return statement;
+}
+
 Statement* Parser::parseStatement() {
     switch (currentToken.type) {
     case TokenType::LET:
@@ -87,7 +115,7 @@ Statement* Parser::parseStatement() {
     case TokenType::RETURN:
         return parseReturnStatement();
     default:
-        return nullptr;
+        return parseExpressionStatement();
     }
 }
 

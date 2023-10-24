@@ -19,6 +19,10 @@ class Statement : public Node {
 class Expression : public Node {
   public:
     void expressionNode();
+
+    // ! temp placeholders
+    std::string tokenLiteral() override { return ""; }
+    std::string toString() override { return ""; }
 };
 
 class Program : public Node {

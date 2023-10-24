@@ -84,7 +84,7 @@ TEST(ParserSuite, TestLetStatement) {
         FAIL() << "Parsing the program returns a null pointer" << std::endl;
     }
 
-    const int expectedStatements = 2;
+    const int expectedStatements = 4;
 
     if (program->statements.size() != expectedStatements) {
         FAIL() << "Parsed program doesn't match the number of input "
@@ -200,13 +200,15 @@ TEST(ParserSuite, TestIdentifierExpression) {
         FAIL() << "Statement is not of type Identifier";
     }
 
-    auto ident = dynamic_cast<Identifier*>(program->statements[0]);
+    auto expression =
+        dynamic_cast<ExpressionStatement*>(program->statements[0]);
+    auto identifier = dynamic_cast<Identifier*>(expression->expression);
 
-    if (ident->value != input) {
+    if (identifier->value != input) {
         FAIL() << "Identifier has an incorrect value";
     }
 
-    if (ident->tokenLiteral() != input) {
+    if (identifier->tokenLiteral() != input) {
         FAIL() << "Identifier has an incorrect token literal";
     }
 }
