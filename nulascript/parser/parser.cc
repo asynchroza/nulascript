@@ -9,16 +9,6 @@ void Parser::getNextToken() {
     peekToken = l->getNextToken();
 }
 
-Parser::Parser(Lexer& l) {
-    this->l = &l;
-
-    getNextToken();
-    getNextToken();
-
-    registerPrefixFunction(TokenType::IDENT,
-                           [&]() -> Expression* { return parseIdentifier(); });
-}
-
 std::vector<std::string> Parser::getErrors() { return errors; }
 
 void Parser::appendError(std::string e) { errors.push_back(e); }
@@ -95,6 +85,16 @@ Expression* Parser::parseExpression(Precedence p) {
     // for clarity
     auto leftExpression = it->second();
     return leftExpression;
+}
+
+Parser::Parser(Lexer& l) {
+    this->l = &l;
+
+    getNextToken();
+    getNextToken();
+
+    registerPrefixFunction(TokenType::IDENT,
+                           [&]() -> Expression* { return parseIdentifier(); });
 }
 
 ExpressionStatement* Parser::parseExpressionStatement() {
