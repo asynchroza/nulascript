@@ -84,6 +84,19 @@ Expression* Parser::parseExpression(Precedence p) {
 
     // for clarity
     auto leftExpression = it->second();
+
+    while (!isEqualToPeekedTokenType(TokenType::SEMICOLON) &&
+           p < checkPeekPrecedence()) {
+        auto infix_it = infixParsingFunctions.find(peekToken.type);
+
+        if (infix_it == infixParsingFunctions.end()) {
+            return leftExpression;
+        }
+
+        getNextToken();
+        leftExpression = infix_it->second(leftExpression);
+    }
+
     return leftExpression;
 }
 
@@ -134,7 +147,43 @@ Parser::Parser(Lexer& l) {
                            [&]() -> Expression* { return parsePrefix(); });
     registerInfixFunction(
         TokenType::MINUS,
-        [&](Expression* left) -> Expression* { return parsePrefix(left); });
+        [&](Expression* left) -> Expression* { return parseInfix(left); });
+
+    registerInfixFunction(
+        TokenType::PLUS,
+        [&](Expression* left) -> Expression* { return parseInfix(left); });
+
+    registerInfixFunction(
+        TokenType::SLASH,
+        [&](Expression* left) -> Expression* { return parseInfix(left); });
+
+    registerInfixFunction(
+        TokenType::ASTERISK,
+        [&](Expression* left) -> Expression* { return parseInfix(left); });
+
+    registerInfixFunction(TokenType::IS, [&](Expression* left) -> Expression* {
+        return parseInfix(left);
+    });
+
+    registerInfixFunction(
+        TokenType::IS_NOT,
+        [&](Expression* left) -> Expression* { return parseInfix(left); });
+
+    registerInfixFunction(TokenType::LT, [&](Expression* left) -> Expression* {
+        return parseInfix(left);
+    });
+
+    registerInfixFunction(TokenType::GT, [&](Expression* left) -> Expression* {
+        return parseInfix(left);
+    });
+
+    registerInfixFunction(TokenType::GOE, [&](Expression* left) -> Expression* {
+        return parseInfix(left);
+    });
+
+    registerInfixFunction(TokenType::LOE, [&](Expression* left) -> Expression* {
+        return parseInfix(left);
+    });
 }
 
 ExpressionStatement* Parser::parseExpressionStatement() {
@@ -210,4 +259,12 @@ Prefix* Parser::parsePrefix() {
     return expression;
 }
 
-Infix* Parser::parseInfix() { Infix* expression = new Infix(currentToken); }
+Infix* Parser::parseInfix(Expression* left) {
+    Infix* expression = new Infix(currentToken, left);
+
+    auto right = checkCurrentPrecedence();
+    getNextToken();
+    expression->right = parseExpression(right);
+
+    return expression;
+}

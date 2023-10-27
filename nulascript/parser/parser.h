@@ -48,7 +48,7 @@ class Parser {
     Integer* parseInteger();
     Identifier* parseIdentifier();
     Prefix* parsePrefix();
-    Infix* parseInfix();
+    Infix* parseInfix(Expression* left);
     bool isEqualToCurrentTokenType(TokenType tokenType);
     bool isEqualToPeekedTokenType(TokenType tokenType);
     bool peekAndLoadExpectedToken(TokenType tokenType);

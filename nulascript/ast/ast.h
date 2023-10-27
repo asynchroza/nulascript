@@ -77,6 +77,7 @@ class Infix : public Expression {
 
   public:
     Infix(Token token, Expression* left, Expression* right);
+    Infix(Token token, Expression* left);
     Infix(Token token);
     std::string tokenLiteral() override;
     std::string toString() override;

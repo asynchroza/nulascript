@@ -64,6 +64,7 @@ std::string Prefix::toString() { return op + right->toString(); }
 // Infix
 Infix::Infix(Token token, Expression* left, Expression* right)
     : token(token), left(left), right(right), op(token.literal){};
+Infix::Infix(Token token, Expression* left) : token(token), left(left){};
 Infix::Infix(Token token) : token(token), op(token.literal){};
 std::string Infix::tokenLiteral() { return token.literal; }
 std::string Infix::toString() {
