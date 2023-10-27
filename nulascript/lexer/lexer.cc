@@ -151,8 +151,6 @@ Token Lexer::getNextToken() {
     default:
         if (isLetter(ch)) {
             currentToken.literal = readExtendedToken(TokenType::IDENT);
-            std::cout << "HERE" << std::endl;
-            std::cout << currentToken.literal << std::endl;
             if (currentToken.literal == "is not") {
                 return newToken(TokenType::IS_NOT, "is not");
             }
