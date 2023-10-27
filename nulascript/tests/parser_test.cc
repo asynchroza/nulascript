@@ -4,10 +4,20 @@
 #include "token.h"
 #include "vector"
 #include "gtest/gtest.h"
+#include <string>
 
 #define MULTILINE_STRING(s) #s
 
 // utility functions
+
+bool isNumber(std::string str) {
+    try {
+        std::stoi(str);
+        return true;
+    } catch (...) {
+        return false;
+    }
+}
 
 bool isCastableToDerivative(Statement* stmt, const std::type_info& type) {
     Statement* st;
@@ -343,12 +353,24 @@ TEST(ParserSuite, TestInfixOperator) {
                    << typeid(statement->expression).name();
         }
 
-        // ASSERT_EQ(expression->op, t_case.op)
-        //     << "expression->operator is not '" << t_case.op
-        //     << "'. got=" << expression->op;
+        ASSERT_EQ(expression->op, t_case.op)
+            << "expression->operator is not '" << t_case.op
+            << "'. got=" << expression->op;
 
-        // ASSERT_EQ(expression->right->tokenLiteral(), t_case.literal)
-        //     << "expression->right->tokenLiteral() is not '" << t_case.literal
-        //     << "', got=" << expression->right->tokenLiteral();
+        ASSERT_EQ(expression->right->tokenLiteral(),
+                  std::to_string(t_case.rightVal))
+            << "expression->right->tokenLiteral() is not '" << t_case.rightVal
+            << "', got=" << expression->right->tokenLiteral();
+
+        ASSERT_EQ(isNumber(expression->right->tokenLiteral()), true)
+            << "Right expression value is not number";
+
+        ASSERT_EQ(expression->left->tokenLiteral(),
+                  std::to_string(t_case.leftVal))
+            << "expression->right->tokenLiteral() is not '" << t_case.leftVal
+            << "', got=" << expression->left->tokenLiteral();
+
+        ASSERT_EQ(isNumber(expression->left->tokenLiteral()), true)
+            << "Left expression value is not number";
     }
 }
