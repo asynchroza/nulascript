@@ -262,7 +262,7 @@ TEST(ParserSuite, TestPrefixOperator) {
     std::vector<PrefixTest> prefixTests = {
         {"-69;", "-", "69"},
         {"!something;", "!", "something"},
-    };
+        {"not something;", "not", "something"}};
 
     for (const PrefixTest& t_case : prefixTests) {
         Lexer l(t_case.input);
