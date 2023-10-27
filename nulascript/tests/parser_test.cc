@@ -388,7 +388,11 @@ TEST(ParserSuite, TestOperatorPrecedence) {
         {"a - b + c", "((a - b) + c)\n"},
         {"a - b - c", "((a - b) - c)\n"},
         {"a + b + c + d / e + f", "((((a + b) + c) + (d / e)) + f)\n"},
-        {"a * b + c + d / e + f", "((((a * b) + c) + (d / e)) + f)\n"}};
+        {"a * b + c + d / e + f", "((((a * b) + c) + (d / e)) + f)\n"},
+        {"a + b * c == a * d + p * q",
+         "((a + (b * c)) == ((a * d) + (p * q)))\n"},
+        {"a + b * c is not a * d + p * q",
+         "((a + (b * c)) is not ((a * d) + (p * q)))\n"}};
 
     for (auto test : precedenceTests) {
         Lexer l(test.input);
