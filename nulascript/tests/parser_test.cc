@@ -374,3 +374,27 @@ TEST(ParserSuite, TestInfixOperator) {
             << "Left expression value is not number";
     }
 }
+
+TEST(ParserSuite, TestOperatorPrecedence) {
+    struct PrecedenceTest {
+        std::string input;
+        std::string output;
+    };
+
+    // ! Investigate whether the newline here is a problem
+    std::vector<PrecedenceTest> precedenceTests = {
+        {"a + b - c", "((a + b) - c)\n"},
+        {"a + b + c", "((a + b) + c)\n"},
+        {"a - b + c", "((a - b) + c)\n"},
+        {"a - b - c", "((a - b) - c)\n"},
+        {"a + b + c + d / e + f", "((((a + b) + c) + (d / e)) + f)\n"},
+        {"a * b + c + d / e + f", "((((a * b) + c) + (d / e)) + f)\n"}};
+
+    for (auto test : precedenceTests) {
+        Lexer l(test.input);
+        Parser p(l);
+        auto program = p.parseProgram();
+
+        ASSERT_EQ(program->toString(), test.output);
+    };
+}

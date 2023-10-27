@@ -59,7 +59,7 @@ Prefix::Prefix(Token token, Expression* expression)
     : token(token), right(expression), op(token.literal) {}
 Prefix::Prefix(Token token) : token(token), op(token.literal) {}
 std::string Prefix::tokenLiteral() { return token.literal; }
-std::string Prefix::toString() { return op + right->toString(); }
+std::string Prefix::toString() { return "(" + op + right->toString() + ")"; }
 
 // Infix
 Infix::Infix(Token token, Expression* left, Expression* right)
@@ -69,7 +69,7 @@ Infix::Infix(Token token, Expression* left)
 Infix::Infix(Token token) : token(token), op(token.literal){};
 std::string Infix::tokenLiteral() { return token.literal; }
 std::string Infix::toString() {
-    return left->toString() + " " + op + " " + right->toString();
+    return "(" + left->toString() + " " + op + " " + right->toString() + ")";
 }
 
 // ReturnStatement
