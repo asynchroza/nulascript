@@ -87,6 +87,24 @@ Expression* Parser::parseExpression(Precedence p) {
     return leftExpression;
 }
 
+Precedence Parser::checkPeekPrecedence() {
+    auto it = tokenPrecedences.find(peekToken.type);
+    if (it == tokenPrecedences.end()) {
+        return Precedence::LOWEST;
+    }
+
+    return tokenPrecedences.at(peekToken.type);
+};
+
+Precedence Parser::checkCurrentPrecedence() {
+    auto it = tokenPrecedences.find(currentToken.type);
+    if (it == tokenPrecedences.end()) {
+        return Precedence::LOWEST;
+    }
+
+    return tokenPrecedences.at(currentToken.type);
+};
+
 Parser::Parser(Lexer& l) {
     this->l = &l;
 
@@ -114,6 +132,9 @@ Parser::Parser(Lexer& l) {
                            [&]() -> Expression* { return parsePrefix(); });
     registerPrefixFunction(TokenType::MINUS,
                            [&]() -> Expression* { return parsePrefix(); });
+    registerInfixFunction(
+        TokenType::MINUS,
+        [&](Expression* left) -> Expression* { return parsePrefix(left); });
 }
 
 ExpressionStatement* Parser::parseExpressionStatement() {
@@ -189,7 +210,4 @@ Prefix* Parser::parsePrefix() {
     return expression;
 }
 
-// int Parser::checkPrecedence() {
-//     if (peekToken.type ==) {
-//     }
-// }
+Infix* Parser::parseInfix() { Infix* expression = new Infix(currentToken); }

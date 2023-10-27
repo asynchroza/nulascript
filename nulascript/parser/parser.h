@@ -20,8 +20,7 @@ enum class Precedence {
 // ! this is not explained in thesis
 // ? should this be Expression or ExpressionStatement
 using ParsePrefixFunction = std::function<Expression*()>;
-using ParseInfixFunction =
-    std::function<ExpressionStatement(ExpressionStatement)>;
+using ParseInfixFunction = std::function<Expression*(Expression*)>;
 
 class Parser {
   private:
@@ -49,6 +48,7 @@ class Parser {
     Integer* parseInteger();
     Identifier* parseIdentifier();
     Prefix* parsePrefix();
+    Infix* parseInfix();
     bool isEqualToCurrentTokenType(TokenType tokenType);
     bool isEqualToPeekedTokenType(TokenType tokenType);
     bool peekAndLoadExpectedToken(TokenType tokenType);
@@ -56,7 +56,8 @@ class Parser {
                                 ParsePrefixFunction prefixParsingFunction);
     void registerInfixFunction(TokenType tokenType,
                                ParseInfixFunction infixParsingFunction);
-    int checkPrecedence();
+    Precedence checkCurrentPrecedence();
+    Precedence checkPeekPrecedence();
 
     std::vector<std::string> getErrors();
     void appendError(std::string e);
