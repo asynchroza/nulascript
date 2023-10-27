@@ -69,19 +69,11 @@ char Lexer::peekNextChar() {
 Token Lexer::checkForEqualityOperator(char ch) {
     if (peekNextChar() == '=') {
         readChar();
-        return newToken(TokenType::IS, "is");
+        return newToken(TokenType::IS, "==");
     }
 
     return newToken(TokenType::ASSIGN, ch);
 }
-
-// Token Lexer::checkForInequalityOperator() {
-//     if (peekNextChar() == 's' && readPos + 4 >= input.size() && input[readPos
-//     + 1] == ' ' && input[readPos + 2] == 'n' && input[readPos + 3] == 'o' &&
-//     input[readPos + 4] == 't' ){
-//         return newToken(TokenType::IS_NOT, ch);
-//     }
-// }
 
 Token Lexer::getNextToken() {
     Token currentToken;
