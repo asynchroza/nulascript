@@ -19,6 +19,8 @@ class Lexer {
     Token newToken(TokenType tokenType, const char* tokenLiteral);
     Token handleComparisonOperators(char opChar, TokenType shortType,
                                     TokenType extendedType);
+    Token checkForEqualityOperator(char ch);
+    Token checkForInequalityOperator();
     bool isLetter(char ch);
     bool isDigit(char ch);
 

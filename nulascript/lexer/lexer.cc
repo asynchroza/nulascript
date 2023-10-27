@@ -1,5 +1,6 @@
 #include "lexer.h"
 #include "token.h"
+#include <iostream>
 
 Lexer::Lexer(const std::string& input)
     : input(input), pos(0), readPos(0), ch(0), tokenLookup(TokenLookup()) {
@@ -35,6 +36,19 @@ std::string Lexer::readExtendedToken(TokenType tokenType) {
         readChar();
     }
 
+    auto currentBuffer = input.substr(position, pos - position);
+    if (currentBuffer == "is") {
+        if (currentBuffer == "is" &&
+            position + (pos - position + 4) <= input.size() &&
+            input.substr(position, pos - position + 4) == "is not") {
+            readChar();
+            readChar();
+            readChar();
+            readChar();
+            return "is not";
+        }
+    }
+
     return input.substr(position, pos - position);
 }
 
@@ -52,6 +66,23 @@ char Lexer::peekNextChar() {
     return input[readPos];
 }
 
+Token Lexer::checkForEqualityOperator(char ch) {
+    if (peekNextChar() == '=') {
+        readChar();
+        return newToken(TokenType::IS, "is");
+    }
+
+    return newToken(TokenType::ASSIGN, ch);
+}
+
+// Token Lexer::checkForInequalityOperator() {
+//     if (peekNextChar() == 's' && readPos + 4 >= input.size() && input[readPos
+//     + 1] == ' ' && input[readPos + 2] == 'n' && input[readPos + 3] == 'o' &&
+//     input[readPos + 4] == 't' ){
+//         return newToken(TokenType::IS_NOT, ch);
+//     }
+// }
+
 Token Lexer::getNextToken() {
     Token currentToken;
 
@@ -59,7 +90,7 @@ Token Lexer::getNextToken() {
 
     switch (ch) {
     case '=':
-        currentToken = newToken(TokenType::ASSIGN, ch);
+        currentToken = checkForEqualityOperator(ch);
         break;
     case '+':
         currentToken = newToken(TokenType::PLUS, ch);
@@ -95,7 +126,12 @@ Token Lexer::getNextToken() {
         currentToken = newToken(TokenType::PIPE, ch);
         break;
     case '!':
-        currentToken = newToken(TokenType::BANG_OR_NOT, ch);
+        if (peekNextChar() == '=') {
+            readChar();
+            currentToken = newToken(TokenType::IS_NOT, "!=");
+        } else {
+            currentToken = newToken(TokenType::BANG_OR_NOT, ch);
+        }
         break;
     case '/':
         currentToken = newToken(TokenType::SLASH, ch);
@@ -115,6 +151,12 @@ Token Lexer::getNextToken() {
     default:
         if (isLetter(ch)) {
             currentToken.literal = readExtendedToken(TokenType::IDENT);
+            std::cout << "HERE" << std::endl;
+            std::cout << currentToken.literal << std::endl;
+            if (currentToken.literal == "is not") {
+                return newToken(TokenType::IS_NOT, "is not");
+            }
+
             currentToken.type = tokenLookup.lookupIdent(currentToken.literal);
             return currentToken; // reading position and position are after the
                                  // last character of the current identifier

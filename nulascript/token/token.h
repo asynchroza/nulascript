@@ -35,6 +35,7 @@ enum TokenType {
     FALSE,
     RETURN,
     IS,
+    IS_NOT
 };
 
 struct Token {
@@ -43,11 +44,11 @@ struct Token {
 };
 
 class TokenLookup {
-public:
+  public:
     TokenLookup();
     TokenType lookupIdent(const std::string& ident);
 
-private:
+  private:
     std::unordered_map<std::string, TokenType> keywords;
 };
 
