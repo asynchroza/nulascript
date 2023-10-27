@@ -68,6 +68,20 @@ class Prefix : public Expression {
     std::string toString() override;
 };
 
+class Infix : public Expression {
+  public:
+    Token token;
+    Expression* left;
+    Expression* right;
+    std::string op;
+
+  public:
+    Infix(Token token, Expression* left, Expression* right);
+    Infix(Token token);
+    std::string tokenLiteral() override;
+    std::string toString() override;
+};
+
 // ? should statementNode be virtual and overriden in child statements?
 class LetStatement : public Statement {
   public:

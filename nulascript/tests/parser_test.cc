@@ -248,10 +248,6 @@ TEST(ParserSuite, TestIntegerLiteralExpression) {
 }
 
 TEST(ParserSuite, TestPrefixOperator) {
-    union ValueUnion {
-        int64_t* integerValue;
-        std::string* stringValue;
-    };
 
     struct PrefixTest {
         std::string input;
@@ -300,5 +296,59 @@ TEST(ParserSuite, TestPrefixOperator) {
         ASSERT_EQ(expression->right->tokenLiteral(), t_case.literal)
             << "expression->right->tokenLiteral() is not '" << t_case.literal
             << "', got=" << expression->right->tokenLiteral();
+    }
+}
+
+TEST(ParserSuite, TestInfixOperator) {
+    struct InfixTest {
+        std::string input;
+        int64_t leftVal;
+        std::string op;
+        int64_t rightVal;
+    };
+
+    std::vector<InfixTest> infixTests = {
+        {"69 + 69;", 69, "+", 69},   {"69 - 69;", 69, "-", 69},
+        {"69 * 69;", 69, "*", 69},   {"69 / 69;", 69, "/", 69},
+        {"69 > 69;", 69, ">", 69},   {"69 < 69;", 69, "<", 69},
+        {"69 == 69;", 69, "==", 69}, {"69 != 69;", 69, "!=", 69},
+    };
+
+    for (const InfixTest& t_case : infixTests) {
+        Lexer l(t_case.input);
+        Parser p(l);
+        Program* program = p.parseProgram();
+
+        if (p.getErrors().size() != 0) {
+            logParserErrors(p.getErrors());
+
+            FAIL();
+        }
+
+        ASSERT_EQ(program->statements.size(), 1)
+            << "program.Statements does not contain 1 statement. got="
+            << program->statements.size();
+
+        ExpressionStatement* statement =
+            dynamic_cast<ExpressionStatement*>(program->statements[0]);
+
+        if (!statement) {
+            FAIL() << "program->statements[0] is not ExpressionStatement. got="
+                   << typeid(program->statements[0]).name();
+        }
+
+        Infix* expression = dynamic_cast<Infix*>(statement->expression);
+        if (!expression) {
+            FAIL() << "statement is not Infix. got="
+                   << typeid(statement->expression).name();
+        }
+
+        // ASSERT_EQ(expression->op, t_case.op)
+        //     << "expression->operator is not '" << t_case.op
+        //     << "'. got=" << expression->op;
+
+        // ASSERT_EQ(expression->right->tokenLiteral(), t_case.literal)
+        //     << "expression->right->tokenLiteral() is not '" << t_case.literal
+        //     << "', got=" << expression->right->tokenLiteral();
     }
 }

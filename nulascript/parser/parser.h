@@ -30,6 +30,8 @@ class Parser {
     Token currentToken;
     Token peekToken;
 
+    std::map<TokenType, Precedence> tokenPrecedences;
+
     std::vector<std::string> errors;
     std::map<TokenType, ParsePrefixFunction> prefixParsingFunctions;
     std::map<TokenType, ParseInfixFunction> infixParsingFunctions;
@@ -54,6 +56,7 @@ class Parser {
                                 ParsePrefixFunction prefixParsingFunction);
     void registerInfixFunction(TokenType tokenType,
                                ParseInfixFunction infixParsingFunction);
+    int checkPrecedence();
 
     std::vector<std::string> getErrors();
     void appendError(std::string e);
