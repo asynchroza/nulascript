@@ -263,7 +263,7 @@ TEST(ParserSuite, TestIdentifierExpression) {
         FAIL() << "Identifier has an incorrect token literal";
     }
 
-    ASSERT_EQ(checkIdentifier(identifier, "someIdentifier"), true);
+    ASSERT_TRUE(checkIdentifier(identifier, "someIdentifier"));
 }
 
 TEST(ParserSuite, TestIntegerLiteralExpression) {
@@ -405,7 +405,7 @@ TEST(ParserSuite, TestInfixOperator) {
             << "expression->right->tokenLiteral() is not '" << t_case.rightVal
             << "', got=" << expression->right->tokenLiteral();
 
-        ASSERT_EQ(isNumber(expression->right->tokenLiteral()), true)
+        ASSERT_TRUE(isNumber(expression->right->tokenLiteral()))
             << "Right expression value is not number";
 
         ASSERT_EQ(expression->left->tokenLiteral(),
@@ -413,7 +413,7 @@ TEST(ParserSuite, TestInfixOperator) {
             << "expression->right->tokenLiteral() is not '" << t_case.leftVal
             << "', got=" << expression->left->tokenLiteral();
 
-        ASSERT_EQ(isNumber(expression->left->tokenLiteral()), true)
+        ASSERT_TRUE(isNumber(expression->left->tokenLiteral()))
             << "Left expression value is not number";
     }
 }
