@@ -5,6 +5,7 @@
 #include "vector"
 #include "gtest/gtest.h"
 #include <string>
+#include <type_traits>
 
 #define MULTILINE_STRING(s) #s
 
@@ -35,6 +36,46 @@ void logParserErrors(std::vector<std::string> errors) {
     for (std::string msg : errors) {
         std::cout << msg << "\n";
     }
+}
+
+bool checkIdentifier(Expression* expression, std::string value) {
+    Identifier* identifier = dynamic_cast<Identifier*>(expression);
+
+    if (!identifier) {
+        std::cout << "expression is not Identifier. got="
+                  << typeid(*expression).name();
+        return false;
+    }
+
+    if (identifier->value != value) {
+        std::cout << "identifier->value not=" << value
+                  << ". got=" << identifier->value;
+        return false;
+    }
+
+    if (identifier->tokenLiteral() != value) {
+        std::cout << "identifier->tokenLiteral not=" << value
+                  << ". got=" << identifier->tokenLiteral();
+        return false;
+    }
+
+    return true;
+}
+
+template <typename T>
+bool verifyLiteralExpression(Expression* expression, T expected) {
+    if (std::is_same<T, std::string>::value) {
+        return checkIdentifier(expression, expected);
+    }
+    /*
+        TODO:
+
+        else if (std::is_same<T, int>::value) {
+            return checkInteger(expression, expected);
+        }
+    */
+
+    return false;
 }
 
 // test suite
@@ -221,6 +262,8 @@ TEST(ParserSuite, TestIdentifierExpression) {
     if (identifier->tokenLiteral() != input) {
         FAIL() << "Identifier has an incorrect token literal";
     }
+
+    ASSERT_EQ(checkIdentifier(identifier, "someIdentifier"), true);
 }
 
 TEST(ParserSuite, TestIntegerLiteralExpression) {
