@@ -83,6 +83,17 @@ class Infix : public Expression {
     std::string toString() override;
 };
 
+class Boolean : public Expression {
+  public:
+    Token token;
+    bool value;
+
+  public:
+    Boolean(Token token);
+    std::string tokenLiteral() override;
+    std::string toString() override;
+};
+
 // ? should statementNode be virtual and overriden in child statements?
 class LetStatement : public Statement {
   public:

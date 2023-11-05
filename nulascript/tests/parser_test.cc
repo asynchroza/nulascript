@@ -62,6 +62,30 @@ bool checkIdentifier(Expression* expression, std::string value) {
     return true;
 }
 
+bool checkBoolean(Expression* expression, bool value) {
+    Boolean* boolean = dynamic_cast<Boolean*>(expression);
+
+    if (!boolean) {
+        std::cout << "boolean is not Boolean. got="
+                  << typeid(*expression).name();
+        return false;
+    }
+
+    if (boolean->value != value) {
+        std::cout << "boolean->value not=" << value
+                  << ". got=" << boolean->value;
+        return false;
+    }
+
+    // if (boolean->tokenLiteral() != (std::string)value) {
+    //     std::cout << "identifier->tokenLiteral not=" << value
+    //               << ". got=" << boolean->tokenLiteral();
+    //     return false;
+    // }
+
+    return true;
+}
+
 bool checkInteger(Expression* expression, int value) {
     Integer* integer = dynamic_cast<Integer*>(expression);
 
@@ -91,6 +115,8 @@ bool verifyLiteralExpression(Expression* expression, T expected) {
         return checkIdentifier(expression, expected);
     } else if (std::is_same<T, int>::value) {
         return checkInteger(expression, expected);
+    } else if (std::is_same<T, bool>::value) {
+        return checkBoolean(expression, expected);
     }
     /*
         TODO:
@@ -311,6 +337,30 @@ TEST(ParserSuite, TestIntegerLiteralExpression) {
 
     // ASSERT_TRUE(verifyLiteralExpression((Expression*)program->statements[0],
     // 10));
+}
+
+TEST(ParserSuite, TestBooleanLiteralExpression) {
+    std::string input = "true;";
+
+    Lexer l(input);
+    Parser p(l);
+    Program* program = p.parseProgram();
+
+    if (program->statements.size() != 1) {
+        FAIL() << "Program got " << program->statements.size()
+               << " statements instead of 1";
+    }
+
+    if (!isCastableToDerivative(program->statements[0],
+                                typeid(ExpressionStatement))) {
+        FAIL() << "Statement is not of type ExpressionStatement";
+    }
+
+    auto expression =
+        dynamic_cast<ExpressionStatement*>(program->statements[0]);
+
+    // ASSERT_TRUE(verifyLiteralExpression((Expression*)program->statements[0],
+    // true));
 }
 
 TEST(ParserSuite, TestPrefixOperator) {

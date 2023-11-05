@@ -72,6 +72,12 @@ std::string Infix::toString() {
     return "(" + left->toString() + " " + op + " " + right->toString() + ")";
 }
 
+// Boolean
+// TODO: string literal to double assigned to value
+Boolean::Boolean(Token token) : token(token){};
+std::string Boolean::tokenLiteral() { return token.literal; }
+std::string Boolean::toString() { return token.literal; }
+
 // ReturnStatement
 ReturnStatement::ReturnStatement(Token token)
     : token(token), returnValue(nullptr) {}
