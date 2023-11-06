@@ -139,6 +139,10 @@ Parser::Parser(Lexer& l) {
 
     registerPrefixFunction(TokenType::IDENT,
                            [&]() -> Expression* { return parseIdentifier(); });
+    registerPrefixFunction(TokenType::TRUE,
+                           [&]() -> Expression* { return parseBoolean(); });
+    registerPrefixFunction(TokenType::FALSE,
+                           [&]() -> Expression* { return parseBoolean(); });
     registerPrefixFunction(TokenType::INT,
                            [&]() -> Expression* { return parseInteger(); });
     registerPrefixFunction(TokenType::BANG_OR_NOT,
@@ -236,6 +240,7 @@ void Parser::registerInfixFunction(TokenType tokenType,
 }
 
 Identifier* Parser::parseIdentifier() { return new Identifier(currentToken); }
+Boolean* Parser::parseBoolean() { return new Boolean(currentToken); }
 
 Integer* Parser::parseInteger() {
     try {

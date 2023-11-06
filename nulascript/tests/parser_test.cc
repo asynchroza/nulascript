@@ -93,12 +93,6 @@ bool checkLiteral(Statement* expression, bool value) {
         return false;
     }
 
-    // if (boolean->tokenLiteral() != (std::string)value) {
-    //     std::cout << "identifier->tokenLiteral not=" << value
-    //               << ". got=" << boolean->tokenLiteral();
-    //     return false;
-    // }
-
     return true;
 }
 
@@ -340,14 +334,6 @@ TEST(ParserSuite, TestBooleanLiteralExpression) {
         FAIL() << "Program got " << program->statements.size()
                << " statements instead of 1";
     }
-
-    if (!isCastableToDerivative(program->statements[0],
-                                typeid(ExpressionStatement))) {
-        FAIL() << "Statement is not of type ExpressionStatement";
-    }
-
-    auto expression =
-        dynamic_cast<ExpressionStatement*>(program->statements[0]);
 
     ASSERT_TRUE(checkLiteral(program->statements[0], true));
 }

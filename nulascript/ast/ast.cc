@@ -1,7 +1,19 @@
+#include <algorithm>
 #include <ast.h>
+#include <cctype>
+#include <iomanip>
 #include <iostream>
+#include <sstream>
 #include <string>
 #include <token.h>
+
+bool to_bool(std::string str) {
+    std::transform(str.begin(), str.end(), str.begin(), ::tolower);
+    std::istringstream is(str);
+    bool b;
+    is >> std::boolalpha >> b;
+    return b;
+}
 
 // Program
 // ? should this implementation be dropped
@@ -74,7 +86,7 @@ std::string Infix::toString() {
 
 // Boolean
 // TODO: string literal to double assigned to value
-Boolean::Boolean(Token token) : token(token){};
+Boolean::Boolean(Token token) : token(token), value(to_bool(token.literal)){};
 std::string Boolean::tokenLiteral() { return token.literal; }
 std::string Boolean::toString() { return token.literal; }
 
