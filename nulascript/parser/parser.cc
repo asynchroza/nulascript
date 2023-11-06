@@ -145,6 +145,8 @@ Parser::Parser(Lexer& l) {
     });
     registerPrefixFunction(TokenType::IDENT,
                            [&]() -> Expression* { return parseIdentifier(); });
+    registerPrefixFunction(TokenType::IF,
+                           [&]() -> Expression* { return parseConditional(); });
     registerPrefixFunction(TokenType::TRUE,
                            [&]() -> Expression* { return parseBoolean(); });
     registerPrefixFunction(TokenType::FALSE,
@@ -290,4 +292,44 @@ Infix* Parser::parseInfix(Expression* left) {
     expression->right = parseExpression(right);
 
     return expression;
+}
+
+BlockStatement* Parser::parseBlock() {
+    auto currentBlock = new BlockStatement(currentToken);
+    currentBlock->statements = std::vector<Statement*>(); // ?
+
+    getNextToken();
+
+    while (!isEqualToCurrentTokenType(TokenType::EOF_TYPE) &&
+           !isEqualToCurrentTokenType(TokenType::RBRACE)) {
+        auto statement = parseStatement();
+        if (statement)
+            currentBlock->statements.push_back(statement);
+        getNextToken();
+    }
+
+    return currentBlock;
+}
+
+Conditional* Parser::parseConditional() {
+    auto conditional = new Conditional(currentToken);
+
+    if (!peekAndLoadExpectedToken(TokenType::LPAR)) {
+        return nullptr;
+    }
+
+    getNextToken();
+    conditional->condition = parseExpression(Precedence::LOWEST);
+
+    if (!peekAndLoadExpectedToken(TokenType::RPAR)) {
+        return nullptr;
+    }
+
+    if (!peekAndLoadExpectedToken(TokenType::LBRACE)) {
+        return nullptr;
+    }
+
+    conditional->currentBlock = parseBlock();
+
+    return conditional;
 }

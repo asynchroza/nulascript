@@ -50,6 +50,8 @@ class Parser {
     Prefix* parsePrefix();
     Boolean* parseBoolean();
     Infix* parseInfix(Expression* left);
+    Conditional* parseConditional();
+    BlockStatement* parseBlock();
     Expression* parseParensExpressions();
     bool isEqualToCurrentTokenType(TokenType tokenType);
     bool isEqualToPeekedTokenType(TokenType tokenType);
