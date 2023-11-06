@@ -331,5 +331,15 @@ Conditional* Parser::parseConditional() {
 
     conditional->currentBlock = parseBlock();
 
+    if (isEqualToPeekedTokenType(TokenType::ELSE)) {
+        getNextToken();
+
+        if (!peekAndLoadExpectedToken(TokenType::LBRACE)) {
+            return nullptr;
+        }
+
+        conditional->elseBlock = parseBlock();
+    }
+
     return conditional;
 }

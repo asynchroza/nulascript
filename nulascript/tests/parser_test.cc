@@ -512,7 +512,7 @@ TEST(ParserSuite, TestOperatorPrecedence) {
 }
 
 TEST(ParserSuite, TestConditionalExpression) {
-    std::string input = "if (a > b) { 100 }";
+    std::string input = "if (a > b) { 100 } else { 200 }";
 
     Lexer l(input);
     Parser p(l);
@@ -539,7 +539,7 @@ TEST(ParserSuite, TestConditionalExpression) {
     Conditional* exp = dynamic_cast<Conditional*>(stmt->expression);
 
     if (!exp) {
-        FAIL() << "stmt.Expression is not Conditional. got="
+        FAIL() << "exp is not Conditional. got="
                << typeid(stmt->expression).name();
     }
 
@@ -548,15 +548,28 @@ TEST(ParserSuite, TestConditionalExpression) {
     }
 
     if (exp->currentBlock->statements.size() != 1) {
-        FAIL() << "consequence is not 1 statement. got="
+        FAIL() << "currentBlock is not 1 statement. got="
                << exp->currentBlock->statements.size();
     }
 
-    ExpressionStatement* consequence =
+    ExpressionStatement* currentBlock =
         dynamic_cast<ExpressionStatement*>(exp->currentBlock->statements[0]);
 
-    if (!consequence) {
-        FAIL() << "Statements[0] is not ExpressionStatement. got="
+    if (!currentBlock) {
+        FAIL() << "current block statements[0] is not ExpressionStatement. got "
+                  "instead ->"
                << typeid(exp->currentBlock->statements[0]).name();
     }
+
+    ExpressionStatement* elseBlock =
+        dynamic_cast<ExpressionStatement*>(exp->elseBlock->statements[0]);
+
+    if (!elseBlock) {
+        FAIL() << "else block statements[0] is not ExpressionStatement. got "
+                  "instead -> "
+               << typeid(exp->elseBlock->statements[0]).name();
+    }
+
+    ASSERT_TRUE(checkLiteral(exp->currentBlock->statements[0], 100));
+    ASSERT_TRUE(checkLiteral(exp->elseBlock->statements[0], 200));
 }
