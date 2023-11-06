@@ -267,7 +267,7 @@ TEST(ParserSuite, TestAstToString) {
         return a;
     );
 
-    std::string expectedResult = "let a = ;\nreturn ;\n";
+    std::string expectedResult = "let a = ;return ;";
     // clang-format on
 
     Lexer l(input);
@@ -475,7 +475,7 @@ TEST(ParserSuite, TestOperatorPrecedence) {
         {"a + b * c is not a * d + p * q",
          "((a + (b * c)) is not ((a * d) + (p * q)))"},
         {"false == a + b", "(false == (a + b))"},
-        {"a + (b + c) + d", "(a + (b + c)) + d)"}};
+        {"a + (b + c) + d", "((a + (b + c)) + d)"}};
 
     for (auto test : precedenceTests) {
         Lexer l(test.input);

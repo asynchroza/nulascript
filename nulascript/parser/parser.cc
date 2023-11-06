@@ -222,9 +222,8 @@ Expression* Parser::parseParensExpressions() {
     getNextToken();
 
     auto expression = parseExpression(Precedence::LOWEST);
-    std::cout << expression->toString() << std::endl;
 
-    if (!isEqualToPeekedTokenType(TokenType::RPAR)) {
+    if (!peekAndLoadExpectedToken(TokenType::RPAR)) {
         return nullptr;
     }
 
