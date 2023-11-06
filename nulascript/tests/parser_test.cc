@@ -519,7 +519,7 @@ TEST(ParserSuite, TestConditionalExpression) {
     Program* program = p.parseProgram();
 
     if (!p.getErrors().empty()) {
-        logParserErrors(p.getErrors());
+        // logParserErrors(p.getErrors());
         FAIL() << "There are errors after parsing if expression";
     }
 

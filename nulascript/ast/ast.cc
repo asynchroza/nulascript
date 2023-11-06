@@ -124,3 +124,28 @@ std::string ExpressionStatement::toString() {
 
     return "";
 }
+
+Conditional::Conditional(Token token) : token(token) {}
+std::string Conditional::toString() {
+    std::string result =
+        "if " + condition->toString() + " " + currentBlock->toString();
+    if (elseBlock) {
+        result += " else " + elseBlock->toString();
+    }
+
+    return result;
+}
+
+std::string Conditional::tokenLiteral() { return token.literal; }
+
+BlockStatement::BlockStatement(Token token) : token(token) {}
+std::string BlockStatement::tokenLiteral() { return token.literal; }
+
+std::string BlockStatement::toString() {
+    std::string result = "";
+    for (auto stmt : statements) {
+        result += stmt->toString();
+    }
+
+    return result;
+}
