@@ -38,12 +38,20 @@ void logParserErrors(std::vector<std::string> errors) {
     }
 }
 
-bool checkIdentifier(Expression* expression, std::string value) {
-    Identifier* identifier = dynamic_cast<Identifier*>(expression);
+bool checkLiteral(Statement* expression, std::string value) {
+    ExpressionStatement* exp = dynamic_cast<ExpressionStatement*>(expression);
+
+    if (!exp) {
+        std::cout << "literal is not ExpressionStatement. got="
+                  << typeid(*expression).name() << std::endl;
+        return false;
+    }
+
+    Identifier* identifier = dynamic_cast<Identifier*>(exp->expression);
 
     if (!identifier) {
         std::cout << "expression is not Identifier. got="
-                  << typeid(*expression).name();
+                  << typeid(*expression).name() << std::endl;
         return false;
     }
 
@@ -62,12 +70,20 @@ bool checkIdentifier(Expression* expression, std::string value) {
     return true;
 }
 
-bool checkBoolean(Expression* expression, bool value) {
-    Boolean* boolean = dynamic_cast<Boolean*>(expression);
+bool checkLiteral(Statement* expression, bool value) {
+    ExpressionStatement* exp = dynamic_cast<ExpressionStatement*>(expression);
+
+    if (!exp) {
+        std::cout << "literal is not ExpressionStatement. got="
+                  << typeid(*expression).name() << std::endl;
+        return false;
+    }
+
+    Boolean* boolean = dynamic_cast<Boolean*>(exp->expression);
 
     if (!boolean) {
         std::cout << "boolean is not Boolean. got="
-                  << typeid(*expression).name();
+                  << typeid(*expression).name() << std::endl;
         return false;
     }
 
@@ -86,12 +102,20 @@ bool checkBoolean(Expression* expression, bool value) {
     return true;
 }
 
-bool checkInteger(Expression* expression, int value) {
-    Integer* integer = dynamic_cast<Integer*>(expression);
+bool checkLiteral(Statement* expression, int value) {
+    ExpressionStatement* exp = dynamic_cast<ExpressionStatement*>(expression);
+
+    if (!exp) {
+        std::cout << "literal is not ExpressionStatement. got="
+                  << typeid(*expression).name() << std::endl;
+        return false;
+    }
+
+    Integer* integer = dynamic_cast<Integer*>(exp->expression);
 
     if (!integer) {
         std::cout << "expression is not Integer. got="
-                  << typeid(*expression).name();
+                  << typeid(*expression).name() << std::endl;
         return false;
     }
 
@@ -108,27 +132,7 @@ bool checkInteger(Expression* expression, int value) {
     }
 }
 
-template <typename T>
-bool verifyLiteralExpression(Expression* expression, T expected) {
-    // std::cout << std::is_same<T, std::string>::value << std::endl;
-    if (std::is_same<T, std::string>::value) {
-        return checkIdentifier(expression, expected);
-    } else if (std::is_same<T, int>::value) {
-        return checkInteger(expression, expected);
-    } else if (std::is_same<T, bool>::value) {
-        return checkBoolean(expression, expected);
-    }
-    /*
-        TODO:
-        --- Fix conditional logic ---
-        add testing for infinx/prefix operators
-    */
-
-    return true;
-}
-
 // test suite
-
 bool testLetStatement(Statement* statement, std::string ident) {
     LetStatement* castedStatement = dynamic_cast<LetStatement*>(statement);
 
@@ -291,28 +295,18 @@ TEST(ParserSuite, TestIdentifierExpression) {
                << " statements instead of 1";
     }
 
-    if (!isCastableToDerivative(program->statements[0],
-                                typeid(ExpressionStatement))) {
-        FAIL() << "Statement is not of type ExpressionStatement";
-    }
+    // if (!isCastableToDerivative(program->statements[0],
+    //                             typeid(ExpressionStatement))) {
+    //     FAIL() << "Statement is not of type ExpressionStatement";
+    // }
 
-    if (!isCastableToDerivative(program->statements[0], typeid(Identifier))) {
-        FAIL() << "Statement is not of type Identifier";
-    }
+    // if (!isCastableToDerivative(program->statements[0], typeid(Identifier)))
+    // {
+    //     FAIL() << "Statement is not of type Identifier";
+    // }
 
-    auto expression =
-        dynamic_cast<ExpressionStatement*>(program->statements[0]);
-    auto identifier = dynamic_cast<Identifier*>(expression->expression);
-
-    if (identifier->value != input) {
-        FAIL() << "Identifier has an incorrect value";
-    }
-
-    if (identifier->tokenLiteral() != input) {
-        FAIL() << "Identifier has an incorrect token literal";
-    }
-
-    // ASSERT_TRUE(verifyLiteralExpression(identifier, "someIdentifier"));
+    ASSERT_TRUE(
+        checkLiteral(program->statements[0], std::string("someIdentifier")));
 }
 
 TEST(ParserSuite, TestIntegerLiteralExpression) {
@@ -332,11 +326,7 @@ TEST(ParserSuite, TestIntegerLiteralExpression) {
         FAIL() << "Statement is not of type ExpressionStatement";
     }
 
-    auto expression =
-        dynamic_cast<ExpressionStatement*>(program->statements[0]);
-
-    // ASSERT_TRUE(verifyLiteralExpression((Expression*)program->statements[0],
-    // 10));
+    ASSERT_TRUE(checkLiteral(program->statements[0], 10));
 }
 
 TEST(ParserSuite, TestBooleanLiteralExpression) {
@@ -359,8 +349,7 @@ TEST(ParserSuite, TestBooleanLiteralExpression) {
     auto expression =
         dynamic_cast<ExpressionStatement*>(program->statements[0]);
 
-    // ASSERT_TRUE(verifyLiteralExpression((Expression*)program->statements[0],
-    // true));
+    ASSERT_TRUE(checkLiteral(program->statements[0], true));
 }
 
 TEST(ParserSuite, TestPrefixOperator) {
