@@ -68,6 +68,30 @@ class Prefix : public Expression {
     std::string toString() override;
 };
 
+class BlockStatement : public Statement {
+  public:
+    Token token;
+    std::vector<Statement*> statements;
+
+  public:
+    BlockStatement(Token token);
+    std::string toString();
+    std::string tokenLiteral();
+};
+
+class Conditional : public Expression {
+  public:
+    Token token;
+    Expression* condition;
+    BlockStatement* currentBlock;
+    BlockStatement* elseBlock;
+
+  public:
+    Conditional(Token token);
+    std::string toString();
+    std::string tokenLiteral();
+};
+
 class Infix : public Expression {
   public:
     Token token;

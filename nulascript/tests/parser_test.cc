@@ -124,6 +124,31 @@ bool checkLiteral(Statement* expression, int value) {
                   << ". got=" << integer->value;
         return false;
     }
+
+    return true;
+}
+
+bool testInfixExpression(Expression* exp, const std::string& op,
+                         const std::string& left, const std::string& right) {
+    Infix* opExp = dynamic_cast<Infix*>(exp);
+
+    if (!opExp) {
+        return false;
+    }
+
+    if (opExp->left->tokenLiteral() != left) {
+        return false;
+    }
+
+    if (opExp->op != op) {
+        return false;
+    }
+
+    if (opExp->right->tokenLiteral() != right) {
+        return false;
+    }
+
+    return true;
 }
 
 // test suite
@@ -484,4 +509,54 @@ TEST(ParserSuite, TestOperatorPrecedence) {
 
         ASSERT_EQ(program->toString(), test.output);
     };
+}
+
+TEST(ParserSuite, TestConditionalExpression) {
+    std::string input = "if (a > b) { 100 }";
+
+    Lexer l(input);
+    Parser p(l);
+    Program* program = p.parseProgram();
+
+    if (!p.getErrors().empty()) {
+        logParserErrors(p.getErrors());
+        FAIL() << "There are errors after parsing if expression";
+    }
+
+    if (program->statements.size() != 1) {
+        FAIL() << "program.Statements does not contain 1 statement. got="
+               << program->statements.size();
+    }
+
+    ExpressionStatement* stmt =
+        dynamic_cast<ExpressionStatement*>(program->statements[0]);
+
+    if (!stmt) {
+        FAIL() << "program.Statements[0] is not ExpressionStatement. got="
+               << typeid(program->statements[0]).name();
+    }
+
+    Conditional* exp = dynamic_cast<Conditional*>(stmt->expression);
+
+    if (!exp) {
+        FAIL() << "stmt.Expression is not Conditional. got="
+               << typeid(stmt->expression).name();
+    }
+
+    if (!testInfixExpression(exp->condition, "a", ">", "b")) {
+        return;
+    }
+
+    if (exp->currentBlock->statements.size() != 1) {
+        FAIL() << "consequence is not 1 statement. got="
+               << exp->currentBlock->statements.size();
+    }
+
+    ExpressionStatement* consequence =
+        dynamic_cast<ExpressionStatement*>(exp->currentBlock->statements[0]);
+
+    if (!consequence) {
+        FAIL() << "Statements[0] is not ExpressionStatement. got="
+               << typeid(exp->currentBlock->statements[0]).name();
+    }
 }
