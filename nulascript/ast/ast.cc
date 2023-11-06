@@ -28,7 +28,7 @@ std::string Program::tokenLiteral() {
 std::string Program::toString() {
     std::string representation = "";
     for (int i = 0; i < statements.size(); i++) {
-        representation += statements[i]->toString() + "\n";
+        representation += statements[i]->toString();
     }
 
     return representation;
@@ -85,7 +85,6 @@ std::string Infix::toString() {
 }
 
 // Boolean
-// TODO: string literal to double assigned to value
 Boolean::Boolean(Token token) : token(token), value(to_bool(token.literal)){};
 std::string Boolean::tokenLiteral() { return token.literal; }
 std::string Boolean::toString() { return token.literal; }

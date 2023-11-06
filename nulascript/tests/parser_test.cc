@@ -464,16 +464,18 @@ TEST(ParserSuite, TestOperatorPrecedence) {
 
     // ! Investigate whether the newline here is a problem
     std::vector<PrecedenceTest> precedenceTests = {
-        {"a + b - c", "((a + b) - c)\n"},
-        {"a + b + c", "((a + b) + c)\n"},
-        {"a - b + c", "((a - b) + c)\n"},
-        {"a - b - c", "((a - b) - c)\n"},
-        {"a + b + c + d / e + f", "((((a + b) + c) + (d / e)) + f)\n"},
-        {"a * b + c + d / e + f", "((((a * b) + c) + (d / e)) + f)\n"},
+        {"a + b - c", "((a + b) - c)"},
+        {"a + b + c", "((a + b) + c)"},
+        {"a - b + c", "((a - b) + c)"},
+        {"a - b - c", "((a - b) - c)"},
+        {"a + b + c + d / e + f", "((((a + b) + c) + (d / e)) + f)"},
+        {"a * b + c + d / e + f", "((((a * b) + c) + (d / e)) + f)"},
         {"a + b * c == a * d + p * q",
-         "((a + (b * c)) == ((a * d) + (p * q)))\n"},
+         "((a + (b * c)) == ((a * d) + (p * q)))"},
         {"a + b * c is not a * d + p * q",
-         "((a + (b * c)) is not ((a * d) + (p * q)))\n"}};
+         "((a + (b * c)) is not ((a * d) + (p * q)))"},
+        {"false == a + b", "(false == (a + b))"},
+        {"a + (b + c) + d", "(a + (b + c)) + d)"}};
 
     for (auto test : precedenceTests) {
         Lexer l(test.input);

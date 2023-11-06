@@ -77,8 +77,11 @@ Expression* Parser::parseExpression(Precedence p) {
     auto it = prefixParsingFunctions.find(currentToken.type);
 
     if (it == prefixParsingFunctions.end()) {
-        appendError("No parsing function was found for prefix of type: " +
-                    std::to_string(currentToken.type));
+        std::string err =
+            "[ERROR] No parsing function was found for prefix of type: " +
+            std::to_string(currentToken.type);
+        std::cout << err << std::endl;
+        appendError(err);
         return nullptr;
     }
 
@@ -137,6 +140,9 @@ Parser::Parser(Lexer& l) {
     getNextToken();
     getNextToken();
 
+    registerPrefixFunction(TokenType::LPAR, [&]() -> Expression* {
+        return parseParensExpressions();
+    });
     registerPrefixFunction(TokenType::IDENT,
                            [&]() -> Expression* { return parseIdentifier(); });
     registerPrefixFunction(TokenType::TRUE,
@@ -210,6 +216,19 @@ Statement* Parser::parseStatement() {
     default:
         return parseExpressionStatement();
     }
+}
+
+Expression* Parser::parseParensExpressions() {
+    getNextToken();
+
+    auto expression = parseExpression(Precedence::LOWEST);
+    std::cout << expression->toString() << std::endl;
+
+    if (!isEqualToPeekedTokenType(TokenType::RPAR)) {
+        return nullptr;
+    }
+
+    return expression;
 }
 
 Program* Parser::parseProgram() {
