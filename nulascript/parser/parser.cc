@@ -145,6 +145,8 @@ Parser::Parser(Lexer& l) {
     });
     registerPrefixFunction(TokenType::IDENT,
                            [&]() -> Expression* { return parseIdentifier(); });
+    registerPrefixFunction(TokenType::FUNC,
+                           [&]() -> Expression* { return parseFunction(); });
     registerPrefixFunction(TokenType::IF,
                            [&]() -> Expression* { return parseConditional(); });
     registerPrefixFunction(TokenType::TRUE,
@@ -343,3 +345,74 @@ Conditional* Parser::parseConditional() {
 
     return conditional;
 }
+
+// std::vector<Expression*>* Parser::parseFunctionArguments() {
+//     std::vector<Expression*>* arguments = new std::vector<Expression*>();
+
+//     if(isEqualToPeekedTokenType(TokenType::RPAR)){
+//         getNextToken();
+//         return arguments;
+//     }
+
+//     getNextToken();
+//     arguments->push_back(parseExpression(Precedence::LOWEST));
+
+//     while(isEqualToPeekedTokenType(TokenType::COMMA)){
+//         getNextToken();
+//         getNextToken();
+//         arguments->push_back(parseExpression(Precedence::LOWEST));
+//     }
+
+//     if(!peekAndLoadExpectedToken(TokenType::RPAR)){
+//         return nullptr;
+//     }
+
+//     return arguments;
+// }
+
+std::vector<Identifier*> Parser::parseFunctionArguments() {
+    auto arguments = std::vector<Identifier*>();
+
+    if (isEqualToPeekedTokenType(TokenType::RPAR)) {
+        getNextToken();
+        return arguments;
+    }
+
+    getNextToken();
+    auto identifier = new Identifier(currentToken);
+    arguments.push_back(identifier);
+
+    while (isEqualToPeekedTokenType(TokenType::COMMA)) {
+        getNextToken();
+        getNextToken();
+        identifier = new Identifier(currentToken);
+        arguments.push_back(identifier);
+    }
+
+    if (!peekAndLoadExpectedToken(TokenType::RPAR)) {
+        return std::vector<Identifier*>();
+    }
+
+    return arguments;
+}
+
+Function* Parser::parseFunction() {
+    auto func = new Function(currentToken);
+
+    if (!peekAndLoadExpectedToken(TokenType::LPAR)) {
+        return nullptr;
+    }
+
+    func->arguments = parseFunctionArguments();
+
+    if (!peekAndLoadExpectedToken(TokenType::LBRACE)) {
+        return nullptr;
+    }
+
+    func->code = parseBlock();
+    return func;
+}
+
+// Function* Parser::parseFunctionExpression(Function) {
+//     auto function = new Function(currentToken);
+// }

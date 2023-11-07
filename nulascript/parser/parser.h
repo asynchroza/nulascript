@@ -53,6 +53,9 @@ class Parser {
     Conditional* parseConditional();
     BlockStatement* parseBlock();
     Expression* parseParensExpressions();
+    Function* parseFunction();
+    Function* parseFunctionExpression();
+    std::vector<Identifier*> parseFunctionArguments();
     bool isEqualToCurrentTokenType(TokenType tokenType);
     bool isEqualToPeekedTokenType(TokenType tokenType);
     bool peekAndLoadExpectedToken(TokenType tokenType);
@@ -66,8 +69,6 @@ class Parser {
     std::vector<std::string> getErrors();
     void appendError(std::string e);
     void appendPeekError(TokenType token);
-
-  private:
 };
 
 #endif

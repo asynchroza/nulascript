@@ -39,15 +39,21 @@ void logParserErrors(std::vector<std::string> errors) {
 }
 
 bool checkLiteral(Statement* expression, std::string value) {
-    ExpressionStatement* exp = dynamic_cast<ExpressionStatement*>(expression);
+    Identifier* identifier = dynamic_cast<Identifier*>(expression);
+    std::cout << typeid(identifier).name() << std::endl;
 
-    if (!exp) {
-        std::cout << "literal is not ExpressionStatement. got="
-                  << typeid(*expression).name() << std::endl;
-        return false;
+    if (!identifier) {
+        ExpressionStatement* exp =
+            dynamic_cast<ExpressionStatement*>(expression);
+
+        if (!exp) {
+            std::cout << "literal is not ExpressionStatement. got="
+                      << typeid(*expression).name() << std::endl;
+            return false;
+        }
+
+        identifier = dynamic_cast<Identifier*>(exp->expression);
     }
-
-    Identifier* identifier = dynamic_cast<Identifier*>(exp->expression);
 
     if (!identifier) {
         std::cout << "expression is not Identifier. got="
@@ -604,11 +610,21 @@ TEST(ParserSuite, TestFunction) {
                << typeid(stmt->expression).name();
     }
 
-    // TODO: Verify statements in code aren't more than 1
+    // TODO: This will break once actual value is allocated
+    ASSERT_EQ(exp->arguments[0]->value, std::string("argOne"));
+    ASSERT_EQ(exp->arguments[1]->value, std::string("argTwo"));
 
-    ASSERT_TRUE(checkLiteral((Statement*)exp->arguments[0], "argOne"));
-    ASSERT_TRUE(checkLiteral((Statement*)exp->arguments[1], "argTwo"));
-
-    ASSERT_TRUE(testInfixExpression((Expression*)exp->code->statements[0], "a",
-                                    ">", "b"));
+    ExpressionStatement* exp_stmt =
+        dynamic_cast<ExpressionStatement*>(exp->code->statements[0]);
+    Infix* infix = dynamic_cast<Infix*>(exp_stmt->expression);
+    if (infix) {
+        if (infix->op != "+" || infix->left->toString() != "argOne" ||
+            infix->right->toString() != "argTwo") {
+            FAIL() << "Either left, right or the operator was not properly "
+                      "parsed within the infix expression";
+        }
+    } else {
+        FAIL() << "Couldn't properly parse Infix expression nested in "
+                  "ExpressionStatement";
+    }
 }

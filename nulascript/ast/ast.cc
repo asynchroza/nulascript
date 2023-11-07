@@ -54,6 +54,7 @@ std::string LetStatement::toString() {
 }
 
 // Identifier
+// TODO: Value shouldn't be token.literal here
 Identifier::Identifier(Token token) : token(token), value(token.literal) {}
 
 std::string Identifier::tokenLiteral() { return token.literal; }
