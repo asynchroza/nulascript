@@ -149,3 +149,16 @@ std::string BlockStatement::toString() {
 
     return result;
 }
+
+Function::Function(Token token) : token(token) {}
+std::string Function::toString() {
+    std::string result = "";
+    result += token.literal + "(";
+    for (auto param : arguments) {
+        result += param->tokenLiteral() + ", ";
+    }
+    result += ")";
+
+    return result;
+}
+std::string Function::tokenLiteral() { return token.literal; }

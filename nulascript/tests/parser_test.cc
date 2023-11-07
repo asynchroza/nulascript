@@ -187,7 +187,7 @@ bool testLetStatement(Statement* statement, std::string ident) {
 }
 
 TEST(ParserSuite, TestLetStatement) {
-    // Only the first two first two variables are correctly defined.
+    // Only the first two variables are correctly defined.
 
     // clang-format off
     std::string input =
@@ -543,9 +543,7 @@ TEST(ParserSuite, TestConditionalExpression) {
                << typeid(stmt->expression).name();
     }
 
-    if (!testInfixExpression(exp->condition, "a", ">", "b")) {
-        return;
-    }
+    ASSERT_TRUE(!testInfixExpression(exp->condition, "a", ">", "b"));
 
     if (exp->currentBlock->statements.size() != 1) {
         FAIL() << "currentBlock is not 1 statement. got="
@@ -572,4 +570,45 @@ TEST(ParserSuite, TestConditionalExpression) {
 
     ASSERT_TRUE(checkLiteral(exp->currentBlock->statements[0], 100));
     ASSERT_TRUE(checkLiteral(exp->elseBlock->statements[0], 200));
+}
+
+TEST(ParserSuite, TestFunction) {
+    std::string input = "fn(argOne, argTwo) { argOne + argTwo; }";
+
+    Lexer l(input);
+    Parser p(l);
+    Program* program = p.parseProgram();
+
+    if (!p.getErrors().empty()) {
+        // logParserErrors(p.getErrors());
+        FAIL() << "There are errors after parsing function";
+    }
+
+    if (program->statements.size() != 1) {
+        FAIL() << "program.Statements does not contain 1 statement. got="
+               << program->statements.size();
+    }
+
+    ExpressionStatement* stmt =
+        dynamic_cast<ExpressionStatement*>(program->statements[0]);
+
+    if (!stmt) {
+        FAIL() << "program.Statements[0] is not ExpressionStatement. got="
+               << typeid(program->statements[0]).name();
+    }
+
+    Function* exp = dynamic_cast<Function*>(stmt->expression);
+
+    if (!exp) {
+        FAIL() << "exp is not Function. got="
+               << typeid(stmt->expression).name();
+    }
+
+    // TODO: Verify statements in code aren't more than 1
+
+    ASSERT_TRUE(checkLiteral((Statement*)exp->arguments[0], "argOne"));
+    ASSERT_TRUE(checkLiteral((Statement*)exp->arguments[1], "argTwo"));
+
+    ASSERT_TRUE(testInfixExpression((Expression*)exp->code->statements[0], "a",
+                                    ">", "b"));
 }

@@ -157,3 +157,15 @@ class ExpressionStatement : public Statement {
 };
 
 #endif
+
+class Function : public Expression {
+  public:
+    Token token;
+    std::vector<Identifier*> arguments;
+    BlockStatement* code;
+
+  public:
+    Function(Token token);
+    std::string tokenLiteral() override;
+    std::string toString() override;
+};
