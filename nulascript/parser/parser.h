@@ -55,6 +55,8 @@ class Parser {
     Expression* parseParensExpressions();
     Function* parseFunction();
     Function* parseFunctionExpression();
+    Expression* parseInvocation(Expression* function);
+    std::vector<Expression*> parseInvocationArguments();
     std::vector<Identifier*> parseFunctionArguments();
     bool isEqualToCurrentTokenType(TokenType tokenType);
     bool isEqualToPeekedTokenType(TokenType tokenType);

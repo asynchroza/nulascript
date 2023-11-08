@@ -178,6 +178,9 @@ Parser::Parser(Lexer& l) {
     registerInfixFunction(TokenType::IS, [&](Expression* left) -> Expression* {
         return parseInfix(left);
     });
+    registerInfixFunction(
+        TokenType::LPAR,
+        [&](Expression* left) -> Expression* { return parseInvocation(left); });
 
     registerInfixFunction(
         TokenType::IS_NOT,
@@ -346,29 +349,29 @@ Conditional* Parser::parseConditional() {
     return conditional;
 }
 
-// std::vector<Expression*>* Parser::parseFunctionArguments() {
-//     std::vector<Expression*>* arguments = new std::vector<Expression*>();
+std::vector<Expression*> Parser::parseInvocationArguments() {
+    std::vector<Expression*> arguments = std::vector<Expression*>();
 
-//     if(isEqualToPeekedTokenType(TokenType::RPAR)){
-//         getNextToken();
-//         return arguments;
-//     }
+    if (isEqualToPeekedTokenType(TokenType::RPAR)) {
+        getNextToken();
+        return arguments;
+    }
 
-//     getNextToken();
-//     arguments->push_back(parseExpression(Precedence::LOWEST));
+    getNextToken();
+    arguments.push_back(parseExpression(Precedence::LOWEST));
 
-//     while(isEqualToPeekedTokenType(TokenType::COMMA)){
-//         getNextToken();
-//         getNextToken();
-//         arguments->push_back(parseExpression(Precedence::LOWEST));
-//     }
+    while (isEqualToPeekedTokenType(TokenType::COMMA)) {
+        getNextToken();
+        getNextToken();
+        arguments.push_back(parseExpression(Precedence::LOWEST));
+    }
 
-//     if(!peekAndLoadExpectedToken(TokenType::RPAR)){
-//         return nullptr;
-//     }
+    if (!peekAndLoadExpectedToken(TokenType::RPAR)) {
+        return std::vector<Expression*>();
+    }
 
-//     return arguments;
-// }
+    return arguments;
+}
 
 std::vector<Identifier*> Parser::parseFunctionArguments() {
     auto arguments = std::vector<Identifier*>();
@@ -416,3 +419,9 @@ Function* Parser::parseFunction() {
 // Function* Parser::parseFunctionExpression(Function) {
 //     auto function = new Function(currentToken);
 // }
+
+Expression* Parser::parseInvocation(Expression* function) {
+    auto invocation = new Invocation(currentToken, (Function*)function);
+    invocation->arguments = parseInvocationArguments();
+    return invocation;
+}

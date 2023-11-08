@@ -169,3 +169,15 @@ class Function : public Expression {
     std::string tokenLiteral() override;
     std::string toString() override;
 };
+
+class Invocation : public Expression {
+  public:
+    Token token;
+    Function* function;
+    std::vector<Expression*> arguments;
+
+  public:
+    Invocation(Token token, Function* function);
+    std::string tokenLiteral() override;
+    std::string toString() override;
+};

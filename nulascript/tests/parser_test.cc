@@ -103,20 +103,24 @@ bool checkLiteral(Statement* expression, bool value) {
 }
 
 bool checkLiteral(Statement* expression, int value) {
-    ExpressionStatement* exp = dynamic_cast<ExpressionStatement*>(expression);
-
-    if (!exp) {
-        std::cout << "literal is not ExpressionStatement. got="
-                  << typeid(*expression).name() << std::endl;
-        return false;
-    }
-
-    Integer* integer = dynamic_cast<Integer*>(exp->expression);
+    Integer* integer = dynamic_cast<Integer*>(expression);
 
     if (!integer) {
-        std::cout << "expression is not Integer. got="
-                  << typeid(*expression).name() << std::endl;
-        return false;
+        ExpressionStatement* exp =
+            dynamic_cast<ExpressionStatement*>(expression);
+        if (!exp) {
+            std::cout << "literal is not ExpressionStatement. got="
+                      << typeid(*expression).name() << std::endl;
+            return false;
+        }
+
+        integer = dynamic_cast<Integer*>(exp->expression);
+
+        if (!integer) {
+            std::cout << "expression is not Integer. got="
+                      << typeid(*expression).name() << std::endl;
+            return false;
+        }
     }
 
     if (std::stoi(integer->tokenLiteral()) != value) {
@@ -319,16 +323,6 @@ TEST(ParserSuite, TestIdentifierExpression) {
         FAIL() << "Program got " << program->statements.size()
                << " statements instead of 1";
     }
-
-    // if (!isCastableToDerivative(program->statements[0],
-    //                             typeid(ExpressionStatement))) {
-    //     FAIL() << "Statement is not of type ExpressionStatement";
-    // }
-
-    // if (!isCastableToDerivative(program->statements[0], typeid(Identifier)))
-    // {
-    //     FAIL() << "Statement is not of type Identifier";
-    // }
 
     ASSERT_TRUE(
         checkLiteral(program->statements[0], std::string("someIdentifier")));
@@ -627,4 +621,39 @@ TEST(ParserSuite, TestFunction) {
         FAIL() << "Couldn't properly parse Infix expression nested in "
                   "ExpressionStatement";
     }
+}
+
+TEST(ParserSuite, TestInvocation) {
+    std::string input = "multiply(1, 1 + 2, 1 * 2);";
+
+    Lexer l(input);
+    Parser p(l);
+    Program* program = p.parseProgram();
+
+    if (!p.getErrors().empty()) {
+        // logParserErrors(p.getErrors());
+        FAIL() << "There are errors after parsing invocation";
+    }
+
+    if (program->statements.size() != 1) {
+        FAIL() << "program.Statements does not contain 1 statement. got="
+               << program->statements.size();
+    }
+
+    ExpressionStatement* stmt =
+        dynamic_cast<ExpressionStatement*>(program->statements[0]);
+
+    if (!stmt) {
+        FAIL() << "program.Statements[0] is not ExpressionStatement. got="
+               << typeid(program->statements[0]).name();
+    }
+
+    Invocation* exp = dynamic_cast<Invocation*>(stmt->expression);
+
+    if (!exp) {
+        FAIL() << "exp is not Invocation. got="
+               << typeid(stmt->expression).name();
+    }
+    EXPECT_EQ(exp->arguments.size(), 3);
+    EXPECT_TRUE(checkLiteral((Statement*)exp->arguments[0], 1));
 }

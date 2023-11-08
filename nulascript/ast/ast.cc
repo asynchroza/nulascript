@@ -163,3 +163,17 @@ std::string Function::toString() {
     return result;
 }
 std::string Function::tokenLiteral() { return token.literal; }
+
+Invocation::Invocation(Token token, Function* function)
+    : token(token), function(function) {}
+std::string Invocation::toString() {
+    std::string result = "";
+    result += function->toString() + "(";
+    for (auto param : arguments) {
+        result += param->tokenLiteral() + ", ";
+    }
+    result += ")";
+
+    return result;
+}
+std::string Invocation::tokenLiteral() { return token.literal; }
