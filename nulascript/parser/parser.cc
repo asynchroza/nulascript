@@ -52,8 +52,11 @@ LetStatement* Parser::parseLetStatement() {
         return nullptr;
     }
 
-    // TODO: -> It's skipping all expressions now
-    while (!isEqualToCurrentTokenType(TokenType::SEMICOLON)) {
+    getNextToken();
+
+    letStatement->value = parseExpression(Precedence::LOWEST);
+
+    if (isEqualToPeekedTokenType(TokenType::SEMICOLON)) {
         getNextToken();
     }
 

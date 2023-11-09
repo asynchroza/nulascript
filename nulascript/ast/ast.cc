@@ -35,8 +35,7 @@ std::string Program::toString() {
 }
 
 // LetStatement
-LetStatement::LetStatement(Token token)
-    : token(token), name(nullptr), value(nullptr) {}
+LetStatement::LetStatement(Token token) : token(token) {}
 
 std::string LetStatement::tokenLiteral() { return token.literal; }
 

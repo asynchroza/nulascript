@@ -161,8 +161,13 @@ bool testInfixExpression(Expression* exp, const std::string& op,
     return true;
 }
 
+struct IdentTest {
+    std::string tokenOfIdent;
+    std::string assignedVal;
+};
+
 // test suite
-bool testLetStatement(Statement* statement, std::string ident) {
+bool testLetStatement(Statement* statement, IdentTest ident) {
     LetStatement* castedStatement = dynamic_cast<LetStatement*>(statement);
 
     if (!castedStatement) {
@@ -176,18 +181,17 @@ bool testLetStatement(Statement* statement, std::string ident) {
         return false;
     }
 
-    if (castedStatement->name->token.literal != ident) {
-        std::cout
-            << "LetStatement's identifier has incorrect literal: Expected " +
-                   ident + "; Got " + castedStatement->name->token.literal +
-                   " instead."
-            << std::endl;
+    if (castedStatement->value->tokenLiteral() != ident.assignedVal) {
+        std::cout << "LetStatement value's token literal doesn't match " +
+                         ident.assignedVal + "; Got " +
+                         castedStatement->name->tokenLiteral() + "."
+                  << std::endl;
         return false;
     }
 
-    if (castedStatement->name->tokenLiteral() != ident) {
+    if (castedStatement->name->tokenLiteral() != ident.tokenOfIdent) {
         std::cout << "LetStatement name's token literal doesn't match " +
-                         ident + "; Got " +
+                         ident.tokenOfIdent + "; Got " +
                          castedStatement->name->tokenLiteral() + "."
                   << std::endl;
         return false;
@@ -226,7 +230,7 @@ TEST(ParserSuite, TestLetStatement) {
                << expectedStatements << std::endl;
     }
 
-    std::vector<std::string> tests = {"one", "two"};
+    std::vector<IdentTest> tests = {{"one", "1"}, {"two", "2"}};
 
     for (int i = 0; i < tests.size(); i++) {
         Statement* statement = program->statements[i];
@@ -302,7 +306,7 @@ TEST(ParserSuite, TestAstToString) {
         return a;
     );
 
-    std::string expectedResult = "let a = ;return ;";
+    std::string expectedResult = "let a = 5;return ;";
     // clang-format on
 
     Lexer l(input);
