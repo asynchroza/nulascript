@@ -68,8 +68,9 @@ ReturnStatement* Parser::parseReturnStatement() {
 
     getNextToken();
 
-    // TODO: -> It's skipping all expressions now
-    while (!isEqualToCurrentTokenType(TokenType::SEMICOLON)) {
+    returnStatement->returnValue = parseExpression(Precedence::LOWEST);
+
+    if (isEqualToPeekedTokenType(TokenType::SEMICOLON)) {
         getNextToken();
     }
 
