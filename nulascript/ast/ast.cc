@@ -155,9 +155,15 @@ Function::Function(Token token) : token(token) {}
 std::string Function::toString() {
     std::string result = "";
     result += token.literal + "(";
-    for (auto param : arguments) {
-        result += param->tokenLiteral() + ", ";
+
+    auto it = arguments.begin();
+    while (it != arguments.end()) {
+        result += (*it)->toString();
+        if (++it != arguments.end()) {
+            result += ", ";
+        }
     }
+
     result += ")";
 
     return result;
@@ -169,9 +175,15 @@ Invocation::Invocation(Token token, Function* function)
 std::string Invocation::toString() {
     std::string result = "";
     result += function->toString() + "(";
-    for (auto param : arguments) {
-        result += param->tokenLiteral() + ", ";
+
+    auto it = arguments.begin();
+    while (it != arguments.end()) {
+        result += (*it)->toString();
+        if (++it != arguments.end()) {
+            result += ", ";
+        }
     }
+
     result += ")";
 
     return result;

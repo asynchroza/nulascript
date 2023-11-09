@@ -487,7 +487,6 @@ TEST(ParserSuite, TestOperatorPrecedence) {
         std::string output;
     };
 
-    // ! Investigate whether the newline here is a problem
     std::vector<PrecedenceTest> precedenceTests = {
         {"a + b - c", "((a + b) - c)"},
         {"a + b + c", "((a + b) + c)"},
@@ -500,7 +499,9 @@ TEST(ParserSuite, TestOperatorPrecedence) {
         {"a + b * c is not a * d + p * q",
          "((a + (b * c)) is not ((a * d) + (p * q)))"},
         {"false == a + b", "(false == (a + b))"},
-        {"a + (b + c) + d", "((a + (b + c)) + d)"}};
+        {"a + (b + c) + d", "((a + (b + c)) + d)"},
+        {"multiply(a, b + c + d, d * p * (c / d))",
+         "multiply(a, ((b + c) + d), ((d * p) * (c / d)))"}};
 
     for (auto test : precedenceTests) {
         Lexer l(test.input);
@@ -655,5 +656,5 @@ TEST(ParserSuite, TestInvocation) {
                << typeid(stmt->expression).name();
     }
     EXPECT_EQ(exp->arguments.size(), 3);
-    EXPECT_TRUE(checkLiteral((Statement*)exp->arguments[0], 1));
+    EXPECT_EQ(exp->arguments[0]->tokenLiteral(), "1");
 }

@@ -124,18 +124,17 @@ Precedence Parser::checkCurrentPrecedence() {
 Parser::Parser(Lexer& l) {
     this->l = &l;
 
-    tokenPrecedences = {
-        {TokenType::IS, Precedence::EQUALS},
-        {TokenType::IS_NOT, Precedence::EQUALS},
-        {TokenType::LT, Precedence::LESSGREATER},
-        {TokenType::GT, Precedence::LESSGREATER},
-        {TokenType::LOE, Precedence::LESSGREATER},
-        {TokenType::GOE, Precedence::LESSGREATER},
-        {TokenType::PLUS, Precedence::SUM},
-        {TokenType::MINUS, Precedence::SUM},
-        {TokenType::SLASH, Precedence::PRODUCT},
-        {TokenType::ASTERISK, Precedence::PRODUCT},
-    };
+    tokenPrecedences = {{TokenType::IS, Precedence::EQUALS},
+                        {TokenType::IS_NOT, Precedence::EQUALS},
+                        {TokenType::LT, Precedence::LESSGREATER},
+                        {TokenType::GT, Precedence::LESSGREATER},
+                        {TokenType::LOE, Precedence::LESSGREATER},
+                        {TokenType::GOE, Precedence::LESSGREATER},
+                        {TokenType::PLUS, Precedence::SUM},
+                        {TokenType::MINUS, Precedence::SUM},
+                        {TokenType::SLASH, Precedence::PRODUCT},
+                        {TokenType::ASTERISK, Precedence::PRODUCT},
+                        {TokenType::LPAR, Precedence::CALL}};
 
     getNextToken();
     getNextToken();
