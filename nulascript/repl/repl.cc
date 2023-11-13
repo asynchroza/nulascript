@@ -29,7 +29,7 @@ void REPL::start() {
 
         auto resolved = evaluate(program);
         if (resolved) {
-            std::cout << resolved->evaluate();
+            std::cout << resolved->evaluate() << "\n";
         }
     }
 }
