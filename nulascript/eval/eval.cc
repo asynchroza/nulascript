@@ -38,6 +38,34 @@ Storage* evaluatePrefix(std::string op, Storage* rightExpression) {
     return nullptr;
 }
 
+IntegerStorage* evaluateIntegerInfix(std::string op, Storage* leftExpression,
+                                     Storage* rightExpression) {
+    auto left = dynamic_cast<IntegerStorage*>(leftExpression);
+    auto right = dynamic_cast<IntegerStorage*>(rightExpression);
+
+    if (op == "+") {
+        return new IntegerStorage(left->value + right->value);
+    } else if (op == "-") {
+        return new IntegerStorage(left->value - right->value);
+    } else if (op == "*") {
+        return new IntegerStorage(left->value * right->value);
+    } else if (op == "/") {
+        return new IntegerStorage(left->value / right->value);
+    }
+
+    return nullptr;
+}
+
+Storage* evaluateInfix(std::string op, Storage* leftExpression,
+                       Storage* rightExpression) {
+    if (leftExpression->getType() == StorageType::INTEGER &&
+        rightExpression->getType() == StorageType::INTEGER) {
+        return evaluateIntegerInfix(op, leftExpression, rightExpression);
+    }
+
+    return nullptr;
+}
+
 Storage* evaluate(Node* node) {
     if (auto program = dynamic_cast<Program*>(node)) {
         return evaluateSequence(program->statements);
@@ -50,6 +78,10 @@ Storage* evaluate(Node* node) {
     } else if (auto prefix = dynamic_cast<Prefix*>(node)) {
         auto rightExpression = evaluate(prefix->right);
         return evaluatePrefix(prefix->op, rightExpression);
+    } else if (auto infix = dynamic_cast<Infix*>(node)) {
+        auto leftExpression = evaluate(infix->left);
+        auto rightExpression = evaluate(infix->right);
+        return evaluateInfix(infix->op, leftExpression, rightExpression);
     }
 
     return nullptr;

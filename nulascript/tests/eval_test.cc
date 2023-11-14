@@ -42,7 +42,8 @@ TEST(EvalSuite, TestIntegerExpression) {
         int64_t expected;
     };
 
-    std::vector<Test> tests = {{"10", 10}, {"-10", -10}};
+    std::vector<Test> tests = {
+        {"10", 10}, {"-10", -10}, {"10 * 420 / 69 + ((69 / 420) * 100)", 60}};
 
     for (auto test : tests) {
         auto result =

@@ -505,7 +505,9 @@ TEST(ParserSuite, TestOperatorPrecedence) {
         {"false == a + b", "(false == (a + b))"},
         {"a + (b + c) + d", "((a + (b + c)) + d)"},
         {"multiply(a, b + c + d, d * p * (c / d))",
-         "multiply(a, ((b + c) + d), ((d * p) * (c / d)))"}};
+         "multiply(a, ((b + c) + d), ((d * p) * (c / d)))"},
+        {"10 * 420 / 69 + ((69 / 420) * 100)",
+         "(((10 * 420) / 69) + ((69 / 420) * 100))"}};
 
     for (auto test : precedenceTests) {
         Lexer l(test.input);
