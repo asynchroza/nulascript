@@ -29,7 +29,12 @@ void REPL::start() {
 
         auto resolved = evaluate(program);
         if (resolved) {
-            std::cout << resolved->evaluate() << "\n";
+            if (resolved->getType() == StorageType::NIL) {
+                std::cout << "undefined"
+                          << "\n";
+            } else {
+                std::cout << resolved->evaluate() << "\n";
+            }
         }
     }
 }

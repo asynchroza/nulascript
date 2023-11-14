@@ -13,7 +13,7 @@ Storage* evaluateMinusExpression(Storage* rightExpression) {
         return new IntegerStorage(-integer->value);
     }
 
-    return nullptr;
+    return nilStorage;
 }
 
 BooleanStorage* evaluateNotExpression(Storage* rightExpression) {
@@ -35,11 +35,15 @@ Storage* evaluatePrefix(std::string op, Storage* rightExpression) {
         return evaluateMinusExpression(rightExpression);
     }
 
-    return nullptr;
+    return nilStorage;
 }
 
-IntegerStorage* evaluateIntegerInfix(std::string op, Storage* leftExpression,
-                                     Storage* rightExpression) {
+BooleanStorage* getBooleanReference(bool val) {
+    return val ? trueStorage : falseStorage;
+}
+
+Storage* evaluateIntegerInfix(std::string op, Storage* leftExpression,
+                              Storage* rightExpression) {
     auto left = dynamic_cast<IntegerStorage*>(leftExpression);
     auto right = dynamic_cast<IntegerStorage*>(rightExpression);
 
@@ -51,9 +55,21 @@ IntegerStorage* evaluateIntegerInfix(std::string op, Storage* leftExpression,
         return new IntegerStorage(left->value * right->value);
     } else if (op == "/") {
         return new IntegerStorage(left->value / right->value);
+    } else if (op == "<") {
+        return getBooleanReference(left->value < right->value);
+    } else if (op == ">") {
+        return getBooleanReference(left->value > right->value);
+    } else if (op == "==" || op == "is") {
+        return getBooleanReference(left->value == right->value);
+    } else if (op == "!=" || op == "is not") {
+        return getBooleanReference(left->value != right->value);
+    } else if (op == ">=") {
+        return getBooleanReference(left->value >= right->value);
+    } else if (op == "<=") {
+        return getBooleanReference(left->value <= right->value);
     }
 
-    return nullptr;
+    return nilStorage;
 }
 
 Storage* evaluateInfix(std::string op, Storage* leftExpression,
@@ -61,9 +77,13 @@ Storage* evaluateInfix(std::string op, Storage* leftExpression,
     if (leftExpression->getType() == StorageType::INTEGER &&
         rightExpression->getType() == StorageType::INTEGER) {
         return evaluateIntegerInfix(op, leftExpression, rightExpression);
+    } else if (op == "==" || op == "is") {
+        return getBooleanReference(leftExpression == rightExpression);
+    } else if (op == "!=" || op == "is not") {
+        return getBooleanReference(leftExpression != rightExpression);
     }
 
-    return nullptr;
+    return nilStorage;
 }
 
 Storage* evaluate(Node* node) {
@@ -84,7 +104,7 @@ Storage* evaluate(Node* node) {
         return evaluateInfix(infix->op, leftExpression, rightExpression);
     }
 
-    return nullptr;
+    return nilStorage;
 }
 
 Storage* evaluateSequence(std::vector<Statement*> statements) {
