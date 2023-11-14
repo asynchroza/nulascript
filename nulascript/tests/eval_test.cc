@@ -35,3 +35,18 @@ TEST(EvalSuite, TestPrefixBangOperator) {
         ASSERT_EQ(result->value, test.expected);
     }
 }
+
+TEST(EvalSuite, TestIntegerExpression) {
+    struct Test {
+        std::string input;
+        int64_t expected;
+    };
+
+    std::vector<Test> tests = {{"10", 10}, {"-10", -10}};
+
+    for (auto test : tests) {
+        auto result =
+            dynamic_cast<IntegerStorage*>(getEvaluatedStorage(test.input));
+        ASSERT_EQ(result->value, test.expected);
+    }
+}

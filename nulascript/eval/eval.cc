@@ -7,6 +7,15 @@ NilStorage* nilStorage = new NilStorage();
 Storage* evaluate(Node* node);
 Storage* evaluateSequence(std::vector<Statement*> statements);
 
+Storage* evaluateMinusExpression(Storage* rightExpression) {
+    if (rightExpression->getType() == StorageType::INTEGER) {
+        auto integer = dynamic_cast<IntegerStorage*>(rightExpression);
+        return new IntegerStorage(-integer->value);
+    }
+
+    return nullptr;
+}
+
 BooleanStorage* evaluateNotExpression(Storage* rightExpression) {
     if (rightExpression == trueStorage) {
         return falseStorage;
@@ -22,6 +31,8 @@ BooleanStorage* evaluateNotExpression(Storage* rightExpression) {
 Storage* evaluatePrefix(std::string op, Storage* rightExpression) {
     if (op == "!" || op == "not") {
         return evaluateNotExpression(rightExpression);
+    } else if (op == "-") {
+        return evaluateMinusExpression(rightExpression);
     }
 
     return nullptr;
