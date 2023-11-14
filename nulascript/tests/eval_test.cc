@@ -1,0 +1,37 @@
+#include "eval.h"
+#include "iostream"
+#include "lexer.h"
+#include "parser.h"
+#include "token.h"
+#include "vector"
+#include "gtest/gtest.h"
+#include <string>
+#include <type_traits>
+
+// #define MULTILINE_STRING(s) #s
+
+Storage* getEvaluatedStorage(std::string input) {
+    Lexer l(input);
+    Parser p(l);
+    auto program = p.parseProgram();
+
+    return evaluate(program);
+}
+
+TEST(EvalSuite, TestPrefixBangOperator) {
+    struct Test {
+        std::string input;
+        bool expected;
+    };
+
+    std::vector<Test> tests = {{"not true", false}, {"!true", false},
+                               {"!!true", true},    {"not not true", true},
+                               {"!100", false},     {"not 100", false},
+                               {"!!1000", true},    {"not not 1000", true}};
+
+    for (auto test : tests) {
+        auto result =
+            dynamic_cast<BooleanStorage*>(getEvaluatedStorage(test.input));
+        ASSERT_EQ(result->value, test.expected);
+    }
+}
