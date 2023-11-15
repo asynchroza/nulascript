@@ -20,7 +20,7 @@ bool checkTruthiness(Storage* storage) {
     } else if (storage == nilStorage) {
         return false;
     } else {
-        std::cout << "[DEBUG]: Got a non boolean or nil value";
+        // TODO: extend logic for verifying truthiness
         return true;
     }
 }
