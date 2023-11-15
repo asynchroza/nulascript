@@ -51,3 +51,18 @@ TEST(EvalSuite, TestIntegerExpression) {
         ASSERT_EQ(result->value, test.expected);
     }
 }
+
+TEST(EvalSuite, TestIfStatement) {
+    struct Test {
+        std::string input;
+        std::string expected;
+    };
+
+    std::vector<Test> tests = {{"if (true) { 69 }", "69"},
+                               {"if (false) { 69 }", "nil"}};
+
+    for (auto test : tests) {
+        auto result = getEvaluatedStorage(test.input);
+        ASSERT_EQ(result->evaluate(), test.expected);
+    }
+}

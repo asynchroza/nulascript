@@ -7,6 +7,19 @@ NilStorage* nilStorage = new NilStorage();
 Storage* evaluate(Node* node);
 Storage* evaluateSequence(std::vector<Statement*> statements);
 
+bool checkTruthiness(Storage* storage) {
+    if (storage == trueStorage) {
+        return true;
+    } else if (storage == falseStorage) {
+        return false;
+    } else if (storage == nilStorage) {
+        return false;
+    } else {
+        std::cout << "[DEBUG]: Got a non boolean or nil value";
+        return true;
+    }
+}
+
 Storage* evaluateMinusExpression(Storage* rightExpression) {
     if (rightExpression->getType() == StorageType::INTEGER) {
         auto integer = dynamic_cast<IntegerStorage*>(rightExpression);
@@ -86,22 +99,50 @@ Storage* evaluateInfix(std::string op, Storage* leftExpression,
     return nilStorage;
 }
 
+Storage* evaluateIf(Conditional* expression) {
+    auto condition = evaluate(expression->condition);
+
+    if (checkTruthiness(condition)) {
+        return evaluate(expression->currentBlock);
+    } else if (expression->elseBlock) {
+        return evaluate(expression->elseBlock);
+    }
+
+    return nilStorage;
+}
+
+bool checkBase(Node* passed, const std::type_info& expected) {
+    return typeid(*passed) == expected;
+}
+
 Storage* evaluate(Node* node) {
-    if (auto program = dynamic_cast<Program*>(node)) {
+    if (checkBase(node, typeid(Program))) {
+        auto program = dynamic_cast<Program*>(node);
         return evaluateSequence(program->statements);
-    } else if (auto statement = dynamic_cast<ExpressionStatement*>(node)) {
+    } else if (checkBase(node, typeid(ExpressionStatement))) {
+        auto statement = dynamic_cast<ExpressionStatement*>(node);
         return evaluate(statement->expression);
-    } else if (auto integer = dynamic_cast<Integer*>(node)) {
+    } else if (checkBase(node, typeid(Integer))) {
+        auto integer = dynamic_cast<Integer*>(node);
         return new IntegerStorage(integer->value);
-    } else if (auto boolean = dynamic_cast<Boolean*>(node)) {
+    } else if (checkBase(node, typeid(Boolean))) {
+        auto boolean = dynamic_cast<Boolean*>(node);
         return boolean->value ? trueStorage : falseStorage;
-    } else if (auto prefix = dynamic_cast<Prefix*>(node)) {
+    } else if (checkBase(node, typeid(Prefix))) {
+        auto prefix = dynamic_cast<Prefix*>(node);
         auto rightExpression = evaluate(prefix->right);
         return evaluatePrefix(prefix->op, rightExpression);
-    } else if (auto infix = dynamic_cast<Infix*>(node)) {
+    } else if (checkBase(node, typeid(Infix))) {
+        auto infix = dynamic_cast<Infix*>(node);
         auto leftExpression = evaluate(infix->left);
         auto rightExpression = evaluate(infix->right);
         return evaluateInfix(infix->op, leftExpression, rightExpression);
+    } else if (checkBase(node, typeid(BlockStatement))) {
+        auto block = dynamic_cast<BlockStatement*>(node);
+        return evaluateSequence(block->statements);
+    } else if (checkBase(node, typeid(Conditional))) {
+        auto conditional = dynamic_cast<Conditional*>(node);
+        return evaluateIf(conditional);
     }
 
     return nilStorage;
