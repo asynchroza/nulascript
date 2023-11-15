@@ -12,16 +12,10 @@ class Node {
     virtual std::string toString() = 0;
 };
 
-class Statement : public Node {
-  public:
-    void statementNode();
-};
+class Statement : public Node {};
 
 class Expression : public Node {
   public:
-    void expressionNode();
-
-    // ! temp placeholders
     std::string tokenLiteral() override { return ""; }
     std::string toString() override { return ""; }
 };
@@ -33,7 +27,6 @@ class Program : public Node {
     std::string toString() override;
 };
 
-// ? should expressionNode be virtual and overriden in child expressions?
 class Identifier : public Expression {
   public:
     Token token;
@@ -119,7 +112,6 @@ class Boolean : public Expression {
     std::string toString() override;
 };
 
-// ? should statementNode be virtual and overriden in child statements?
 class LetStatement : public Statement {
   public:
     Token token;
