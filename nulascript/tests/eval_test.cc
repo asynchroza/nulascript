@@ -92,8 +92,8 @@ TEST(EvalSuite, TestLet) {
     };
 
     std::vector<Test> tests = {
-        {"let something = 1; let notSomething = 69; let thirdSomething = 400 + "
-         "20; something = notSomething + thirdSomething",
+        {"let something = 420; let notSomething = 69; let result = something + "
+         "notSomething; result;",
          "489"}};
 
     for (auto test : tests) {

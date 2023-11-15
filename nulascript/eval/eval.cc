@@ -216,6 +216,14 @@ Storage* evaluate(Node* node, Environment* env) {
         auto value = evaluate(let->value, env);
         if (isErrorStorage(value))
             return value;
+
+        // identifier as key
+        env->set(let->name->value, value);
+    }
+
+    else if (checkBase(node, typeid(Identifier))) {
+        auto ident = dynamic_cast<Identifier*>(node);
+        return env->get(ident->value);
     }
 
     return createError("No implementation for this functionality");
