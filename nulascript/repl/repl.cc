@@ -1,4 +1,5 @@
 #include "repl.h"
+#include "env.h"
 #include "eval.h"
 #include "lexer.h"
 #include "parser.h"
@@ -27,7 +28,9 @@ void REPL::start() {
             continue;
         }
 
-        auto resolved = evaluate(program);
+        auto environment = new Environment();
+        auto resolved = evaluate(program, environment);
+
         if (resolved) {
             if (resolved->getType() == StorageType::NIL) {
                 std::cout << "undefined"

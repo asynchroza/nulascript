@@ -1,3 +1,4 @@
+#include "env.h"
 #include "eval.h"
 #include "iostream"
 #include "lexer.h"
@@ -14,8 +15,9 @@ Storage* getEvaluatedStorage(std::string input) {
     Lexer l(input);
     Parser p(l);
     auto program = p.parseProgram();
+    auto environment = new Environment();
 
-    return evaluate(program);
+    return evaluate(program, environment);
 }
 
 TEST(EvalSuite, TestPrefixBangOperator) {
@@ -76,6 +78,23 @@ TEST(EvalSuite, TestReturn) {
     std::vector<Test> tests = {
         {"return 69", "69"},
         {"if (420 > 69) { if (420 > 69) { return 420; } return 69; }", "420"}};
+
+    for (auto test : tests) {
+        auto result = getEvaluatedStorage(test.input);
+        ASSERT_EQ(result->evaluate(), test.expected);
+    }
+}
+
+TEST(EvalSuite, TestLet) {
+    struct Test {
+        std::string input;
+        std::string expected;
+    };
+
+    std::vector<Test> tests = {
+        {"let something = 1; let notSomething = 69; let thirdSomething = 400 + "
+         "20; something = notSomething + thirdSomething",
+         "489"}};
 
     for (auto test : tests) {
         auto result = getEvaluatedStorage(test.input);

@@ -4,8 +4,9 @@ BooleanStorage* trueStorage = new BooleanStorage(true);
 BooleanStorage* falseStorage = new BooleanStorage(false);
 NilStorage* nilStorage = new NilStorage();
 
-Storage* evaluate(Node* node);
-Storage* evaluateProgramStatements(std::vector<Statement*> statements);
+Storage* evaluate(Node* node, Environment* env);
+Storage* evaluateProgramStatements(std::vector<Statement*> statements,
+                                   Environment* env);
 
 template <typename T>
 bool checkBase(T* passed, const std::type_info& expected) {
@@ -124,26 +125,27 @@ Storage* evaluateInfix(std::string op, Storage* leftExpression,
                        op + " " + rightExpression->evaluate());
 }
 
-Storage* evaluateIf(Conditional* expression) {
-    auto condition = evaluate(expression->condition);
+Storage* evaluateIf(Conditional* expression, Environment* env) {
+    auto condition = evaluate(expression->condition, env);
     if (isErrorStorage(condition))
         return condition;
 
     if (checkTruthiness(condition)) {
-        return evaluate(expression->currentBlock);
+        return evaluate(expression->currentBlock, env);
     } else if (expression->elseBlock) {
-        return evaluate(expression->elseBlock);
+        return evaluate(expression->elseBlock, env);
     }
 
     return nilStorage;
 }
 
-Storage* evaluateBlockStatement(std::vector<Statement*> statements) {
+Storage* evaluateBlockStatement(std::vector<Statement*> statements,
+                                Environment* env) {
     // TODO: (low prio) accept BlockStatement as an argument instead of the
     Storage* result;
 
     for (auto stmt : statements) {
-        result = evaluate(stmt);
+        result = evaluate(stmt, env);
 
         const StorageType resultType = result->getType();
         if (result && resultType == StorageType::ERROR ||
@@ -155,52 +157,76 @@ Storage* evaluateBlockStatement(std::vector<Statement*> statements) {
     return result;
 }
 
-Storage* evaluate(Node* node) {
+Storage* evaluate(Node* node, Environment* env) {
     if (checkBase(node, typeid(Program))) {
         auto program = dynamic_cast<Program*>(node);
-        return evaluateProgramStatements(program->statements);
-    } else if (checkBase(node, typeid(ExpressionStatement))) {
+        return evaluateProgramStatements(program->statements, env);
+    }
+
+    else if (checkBase(node, typeid(ExpressionStatement))) {
         auto statement = dynamic_cast<ExpressionStatement*>(node);
-        return evaluate(statement->expression);
-    } else if (checkBase(node, typeid(Integer))) {
+        return evaluate(statement->expression, env);
+    }
+
+    else if (checkBase(node, typeid(Integer))) {
         auto integer = dynamic_cast<Integer*>(node);
         return new IntegerStorage(integer->value);
-    } else if (checkBase(node, typeid(Boolean))) {
+    }
+
+    else if (checkBase(node, typeid(Boolean))) {
         auto boolean = dynamic_cast<Boolean*>(node);
         return boolean->value ? trueStorage : falseStorage;
-    } else if (checkBase(node, typeid(Prefix))) {
+    }
+
+    else if (checkBase(node, typeid(Prefix))) {
         auto prefix = dynamic_cast<Prefix*>(node);
-        auto rightExpression = evaluate(prefix->right);
+        auto rightExpression = evaluate(prefix->right, env);
         return evaluatePrefix(prefix->op, rightExpression);
-    } else if (checkBase(node, typeid(Infix))) {
+    }
+
+    else if (checkBase(node, typeid(Infix))) {
         auto infix = dynamic_cast<Infix*>(node);
-        auto leftExpression = evaluate(infix->left);
+        auto leftExpression = evaluate(infix->left, env);
         if (isErrorStorage(leftExpression))
             return leftExpression;
-        auto rightExpression = evaluate(infix->right);
+        auto rightExpression = evaluate(infix->right, env);
         if (isErrorStorage(rightExpression))
             return rightExpression;
         return evaluateInfix(infix->op, leftExpression, rightExpression);
-    } else if (checkBase(node, typeid(BlockStatement))) {
+    }
+
+    else if (checkBase(node, typeid(BlockStatement))) {
         auto block = dynamic_cast<BlockStatement*>(node);
-        return evaluateBlockStatement(block->statements);
-    } else if (checkBase(node, typeid(Conditional))) {
+        return evaluateBlockStatement(block->statements, env);
+    }
+
+    else if (checkBase(node, typeid(Conditional))) {
         auto conditional = dynamic_cast<Conditional*>(node);
-        return evaluateIf(conditional);
-    } else if (checkBase(node, typeid(ReturnStatement))) {
+        return evaluateIf(conditional, env);
+    }
+
+    else if (checkBase(node, typeid(ReturnStatement))) {
         auto statement = dynamic_cast<ReturnStatement*>(node);
-        auto result = evaluate(statement->returnValue);
+        auto result = evaluate(statement->returnValue, env);
         return new ReturnStorage(result);
+    }
+
+    else if (checkBase(node, typeid(LetStatement))) {
+        auto let = dynamic_cast<LetStatement*>(node);
+        auto value = evaluate(let->value, env);
+        if (isErrorStorage(value))
+            return value;
     }
 
     return createError("No implementation for this functionality");
 }
 
-Storage* evaluateProgramStatements(std::vector<Statement*> statements) {
+Storage* evaluateProgramStatements(std::vector<Statement*> statements,
+                                   Environment* env) {
     Storage* result;
 
     for (auto statement : statements) {
-        result = evaluate(statement);
+        result = evaluate(statement, env);
 
         if (checkBase(result, typeid(ReturnStorage))) {
             auto returnVal = dynamic_cast<ReturnStorage*>(result);
