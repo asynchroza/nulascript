@@ -134,7 +134,9 @@ Storage* evaluateBlockStatement(std::vector<Statement*> statements) {
     for (auto stmt : statements) {
         result = evaluate(stmt);
 
-        if (result && result->getType() == StorageType::RETURN) {
+        const StorageType resultType = result->getType();
+        if (result && resultType == StorageType::ERROR ||
+            resultType == StorageType::RETURN) {
             return result;
         }
     }
@@ -193,6 +195,8 @@ Storage* evaluateProgramStatements(std::vector<Statement*> statements) {
         if (checkBase(result, typeid(ReturnStorage))) {
             auto returnVal = dynamic_cast<ReturnStorage*>(result);
             return returnVal->value;
+        } else if (checkBase(result, typeid(ErrorStorage))) {
+            return result;
         }
     }
 
