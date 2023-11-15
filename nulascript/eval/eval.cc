@@ -7,6 +7,11 @@ NilStorage* nilStorage = new NilStorage();
 Storage* evaluate(Node* node);
 Storage* evaluateProgramStatements(std::vector<Statement*> statements);
 
+template <typename T>
+bool checkBase(T* passed, const std::type_info& expected) {
+    return typeid(*passed) == expected;
+}
+
 bool checkTruthiness(Storage* storage) {
     if (storage == trueStorage) {
         return true;
@@ -148,11 +153,6 @@ Storage* evaluateBlockStatement(std::vector<Statement*> statements) {
     }
 
     return result;
-}
-
-template <typename T>
-bool checkBase(T* passed, const std::type_info& expected) {
-    return typeid(*passed) == expected;
 }
 
 Storage* evaluate(Node* node) {
