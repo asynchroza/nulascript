@@ -66,3 +66,17 @@ TEST(EvalSuite, TestIfStatement) {
         ASSERT_EQ(result->evaluate(), test.expected);
     }
 }
+
+TEST(EvalSuite, TestReturn) {
+    struct Test {
+        std::string input;
+        std::string expected;
+    };
+
+    std::vector<Test> tests = {{"return 69", "69"}};
+
+    for (auto test : tests) {
+        auto result = getEvaluatedStorage(test.input);
+        ASSERT_EQ(result->evaluate(), test.expected);
+    }
+}

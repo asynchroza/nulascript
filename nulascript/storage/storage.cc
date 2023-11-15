@@ -19,3 +19,9 @@ NilStorage::NilStorage() {}
 StorageType NilStorage::getType() const { return StorageType::NIL; }
 
 std::string NilStorage::evaluate() const { return "nil"; }
+
+ReturnStorage::ReturnStorage(Storage* value) : value(value){};
+
+StorageType ReturnStorage::getType() const { return StorageType::RETURN; }
+
+std::string ReturnStorage::evaluate() const { return value->evaluate(); }

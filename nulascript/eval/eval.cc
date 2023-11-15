@@ -111,7 +111,8 @@ Storage* evaluateIf(Conditional* expression) {
     return nilStorage;
 }
 
-bool checkBase(Node* passed, const std::type_info& expected) {
+template <typename T>
+bool checkBase(T* passed, const std::type_info& expected) {
     return typeid(*passed) == expected;
 }
 
@@ -143,6 +144,10 @@ Storage* evaluate(Node* node) {
     } else if (checkBase(node, typeid(Conditional))) {
         auto conditional = dynamic_cast<Conditional*>(node);
         return evaluateIf(conditional);
+    } else if (checkBase(node, typeid(ReturnStatement))) {
+        auto statement = dynamic_cast<ReturnStatement*>(node);
+        auto result = evaluate(statement->returnValue);
+        return new ReturnStorage(result);
     }
 
     return nilStorage;
@@ -153,6 +158,11 @@ Storage* evaluateSequence(std::vector<Statement*> statements) {
 
     for (auto statement : statements) {
         result = evaluate(statement);
+
+        if (checkBase(result, typeid(ReturnStorage))) {
+            auto returnVal = dynamic_cast<ReturnStorage*>(result);
+            return returnVal->value;
+        }
     }
 
     return result;

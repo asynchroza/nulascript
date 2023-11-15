@@ -6,7 +6,7 @@
 #include <iostream>
 #include <string>
 
-enum class StorageType { INTEGER, BOOLEAN, NIL };
+enum class StorageType { INTEGER, BOOLEAN, NIL, RETURN };
 
 class Storage {
   public:
@@ -18,10 +18,9 @@ class IntegerStorage : public Storage {
   public:
     int64_t value;
 
-    // Constructor
+  public:
     IntegerStorage(int64_t value);
 
-    // Overrides
     StorageType getType() const override;
     std::string evaluate() const override;
 };
@@ -30,20 +29,26 @@ class BooleanStorage : public Storage {
   public:
     bool value;
 
-    // Constructor
+  public:
     BooleanStorage(bool value);
 
-    // Overrides
     StorageType getType() const override;
     std::string evaluate() const override;
 };
 
 class NilStorage : public Storage {
   public:
-    // Constructor
     NilStorage();
+    StorageType getType() const override;
+    std::string evaluate() const override;
+};
 
-    // Overrides
+class ReturnStorage : public Storage {
+  public:
+    Storage* value;
+
+  public:
+    ReturnStorage(Storage* value);
     StorageType getType() const override;
     std::string evaluate() const override;
 };
