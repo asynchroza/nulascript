@@ -30,7 +30,8 @@ Storage* evaluateMinusExpression(Storage* rightExpression) {
         return new IntegerStorage(-integer->value);
     }
 
-    return nilStorage;
+    return createError("Unknown operator -" +
+                       parseStorageTypeToString(rightExpression->getType()));
 }
 
 BooleanStorage* evaluateNotExpression(Storage* rightExpression) {
@@ -52,7 +53,8 @@ Storage* evaluatePrefix(std::string op, Storage* rightExpression) {
         return evaluateMinusExpression(rightExpression);
     }
 
-    return nilStorage;
+    return createError("Unknown operator " + op +
+                       parseStorageTypeToString(rightExpression->getType()));
 }
 
 BooleanStorage* getBooleanReference(bool val) {

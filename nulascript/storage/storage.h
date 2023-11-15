@@ -5,6 +5,7 @@
 
 #include <iostream>
 #include <string>
+#include <unordered_map>
 
 enum class StorageType { INTEGER, BOOLEAN, NIL, RETURN, ERROR };
 
