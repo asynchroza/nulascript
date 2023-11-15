@@ -5,7 +5,7 @@ BooleanStorage* falseStorage = new BooleanStorage(false);
 NilStorage* nilStorage = new NilStorage();
 
 Storage* evaluate(Node* node);
-Storage* evaluateSequence(std::vector<Statement*> statements);
+Storage* evaluateProgramStatements(std::vector<Statement*> statements);
 
 bool checkTruthiness(Storage* storage) {
     if (storage == trueStorage) {
@@ -111,6 +111,22 @@ Storage* evaluateIf(Conditional* expression) {
     return nilStorage;
 }
 
+Storage* evaluateBlockStatement(std::vector<Statement*> statements) {
+    // TODO: (low prio) accept BlockStatement as an argument instead of the
+    // statements vector
+    Storage* result;
+
+    for (auto stmt : statements) {
+        result = evaluate(stmt);
+
+        if (result && result->getType() == StorageType::RETURN) {
+            return result;
+        }
+    }
+
+    return result;
+}
+
 template <typename T>
 bool checkBase(T* passed, const std::type_info& expected) {
     return typeid(*passed) == expected;
@@ -119,7 +135,7 @@ bool checkBase(T* passed, const std::type_info& expected) {
 Storage* evaluate(Node* node) {
     if (checkBase(node, typeid(Program))) {
         auto program = dynamic_cast<Program*>(node);
-        return evaluateSequence(program->statements);
+        return evaluateProgramStatements(program->statements);
     } else if (checkBase(node, typeid(ExpressionStatement))) {
         auto statement = dynamic_cast<ExpressionStatement*>(node);
         return evaluate(statement->expression);
@@ -140,7 +156,7 @@ Storage* evaluate(Node* node) {
         return evaluateInfix(infix->op, leftExpression, rightExpression);
     } else if (checkBase(node, typeid(BlockStatement))) {
         auto block = dynamic_cast<BlockStatement*>(node);
-        return evaluateSequence(block->statements);
+        return evaluateBlockStatement(block->statements);
     } else if (checkBase(node, typeid(Conditional))) {
         auto conditional = dynamic_cast<Conditional*>(node);
         return evaluateIf(conditional);
@@ -153,7 +169,7 @@ Storage* evaluate(Node* node) {
     return nilStorage;
 }
 
-Storage* evaluateSequence(std::vector<Statement*> statements) {
+Storage* evaluateProgramStatements(std::vector<Statement*> statements) {
     Storage* result;
 
     for (auto statement : statements) {

@@ -73,7 +73,9 @@ TEST(EvalSuite, TestReturn) {
         std::string expected;
     };
 
-    std::vector<Test> tests = {{"return 69", "69"}};
+    std::vector<Test> tests = {
+        {"return 69", "69"},
+        {"if (420 > 69) { if (420 > 69) { return 420; } return 69; }", "420"}};
 
     for (auto test : tests) {
         auto result = getEvaluatedStorage(test.input);
