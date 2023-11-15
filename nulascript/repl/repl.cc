@@ -1,5 +1,4 @@
 #include "repl.h"
-#include "env.h"
 #include "eval.h"
 #include "lexer.h"
 #include "parser.h"

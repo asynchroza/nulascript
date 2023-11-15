@@ -3,11 +3,12 @@
 #ifndef STORAGE_H
 #define STORAGE_H
 
+#include "ast.h"
 #include <iostream>
 #include <string>
 #include <unordered_map>
 
-enum class StorageType { INTEGER, BOOLEAN, NIL, RETURN, ERROR };
+enum class StorageType { INTEGER, BOOLEAN, NIL, RETURN, ERROR, FUNCTION };
 
 extern std::unordered_map<StorageType, std::string> storageTypeMap;
 
@@ -17,6 +18,16 @@ class Storage {
   public:
     virtual StorageType getType() const = 0;
     virtual std::string evaluate() const = 0;
+};
+
+class Environment {
+  public:
+    Environment();
+    Storage* get(const std::string& k);
+    Storage* set(const std::string& k, Storage* v);
+
+  private:
+    std::unordered_map<std::string, Storage*> store;
 };
 
 class IntegerStorage : public Storage {
@@ -64,6 +75,19 @@ class ErrorStorage : public Storage {
 
   public:
     ErrorStorage(std::string message);
+    StorageType getType() const override;
+    std::string evaluate() const override;
+};
+
+class FunctionStorage : public Storage {
+  public:
+    std::vector<Identifier*> arguments;
+    BlockStatement* code;
+    Environment* env;
+
+  public:
+    FunctionStorage(std::vector<Identifier*> arguments, BlockStatement* code,
+                    Environment* env);
     StorageType getType() const override;
     std::string evaluate() const override;
 };

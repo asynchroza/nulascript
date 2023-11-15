@@ -1,4 +1,3 @@
-#include "env.h"
 #include "eval.h"
 #include "iostream"
 #include "lexer.h"
@@ -95,6 +94,21 @@ TEST(EvalSuite, TestLet) {
         {"let something = 420; let notSomething = 69; let result = something + "
          "notSomething; result;",
          "489"}};
+
+    for (auto test : tests) {
+        auto result = getEvaluatedStorage(test.input);
+        ASSERT_EQ(result->evaluate(), test.expected);
+    }
+}
+
+TEST(EvalSuite, TestFunction) {
+    struct Test {
+        std::string input;
+        std::string expected;
+    };
+
+    std::vector<Test> tests = {
+        {"let something = fn(x) {x;}; something(69);", "69"}};
 
     for (auto test : tests) {
         auto result = getEvaluatedStorage(test.input);

@@ -1,5 +1,22 @@
 #include "storage.h"
 
+Environment::Environment() {}
+
+Storage* Environment::get(const std::string& k) {
+    auto it = store.find(k);
+    if (it != store.end()) {
+        return it->second;
+    } else {
+        // TODO: think of better implementation
+        return new ErrorStorage(k + " is undefined");
+    }
+}
+
+Storage* Environment::set(const std::string& k, Storage* v) {
+    store[k] = v;
+    return v;
+}
+
 IntegerStorage::IntegerStorage(int64_t value) : value(value) {}
 
 StorageType IntegerStorage::getType() const { return StorageType::INTEGER; }
@@ -36,11 +53,9 @@ StorageType ErrorStorage::getType() const { return StorageType::ERROR; }
 std::string ErrorStorage::evaluate() const { return message; }
 
 std::unordered_map<StorageType, std::string> storageTypeMap = {
-    {StorageType::INTEGER, "INTEGER"},
-    {StorageType::BOOLEAN, "BOOLEAN"},
-    {StorageType::NIL, "NIL"},
-    {StorageType::RETURN, "RETURN"},
-    {StorageType::ERROR, "ERROR"}};
+    {StorageType::INTEGER, "INTEGER"}, {StorageType::BOOLEAN, "BOOLEAN"},
+    {StorageType::NIL, "NIL"},         {StorageType::RETURN, "RETURN"},
+    {StorageType::ERROR, "ERROR"},     {StorageType::FUNCTION, "FUNCTION"}};
 
 std::string parseStorageTypeToString(StorageType sT) {
     auto it = storageTypeMap.find(sT);
@@ -49,4 +64,25 @@ std::string parseStorageTypeToString(StorageType sT) {
     } else {
         return "UNKNOWN";
     }
+}
+
+FunctionStorage::FunctionStorage(std::vector<Identifier*> arguments,
+                                 BlockStatement* code, Environment* env)
+    : arguments(arguments), code(code), env(env) {}
+
+StorageType FunctionStorage::getType() const { return StorageType::FUNCTION; }
+
+std::string FunctionStorage::evaluate() const {
+    std::string result = "fn";
+
+    auto it = arguments.begin();
+    while (it != arguments.end()) {
+        result += (*it)->toString();
+        if (++it != arguments.end()) {
+            result += ", ";
+        }
+    }
+
+    result += ") {\n" + code->toString() + "\n}";
+    return result;
 }

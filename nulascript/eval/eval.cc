@@ -227,7 +227,11 @@ Storage* evaluate(Node* node, Environment* env) {
         return env->get(ident->value);
     }
 
-    std::cout << node->tokenLiteral() << std::endl;
+    else if (checkBase(node, typeid(Function))) {
+        auto func = dynamic_cast<Function*>(node);
+        return new FunctionStorage(func->arguments, func->code, env);
+    }
+
     return createError("No implementation found for this functionality");
 }
 
