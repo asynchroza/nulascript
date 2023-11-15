@@ -61,6 +61,10 @@ BooleanStorage* getBooleanReference(bool val) {
     return val ? trueStorage : falseStorage;
 }
 
+bool isErrorStorage(Storage* storage) {
+    return checkBase(storage, typeid(ErrorStorage));
+}
+
 Storage* evaluateIntegerInfix(std::string op, Storage* leftExpression,
                               Storage* rightExpression) {
     auto left = dynamic_cast<IntegerStorage*>(leftExpression);
@@ -117,6 +121,8 @@ Storage* evaluateInfix(std::string op, Storage* leftExpression,
 
 Storage* evaluateIf(Conditional* expression) {
     auto condition = evaluate(expression->condition);
+    if (isErrorStorage(condition))
+        return condition;
 
     if (checkTruthiness(condition)) {
         return evaluate(expression->currentBlock);
@@ -169,7 +175,11 @@ Storage* evaluate(Node* node) {
     } else if (checkBase(node, typeid(Infix))) {
         auto infix = dynamic_cast<Infix*>(node);
         auto leftExpression = evaluate(infix->left);
+        if (isErrorStorage(leftExpression))
+            return leftExpression;
         auto rightExpression = evaluate(infix->right);
+        if (isErrorStorage(rightExpression))
+            return rightExpression;
         return evaluateInfix(infix->op, leftExpression, rightExpression);
     } else if (checkBase(node, typeid(BlockStatement))) {
         auto block = dynamic_cast<BlockStatement*>(node);
