@@ -25,9 +25,11 @@ class Environment {
     Environment();
     Storage* get(const std::string& k);
     Storage* set(const std::string& k, Storage* v);
+    void setOutsideScope(Environment* env);
 
   private:
     std::unordered_map<std::string, Storage*> store;
+    Environment* outsideScope;
 };
 
 class IntegerStorage : public Storage {

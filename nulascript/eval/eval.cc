@@ -172,6 +172,26 @@ std::vector<Storage*> evaluateArgs(std::vector<Expression*> arguments,
     return evaluatedArgs;
 }
 
+Storage* invoke(Storage* invocation, std::vector<Storage*> args) {
+    if (auto castedInvocation = dynamic_cast<FunctionStorage*>(invocation)) {
+        auto scope = new Environment();
+        scope->setOutsideScope(castedInvocation->env);
+
+        for (int i = 0; i < castedInvocation->arguments.size(); i++) {
+            scope->set(castedInvocation->arguments[i]->value, args[i]);
+        }
+
+        auto invocationResult = evaluate(castedInvocation->code, scope);
+
+        if (auto returnedResult =
+                dynamic_cast<ReturnStorage*>(invocationResult)) {
+            return returnedResult->value;
+        }
+
+        return invocationResult;
+    }
+}
+
 Storage* evaluate(Node* node, Environment* env) {
     if (checkBase(node, typeid(Program))) {
         auto program = dynamic_cast<Program*>(node);
@@ -257,6 +277,8 @@ Storage* evaluate(Node* node, Environment* env) {
         if (isErrorStorage(arguments.at(arguments.size() - 1))) {
             return arguments[0];
         }
+
+        return invoke(evaluatedInvoc, arguments);
     }
 
     return createError("No implementation found for this functionality");

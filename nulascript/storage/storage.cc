@@ -7,7 +7,13 @@ Storage* Environment::get(const std::string& k) {
     if (it != store.end()) {
         return it->second;
     } else {
-        // TODO: think of better implementation
+        if (outsideScope) {
+            it = outsideScope->store.find(k);
+            if (it != outsideScope->store.end()) {
+                return it->second;
+            }
+        }
+
         return new ErrorStorage(k + " is undefined");
     }
 }
@@ -15,6 +21,10 @@ Storage* Environment::get(const std::string& k) {
 Storage* Environment::set(const std::string& k, Storage* v) {
     store[k] = v;
     return v;
+}
+
+void Environment::setOutsideScope(Environment* env) {
+    this->outsideScope = env;
 }
 
 IntegerStorage::IntegerStorage(int64_t value) : value(value) {}
@@ -73,7 +83,7 @@ FunctionStorage::FunctionStorage(std::vector<Identifier*> arguments,
 StorageType FunctionStorage::getType() const { return StorageType::FUNCTION; }
 
 std::string FunctionStorage::evaluate() const {
-    std::string result = "fn";
+    std::string result = "fn(";
 
     auto it = arguments.begin();
     while (it != arguments.end()) {
@@ -83,6 +93,6 @@ std::string FunctionStorage::evaluate() const {
         }
     }
 
-    result += ") {\n" + code->toString() + "\n}";
+    result += ") {\n  " + code->toString() + "\n}";
     return result;
 }
