@@ -8,7 +8,7 @@
 #include <string>
 #include <type_traits>
 
-// #define MULTILINE_STRING(s) #s
+#define MULTILINE_STRING(s) #s
 
 Storage* getEvaluatedStorage(std::string input) {
     Lexer l(input);
@@ -107,8 +107,18 @@ TEST(EvalSuite, TestFunction) {
         std::string expected;
     };
 
-    std::vector<Test> tests = {
-        {"let something = fn(x) {x;}; something(69);", "69"}};
+    std::vector<Test> tests = {{
+        // clang-format off
+            MULTILINE_STRING(
+                let something = fn(a) {
+                    fn(b) { a == b };
+                };
+
+                let result = something(10);
+                result(10);
+            ), "true"
+        // clang-format on
+    }};
 
     for (auto test : tests) {
         auto result = getEvaluatedStorage(test.input);
