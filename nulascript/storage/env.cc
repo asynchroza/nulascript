@@ -8,7 +8,7 @@ Storage* Environment::get(const std::string& k) {
         return it->second;
     } else {
         // TODO: think of better implementation
-        return new ErrorStorage("Couldn't find value");
+        return new ErrorStorage(k + " is undefined");
     }
 }
 

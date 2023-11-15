@@ -219,6 +219,7 @@ Storage* evaluate(Node* node, Environment* env) {
 
         // identifier as key
         env->set(let->name->value, value);
+        return value;
     }
 
     else if (checkBase(node, typeid(Identifier))) {
@@ -226,7 +227,8 @@ Storage* evaluate(Node* node, Environment* env) {
         return env->get(ident->value);
     }
 
-    return createError("No implementation for this functionality");
+    std::cout << node->tokenLiteral() << std::endl;
+    return createError("No implementation found for this functionality");
 }
 
 Storage* evaluateProgramStatements(std::vector<Statement*> statements,

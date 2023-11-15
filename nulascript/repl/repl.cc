@@ -11,6 +11,7 @@ const std::string REPL::PROMPT = "> ";
 void REPL::start() {
     std::string line;
 
+    auto environment = new Environment();
     while (true) {
         std::cout << REPL::PROMPT;
         if (!std::getline(std::cin, line)) {
@@ -28,7 +29,6 @@ void REPL::start() {
             continue;
         }
 
-        auto environment = new Environment();
         auto resolved = evaluate(program, environment);
 
         if (resolved) {
