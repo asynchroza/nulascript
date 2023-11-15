@@ -84,7 +84,6 @@ Expression* Parser::parseExpression(Precedence p) {
         std::string err =
             "[ERROR] No parsing function was found for prefix of type: " +
             std::to_string(currentToken.type);
-        std::cout << err << std::endl;
         appendError(err);
         return nullptr;
     }

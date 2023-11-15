@@ -6,7 +6,11 @@
 #include <iostream>
 #include <string>
 
-enum class StorageType { INTEGER, BOOLEAN, NIL, RETURN };
+enum class StorageType { INTEGER, BOOLEAN, NIL, RETURN, ERROR };
+
+extern std::unordered_map<StorageType, std::string> storageTypeMap;
+
+std::string parseStorageTypeToString(StorageType sT);
 
 class Storage {
   public:
@@ -49,6 +53,16 @@ class ReturnStorage : public Storage {
 
   public:
     ReturnStorage(Storage* value);
+    StorageType getType() const override;
+    std::string evaluate() const override;
+};
+
+class ErrorStorage : public Storage {
+  public:
+    std::string message;
+
+  public:
+    ErrorStorage(std::string message);
     StorageType getType() const override;
     std::string evaluate() const override;
 };

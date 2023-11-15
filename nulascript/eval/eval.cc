@@ -20,6 +20,10 @@ bool checkTruthiness(Storage* storage) {
     }
 }
 
+ErrorStorage* createError(std::string message) {
+    return new ErrorStorage(message);
+}
+
 Storage* evaluateMinusExpression(Storage* rightExpression) {
     if (rightExpression->getType() == StorageType::INTEGER) {
         auto integer = dynamic_cast<IntegerStorage*>(rightExpression);
@@ -94,9 +98,19 @@ Storage* evaluateInfix(std::string op, Storage* leftExpression,
         return getBooleanReference(leftExpression == rightExpression);
     } else if (op == "!=" || op == "is not") {
         return getBooleanReference(leftExpression != rightExpression);
+    } else if (leftExpression->getType() != rightExpression->getType()) {
+        std::string errorMessage = "";
+
+        errorMessage = "Type missmatch. Left side is " +
+                       parseStorageTypeToString(leftExpression->getType()) +
+                       " and right side is " +
+                       parseStorageTypeToString(rightExpression->getType());
+
+        return createError(errorMessage);
     }
 
-    return nilStorage;
+    return createError("Unkown operator " + leftExpression->evaluate() + " " +
+                       op + " " + rightExpression->evaluate());
 }
 
 Storage* evaluateIf(Conditional* expression) {
@@ -113,7 +127,6 @@ Storage* evaluateIf(Conditional* expression) {
 
 Storage* evaluateBlockStatement(std::vector<Statement*> statements) {
     // TODO: (low prio) accept BlockStatement as an argument instead of the
-    // statements vector
     Storage* result;
 
     for (auto stmt : statements) {
@@ -166,7 +179,7 @@ Storage* evaluate(Node* node) {
         return new ReturnStorage(result);
     }
 
-    return nilStorage;
+    return createError("No implementation for this functionality");
 }
 
 Storage* evaluateProgramStatements(std::vector<Statement*> statements) {
