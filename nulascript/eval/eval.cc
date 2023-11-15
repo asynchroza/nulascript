@@ -157,6 +157,21 @@ Storage* evaluateBlockStatement(std::vector<Statement*> statements,
     return result;
 }
 
+std::vector<Storage*> evaluateArgs(std::vector<Expression*> arguments,
+                                   Environment* env) {
+    std::vector<Storage*> evaluatedArgs;
+    Storage* evaluated;
+
+    for (auto arg : arguments) {
+        evaluated = evaluate(arg, env);
+        evaluatedArgs.push_back(evaluated);
+        if (isErrorStorage(evaluated))
+            return evaluatedArgs;
+    }
+
+    return evaluatedArgs;
+}
+
 Storage* evaluate(Node* node, Environment* env) {
     if (checkBase(node, typeid(Program))) {
         auto program = dynamic_cast<Program*>(node);
@@ -230,6 +245,18 @@ Storage* evaluate(Node* node, Environment* env) {
     else if (checkBase(node, typeid(Function))) {
         auto func = dynamic_cast<Function*>(node);
         return new FunctionStorage(func->arguments, func->code, env);
+    }
+
+    else if (checkBase(node, typeid(Invocation))) {
+        auto invoc = dynamic_cast<Invocation*>(node);
+        auto evaluatedInvoc = evaluate(invoc->function, env);
+        if (isErrorStorage(evaluatedInvoc))
+            return evaluatedInvoc;
+
+        auto arguments = evaluateArgs(invoc->arguments, env);
+        if (isErrorStorage(arguments.at(arguments.size() - 1))) {
+            return arguments[0];
+        }
     }
 
     return createError("No implementation found for this functionality");
