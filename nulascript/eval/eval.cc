@@ -190,6 +190,9 @@ Storage* invoke(Storage* invocation, std::vector<Storage*> args) {
 
         return invocationResult;
     }
+
+    return createError(
+        "An invocation was executed on an element which is not a function");
 }
 
 Storage* evaluate(Node* node, Environment* env) {
