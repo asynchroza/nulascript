@@ -147,6 +147,8 @@ Parser::Parser(Lexer& l) {
     });
     registerPrefixFunction(TokenType::IDENT,
                            [&]() -> Expression* { return parseIdentifier(); });
+    registerPrefixFunction(TokenType::REF,
+                           [&]() -> Expression* { return parseReference(); });
     registerPrefixFunction(TokenType::STRING,
                            [&]() -> Expression* { return parseString(); });
     registerPrefixFunction(TokenType::FUNC,
@@ -439,3 +441,16 @@ Expression* Parser::parseInvocation(Expression* function) {
 }
 
 String* Parser::parseString() { return new String(currentToken); }
+
+Reference* Parser::parseReference() {
+    auto ref = new Reference(currentToken);
+
+    if (!peekAndLoadExpectedToken(TokenType::IDENT)) {
+        return nullptr;
+    }
+
+    ref->referencedIdentifier = currentToken.literal;
+    getNextToken();
+
+    return ref;
+}

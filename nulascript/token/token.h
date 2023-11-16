@@ -19,7 +19,7 @@ enum TokenType {
     LBRACE,
     RBRACE,
     ASTERISK,
-    DEREF,
+    REF,
     PIPE,
     FUNC,
     BANG_OR_NOT,
@@ -36,7 +36,7 @@ enum TokenType {
     RETURN,
     IS,
     IS_NOT,
-    STRING
+    STRING,
 };
 
 struct Token {

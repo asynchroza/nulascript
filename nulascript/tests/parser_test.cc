@@ -664,3 +664,29 @@ TEST(ParserSuite, TestInvocation) {
     EXPECT_EQ(exp->arguments.size(), 3);
     EXPECT_EQ(exp->arguments[0]->tokenLiteral(), "1");
 }
+
+TEST(ParserSuite, TestReference) {
+    std::string input = "&something";
+
+    Lexer l(input);
+    Parser p(l);
+    Program* program = p.parseProgram();
+
+    if (program->statements.size() != 1) {
+        FAIL() << "Program got " << program->statements.size()
+               << " statements instead of 1";
+    }
+
+    auto stmt = dynamic_cast<ExpressionStatement*>(program->statements[0]);
+    if (!stmt) {
+        FAIL() << "Not correct type" << std::endl;
+    }
+
+    auto ref = dynamic_cast<Reference*>(stmt->expression);
+    if (!ref) {
+        FAIL() << "Not correct type" << std::endl;
+    }
+
+    ASSERT_EQ(ref->referencedIdentifier, "something");
+    ASSERT_EQ(ref->tokenLiteral(), "&");
+}

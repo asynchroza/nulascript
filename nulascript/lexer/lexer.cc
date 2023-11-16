@@ -128,7 +128,7 @@ Token Lexer::getNextToken() {
         currentToken = newToken(TokenType::ASTERISK, ch);
         break;
     case '&':
-        currentToken = newToken(TokenType::DEREF, ch);
+        currentToken = newToken(TokenType::REF, ch);
         break;
     case '|':
         currentToken = newToken(TokenType::PIPE, ch);

@@ -200,3 +200,11 @@ std::string Assignment::tokenLiteral() { return token.literal; }
 
 // TODO: update this toString()
 std::string Assignment::toString() { return token.literal; }
+
+Reference::Reference(Token token) : token(token){};
+
+std::string Reference::toString() {
+    return token.literal + referencedIdentifier;
+}
+
+std::string Reference::tokenLiteral() { return token.literal; }
