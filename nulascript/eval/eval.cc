@@ -177,13 +177,19 @@ std::vector<Storage*> evaluateArgs(std::vector<Expression*> arguments,
     return evaluatedArgs;
 }
 
+EnvironmentObject createActualObject(Storage* storage) {
+    EnvironmentObject obj = {false, "", storage};
+    return obj;
+}
+
 Storage* invoke(Storage* invocation, std::vector<Storage*> args) {
     if (auto castedInvocation = dynamic_cast<FunctionStorage*>(invocation)) {
         auto scope = new Environment();
         scope->setOutsideScope(castedInvocation->env);
 
         for (int i = 0; i < castedInvocation->arguments.size(); i++) {
-            scope->set(castedInvocation->arguments[i]->value, args[i]);
+            auto obj = createActualObject(args[i]);
+            scope->set(castedInvocation->arguments[i]->value, obj);
         }
 
         if (!castedInvocation->code->hasCode())
@@ -263,13 +269,14 @@ Storage* evaluate(Node* node, Environment* env) {
             return value;
 
         // identifier as key
-        env->set(let->name->value, value);
+        auto obj = createActualObject(value);
+        env->set(let->name->value, obj);
         return value;
     }
 
     else if (checkBase(node, typeid(Identifier))) {
         auto ident = dynamic_cast<Identifier*>(node);
-        return env->get(ident->value);
+        return env->get(ident->value).v;
     }
 
     else if (checkBase(node, typeid(Function))) {
@@ -304,7 +311,16 @@ Storage* evaluate(Node* node, Environment* env) {
     else if (checkBase(node, typeid(Assignment))) {
         auto assignment = dynamic_cast<Assignment*>(node);
         auto assignedValue = evaluate(assignment->expression, env);
-        return env->set(assignment->identifier->value, assignedValue);
+
+        EnvironmentObject obj = {false, "", assignedValue};
+        return env->set(assignment->identifier->value, obj);
+    }
+
+    else if (checkBase(node, typeid(Reference))) {
+        auto reference = dynamic_cast<Reference*>(node);
+        EnvironmentObject obj = {true, reference->referencedIdentifier,
+                                 nullptr};
+        return new ReferenceStorage(obj, env);
     }
 
     return createError("No implementation found for this functionality");

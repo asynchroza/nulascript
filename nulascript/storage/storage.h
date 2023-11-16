@@ -15,7 +15,8 @@ enum class StorageType {
     RETURN,
     ERROR,
     FUNCTION,
-    STRING
+    STRING,
+    REFERENCE,
 };
 
 extern std::unordered_map<StorageType, std::string> storageTypeMap;
@@ -28,15 +29,21 @@ class Storage {
     virtual std::string evaluate() const = 0;
 };
 
+struct EnvironmentObject {
+    bool isReferencing;
+    std::string referencedIdentifier;
+    Storage* v;
+};
+
 class Environment {
   public:
     Environment();
-    Storage* get(const std::string& k);
-    Storage* set(const std::string& k, Storage* v);
+    EnvironmentObject get(const std::string& k);
+    Storage* set(const std::string& k, EnvironmentObject v);
     void setOutsideScope(Environment* env);
 
   private:
-    std::unordered_map<std::string, Storage*> store;
+    std::unordered_map<std::string, EnvironmentObject> store;
     Environment* outsideScope;
 };
 
@@ -108,6 +115,17 @@ class StringStorage : public Storage {
 
   public:
     StringStorage(std::string value);
+    StorageType getType() const override;
+    std::string evaluate() const override;
+};
+
+class ReferenceStorage : public Storage {
+  public:
+    EnvironmentObject reference;
+    Environment* env;
+
+  public:
+    ReferenceStorage(EnvironmentObject reference, Environment* env);
     StorageType getType() const override;
     std::string evaluate() const override;
 };

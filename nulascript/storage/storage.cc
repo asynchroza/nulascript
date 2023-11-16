@@ -3,7 +3,7 @@
 
 Environment::Environment() {}
 
-Storage* Environment::get(const std::string& k) {
+EnvironmentObject Environment::get(const std::string& k) {
     auto it = store.find(k);
     if (it != store.end()) {
         return it->second;
@@ -15,13 +15,15 @@ Storage* Environment::get(const std::string& k) {
             }
         }
 
-        return new ErrorStorage(k + " is undefined");
+        EnvironmentObject errorObject = {false, "",
+                                         new ErrorStorage(k + " is undefined")};
+        return errorObject;
     }
 }
 
-Storage* Environment::set(const std::string& k, Storage* v) {
+Storage* Environment::set(const std::string& k, EnvironmentObject v) {
     store[k] = v;
-    return v;
+    return v.v;
 }
 
 void Environment::setOutsideScope(Environment* env) {
@@ -106,3 +108,13 @@ StringStorage::StringStorage(std::string value) : value(value) {}
 std::string StringStorage::evaluate() const { return value; }
 
 StorageType StringStorage::getType() const { return StorageType::STRING; }
+
+ReferenceStorage::ReferenceStorage(EnvironmentObject reference,
+                                   Environment* env)
+    : reference(reference), env(env) {}
+
+std::string ReferenceStorage::evaluate() const {
+    return env->get(reference.referencedIdentifier).v->evaluate();
+}
+
+StorageType ReferenceStorage::getType() const { return StorageType::REFERENCE; }
