@@ -46,9 +46,15 @@ if (100 <= 200) {
 ```
 
 #### Operators:
-```javascript
-let a = not true;   // assigned value is false
-let a = !true;      // assigned value is false
+```python
+def a = not true;   # assigned value is false
+def a = !true;      # assigned value is false
+```
 
-TBA
+#### Functions:
+```python
+# functions are first class citizens in nulascript
+def a = func(x, y) {
+    x + y;
+}
 ```
