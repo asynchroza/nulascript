@@ -15,7 +15,8 @@ enum class StorageType {
     RETURN,
     ERROR,
     FUNCTION,
-    STRING
+    STRING,
+    REFERENCE
 };
 
 extern std::unordered_map<StorageType, std::string> storageTypeMap;
@@ -26,6 +27,7 @@ class Storage {
   public:
     virtual StorageType getType() const = 0;
     virtual std::string evaluate() const = 0;
+    virtual bool setValue(Storage* value);
 };
 
 class Environment {
@@ -49,6 +51,7 @@ class IntegerStorage : public Storage {
 
     StorageType getType() const override;
     std::string evaluate() const override;
+    bool setValue(Storage* value) override;
 };
 
 class BooleanStorage : public Storage {
@@ -60,6 +63,7 @@ class BooleanStorage : public Storage {
 
     StorageType getType() const override;
     std::string evaluate() const override;
+    bool setValue(Storage* value) override;
 };
 
 class NilStorage : public Storage {
@@ -67,6 +71,7 @@ class NilStorage : public Storage {
     NilStorage();
     StorageType getType() const override;
     std::string evaluate() const override;
+    bool setValue(Storage* value) override;
 };
 
 class ReturnStorage : public Storage {
@@ -77,6 +82,7 @@ class ReturnStorage : public Storage {
     ReturnStorage(Storage* value);
     StorageType getType() const override;
     std::string evaluate() const override;
+    bool setValue(Storage* value) override;
 };
 
 class ErrorStorage : public Storage {
@@ -87,6 +93,7 @@ class ErrorStorage : public Storage {
     ErrorStorage(std::string message);
     StorageType getType() const override;
     std::string evaluate() const override;
+    bool setValue(Storage* value) override;
 };
 
 class FunctionStorage : public Storage {
@@ -100,6 +107,7 @@ class FunctionStorage : public Storage {
                     Environment* env);
     StorageType getType() const override;
     std::string evaluate() const override;
+    bool setValue(Storage* value) override;
 };
 
 class StringStorage : public Storage {
@@ -110,6 +118,19 @@ class StringStorage : public Storage {
     StringStorage(std::string value);
     StorageType getType() const override;
     std::string evaluate() const override;
+    bool setValue(Storage* value) override;
+};
+
+class ReferenceStorage : public Storage {
+  public:
+    std::string reference;
+    Environment* environment;
+
+  public:
+    ReferenceStorage(std::string reference, Environment* environment);
+    StorageType getType() const override;
+    std::string evaluate() const override;
+    bool setValue(Storage* value) override;
 };
 
 #endif // STORAGE_H

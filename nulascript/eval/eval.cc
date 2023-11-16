@@ -303,8 +303,18 @@ Storage* evaluate(Node* node, Environment* env) {
 
     else if (checkBase(node, typeid(Assignment))) {
         auto assignment = dynamic_cast<Assignment*>(node);
-        auto assignedValue = evaluate(assignment->expression, env);
-        return env->set(assignment->identifier->value, assignedValue);
+        auto assignedStorage = evaluate(assignment->expression, env);
+        auto fetchedStorage = env->get(assignment->identifier->value);
+        auto result = fetchedStorage->setValue(assignedStorage);
+        if (!result)
+            return new ErrorStorage(
+                "Cannot assign value with missmatching type");
+        return fetchedStorage;
+    }
+
+    else if (checkBase(node, typeid(Reference))) {
+        auto reference = dynamic_cast<Reference*>(node);
+        return new ReferenceStorage(reference->referencedIdentifier, env);
     }
 
     return createError("No implementation found for this functionality");
