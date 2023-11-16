@@ -188,3 +188,9 @@ std::string Invocation::toString() {
     return result;
 }
 std::string Invocation::tokenLiteral() { return token.literal; }
+
+String::String(Token token) : token(token), value(token.literal) {}
+
+std::string String::tokenLiteral() { return token.literal; }
+
+std::string String::toString() { return token.literal; }

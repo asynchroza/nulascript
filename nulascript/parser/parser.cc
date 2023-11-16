@@ -418,12 +418,10 @@ Function* Parser::parseFunction() {
     return func;
 }
 
-// Function* Parser::parseFunctionExpression(Function) {
-//     auto function = new Function(currentToken);
-// }
-
 Expression* Parser::parseInvocation(Expression* function) {
     auto invocation = new Invocation(currentToken, (Function*)function);
     invocation->arguments = parseInvocationArguments();
     return invocation;
 }
+
+String* Parser::parseString() { return new String(currentToken); }

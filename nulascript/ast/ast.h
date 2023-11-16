@@ -174,3 +174,14 @@ class Invocation : public Expression {
     std::string tokenLiteral() override;
     std::string toString() override;
 };
+
+class String : public Expression {
+  public:
+    Token token;
+    std::string value;
+
+  public:
+    String(Token token);
+    std::string tokenLiteral() override;
+    std::string toString() override;
+};
