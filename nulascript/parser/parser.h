@@ -46,7 +46,7 @@ class Parser {
     ReturnStatement* parseReturnStatement();
     ExpressionStatement* parseExpressionStatement();
     Integer* parseInteger();
-    Identifier* parseIdentifier();
+    Expression* parseIdentifier();
     Prefix* parsePrefix();
     Boolean* parseBoolean();
     Infix* parseInfix(Expression* left);
@@ -54,7 +54,6 @@ class Parser {
     BlockStatement* parseBlock();
     Expression* parseParensExpressions();
     Function* parseFunction();
-    Function* parseFunctionExpression();
     String* parseString();
     Expression* parseInvocation(Expression* function);
     std::vector<Expression*> parseInvocationArguments();

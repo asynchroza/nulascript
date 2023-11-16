@@ -268,7 +268,19 @@ void Parser::registerInfixFunction(TokenType tokenType,
     infixParsingFunctions[tokenType] = parseInfixFunction;
 }
 
-Identifier* Parser::parseIdentifier() { return new Identifier(currentToken); }
+Expression* Parser::parseIdentifier() {
+    auto currentIdentifier = new Identifier(currentToken);
+    if (isEqualToPeekedTokenType(TokenType::ASSIGN)) {
+        // make sure it's two times and not one
+        getNextToken();
+        getNextToken();
+        auto assignment = new Assignment(currentToken, currentIdentifier);
+        assignment->expression = parseExpression(Precedence::LOWEST);
+        return assignment;
+    }
+
+    return new Identifier(currentToken);
+}
 Boolean* Parser::parseBoolean() { return new Boolean(currentToken); }
 
 Integer* Parser::parseInteger() {

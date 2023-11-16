@@ -301,6 +301,12 @@ Storage* evaluate(Node* node, Environment* env) {
         return new StringStorage(str->value);
     }
 
+    else if (checkBase(node, typeid(Assignment))) {
+        auto assignment = dynamic_cast<Assignment*>(node);
+        auto assignedValue = evaluate(assignment->expression, env);
+        return env->set(assignment->identifier->value, assignedValue);
+    }
+
     return createError("No implementation found for this functionality");
 }
 

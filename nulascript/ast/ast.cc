@@ -192,3 +192,11 @@ String::String(Token token) : token(token), value(token.literal) {}
 std::string String::tokenLiteral() { return token.literal; }
 
 std::string String::toString() { return token.literal; }
+
+Assignment::Assignment(Token token, Identifier* identifier)
+    : token(token), identifier(identifier){};
+
+std::string Assignment::tokenLiteral() { return token.literal; }
+
+// TODO: update this toString()
+std::string Assignment::toString() { return token.literal; }

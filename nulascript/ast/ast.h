@@ -186,3 +186,15 @@ class String : public Expression {
     std::string tokenLiteral() override;
     std::string toString() override;
 };
+
+class Assignment : public Expression {
+  public:
+    Token token;
+    Identifier* identifier;
+    Expression* expression;
+
+  public:
+    Assignment(Token token, Identifier* identifier);
+    std::string tokenLiteral() override;
+    std::string toString() override;
+};
