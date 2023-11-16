@@ -5,6 +5,7 @@
 Lexer::Lexer(const std::string& input)
     : input(input), pos(0), readPos(0), ch(0), tokenLookup(TokenLookup()) {
     readChar();
+    std::cout << input << std::endl;
 }
 
 void Lexer::readChar() {
@@ -16,6 +17,18 @@ void Lexer::readChar() {
 
     pos = readPos;
     readPos = readPos + 1;
+}
+
+std::string Lexer::readStringLiteral() {
+    int position = pos + 1;
+    while (true) {
+        readChar();
+        if (ch == '"' || ch == 0) {
+            break;
+        }
+    }
+
+    return input.substr(position, pos - position);
 }
 
 std::string Lexer::readExtendedToken(TokenType tokenType) {
@@ -81,6 +94,10 @@ Token Lexer::getNextToken() {
     skipOverWhitespace();
 
     switch (ch) {
+    case '"':
+        currentToken.type = TokenType::STRING;
+        currentToken.literal = readStringLiteral();
+        break;
     case '=':
         currentToken = checkForEqualityOperator(ch);
         break;

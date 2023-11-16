@@ -6,6 +6,7 @@
 
 TEST(LexerSuite, LexerTest) {
     std::vector<std::pair<std::string, std::vector<Token>>> testCases = {
+        {"\"something\"", {{TokenType::STRING, "something"}}},
         {
             MULTILINE_STRING(def numOne = 10; def numTwo = 20;
                              def add = func(x, y) { x + y; }

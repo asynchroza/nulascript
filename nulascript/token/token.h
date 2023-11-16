@@ -35,7 +35,8 @@ enum TokenType {
     FALSE,
     RETURN,
     IS,
-    IS_NOT
+    IS_NOT,
+    STRING
 };
 
 struct Token {
