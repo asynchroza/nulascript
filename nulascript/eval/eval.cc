@@ -305,10 +305,17 @@ Storage* evaluate(Node* node, Environment* env) {
         auto assignment = dynamic_cast<Assignment*>(node);
         auto assignedStorage = evaluate(assignment->expression, env);
         auto fetchedStorage = env->get(assignment->identifier->value);
-        auto result = fetchedStorage->setValue(assignedStorage);
-        if (!result)
-            return new ErrorStorage(
-                "Cannot assign value with missmatching type");
+
+        if (auto castedStorage =
+                dynamic_cast<ReferenceStorage*>(fetchedStorage)) {
+            auto result = castedStorage->setValue(assignedStorage);
+            if (!result)
+                return new ErrorStorage(
+                    "Cannot assign value with missmatching type");
+        } else {
+            return env->set(assignment->identifier->value, assignedStorage);
+        }
+
         return fetchedStorage;
     }
 
