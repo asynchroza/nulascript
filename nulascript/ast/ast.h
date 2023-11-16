@@ -71,6 +71,7 @@ class BlockStatement : public Statement {
     BlockStatement(Token token);
     std::string toString();
     std::string tokenLiteral();
+    bool hasCode();
 };
 
 class Conditional : public Expression {

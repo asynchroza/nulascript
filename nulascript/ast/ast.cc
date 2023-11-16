@@ -44,7 +44,6 @@ std::string LetStatement::toString() {
     representation += tokenLiteral() + " " + name->toString() + " = ";
 
     if (value) {
-        std::cout << "[DEBUG] LetStatement Value is not NULL_PTR" << std::endl;
         representation += value->toString();
     }
 
@@ -103,8 +102,6 @@ std::string ReturnStatement::toString() {
     representation += tokenLiteral() + " ";
 
     if (returnValue) {
-        std::cout << "[DEBUG] ReturnStatement returnValue is not NULL_PTR"
-                  << std::endl;
         representation += returnValue->toString();
     }
 
@@ -140,6 +137,7 @@ std::string Conditional::tokenLiteral() { return token.literal; }
 
 BlockStatement::BlockStatement(Token token) : token(token) {}
 std::string BlockStatement::tokenLiteral() { return token.literal; }
+bool BlockStatement::hasCode() { return statements.size() > 0; }
 
 std::string BlockStatement::toString() {
     std::string result = "";

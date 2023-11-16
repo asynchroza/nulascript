@@ -1,4 +1,5 @@
 #include "storage.h"
+#include <sstream>
 
 Environment::Environment() {}
 
@@ -83,7 +84,7 @@ FunctionStorage::FunctionStorage(std::vector<Identifier*> arguments,
 StorageType FunctionStorage::getType() const { return StorageType::FUNCTION; }
 
 std::string FunctionStorage::evaluate() const {
-    std::string result = "func(";
+    std::string result = "[function]:\n    arguments: [";
 
     auto it = arguments.begin();
     while (it != arguments.end()) {
@@ -93,7 +94,9 @@ std::string FunctionStorage::evaluate() const {
         }
     }
 
-    result += ") {\n  " + code->toString() + "\n}";
+    std::ostringstream addressStream;
+    addressStream << "0x" << std::hex << reinterpret_cast<uintptr_t>(this);
+    result += "]\n    location: \"" + addressStream.str() + "\"";
     return result;
 }
 

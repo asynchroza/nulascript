@@ -106,6 +106,10 @@ Storage* evaluateInfix(std::string op, Storage* leftExpression,
     if (leftExpression->getType() == StorageType::INTEGER &&
         rightExpression->getType() == StorageType::INTEGER) {
         return evaluateIntegerInfix(op, leftExpression, rightExpression);
+    } else if (leftExpression->getType() == StorageType::STRING &&
+               rightExpression->getType() == StorageType::STRING && op == "+") {
+        return new StringStorage(leftExpression->evaluate() +
+                                 rightExpression->evaluate());
     } else if (op == "==" || op == "is") {
         return getBooleanReference(leftExpression == rightExpression);
     } else if (op == "!=" || op == "is not") {
@@ -159,6 +163,7 @@ Storage* evaluateBlockStatement(std::vector<Statement*> statements,
 
 std::vector<Storage*> evaluateArgs(std::vector<Expression*> arguments,
                                    Environment* env) {
+
     std::vector<Storage*> evaluatedArgs;
     Storage* evaluated;
 
@@ -181,6 +186,8 @@ Storage* invoke(Storage* invocation, std::vector<Storage*> args) {
             scope->set(castedInvocation->arguments[i]->value, args[i]);
         }
 
+        if (!castedInvocation->code->hasCode())
+            return new ErrorStorage("Can't invoke functions with empty bodies");
         auto invocationResult = evaluate(castedInvocation->code, scope);
 
         if (auto returnedResult =
@@ -277,8 +284,9 @@ Storage* evaluate(Node* node, Environment* env) {
             return evaluatedInvoc;
 
         auto arguments = evaluateArgs(invoc->arguments, env);
-        if (isErrorStorage(arguments.at(arguments.size() - 1))) {
-            return arguments[0];
+        auto argsSize = arguments.size();
+        if (argsSize > 0 && isErrorStorage(arguments.at(argsSize - 1))) {
+            return arguments[argsSize - 1];
         }
 
         return invoke(evaluatedInvoc, arguments);
