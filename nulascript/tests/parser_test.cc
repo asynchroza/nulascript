@@ -175,8 +175,8 @@ bool testLetStatement(Statement* statement, IdentTest ident) {
         return false;
     }
 
-    if (castedStatement->tokenLiteral() != "let") {
-        std::cout << "Declaration statement is not using correct keyword: 'let'"
+    if (castedStatement->tokenLiteral() != "def") {
+        std::cout << "Declaration statement is not using correct keyword: 'def'"
                   << std::endl;
         return false;
     }
@@ -206,10 +206,10 @@ TEST(ParserSuite, TestLetStatement) {
     // clang-format off
     std::string input =
         MULTILINE_STRING(
-            let one = 1; 
-            let two = 2; 
-            let 123; 
-            let something 128;
+            def one = 1; 
+            def two = 2; 
+            def 123; 
+            def something 128;
             );
     // clang-format on
 
@@ -302,11 +302,11 @@ TEST(ParserSuite, TestReturnStatement) {
 TEST(ParserSuite, TestAstToString) {
     // clang-format off
     std::string input = MULTILINE_STRING(
-        let a = 5;
+        def a = 5;
         return a;
     );
 
-    std::string expectedResult = "let a = 5;return a;";
+    std::string expectedResult = "def a = 5;return a;";
     // clang-format on
 
     Lexer l(input);
@@ -580,7 +580,7 @@ TEST(ParserSuite, TestConditionalExpression) {
 }
 
 TEST(ParserSuite, TestFunction) {
-    std::string input = "fn(argOne, argTwo) { argOne + argTwo; }";
+    std::string input = "func(argOne, argTwo) { argOne + argTwo; }";
 
     Lexer l(input);
     Parser p(l);

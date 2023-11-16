@@ -2,16 +2,11 @@
 
 TokenLookup::TokenLookup() {
     keywords = {
-        {"fn", FUNC},
-        {"let", LET},
-        {"true", TRUE},
-        {"false", FALSE},
-        {"if", IF},
-        {"else", ELSE},
-        {"return", RETURN},
-        {"is", IS},
-        {"not", BANG_OR_NOT},
-        // TODO: ^ Interchanged for '!' - negates value. Read as "not equal" when coupled with "is" identifier - "a is not b"
+        {"func", FUNC},     {"def", LET}, {"true", TRUE},
+        {"false", FALSE},   {"if", IF},   {"else", ELSE},
+        {"return", RETURN}, {"is", IS},   {"not", BANG_OR_NOT},
+        // TODO: ^ Interchanged for '!' - negates value. Read as "not equal"
+        // when coupled with "is" identifier - "a is not b"
     };
 }
 

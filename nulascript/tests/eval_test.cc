@@ -91,7 +91,7 @@ TEST(EvalSuite, TestLet) {
     };
 
     std::vector<Test> tests = {
-        {"let something = 420; let notSomething = 69; let result = something + "
+        {"def something = 420; def notSomething = 69; def result = something + "
          "notSomething; result;",
          "489"}};
 
@@ -110,11 +110,11 @@ TEST(EvalSuite, TestFunction) {
     std::vector<Test> tests = {{
         // clang-format off
             MULTILINE_STRING(
-                let something = fn(a) {
-                    fn(b) { a == b };
+                def something = func(a) {
+                    func(b) { a == b };
                 };
 
-                let result = something(10);
+                def result = something(10);
                 result(10);
             ), "true"
         // clang-format on
