@@ -83,7 +83,7 @@ FunctionStorage::FunctionStorage(std::vector<Identifier*> arguments,
 StorageType FunctionStorage::getType() const { return StorageType::FUNCTION; }
 
 std::string FunctionStorage::evaluate() const {
-    std::string result = "fn(";
+    std::string result = "func(";
 
     auto it = arguments.begin();
     while (it != arguments.end()) {
