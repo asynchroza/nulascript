@@ -24,8 +24,6 @@ Storage* Environment::set(const std::string& k, Storage* v) {
     return v;
 }
 
-bool Storage::setValue(Storage* storage) { return false; }
-
 void Environment::setOutsideScope(Environment* env) {
     this->outsideScope = env;
 }
@@ -36,17 +34,6 @@ StorageType IntegerStorage::getType() const { return StorageType::INTEGER; }
 
 std::string IntegerStorage::evaluate() const { return std::to_string(value); }
 
-bool IntegerStorage::setValue(Storage* storage) {
-    if (getType() != storage->getType()) {
-        return false;
-    }
-
-    auto cast = dynamic_cast<IntegerStorage*>(storage);
-    this->value = cast->value;
-
-    return true;
-}
-
 BooleanStorage::BooleanStorage(bool value) : value(value) {}
 
 StorageType BooleanStorage::getType() const { return StorageType::BOOLEAN; }
@@ -55,32 +42,17 @@ std::string BooleanStorage::evaluate() const {
     return value ? "true" : "false";
 }
 
-bool BooleanStorage::setValue(Storage* storage) {
-    if (getType() != storage->getType()) {
-        return false;
-    }
-
-    auto cast = dynamic_cast<BooleanStorage*>(storage);
-    this->value = cast->value;
-
-    return true;
-}
-
 NilStorage::NilStorage() {}
 
 StorageType NilStorage::getType() const { return StorageType::NIL; }
 
 std::string NilStorage::evaluate() const { return "nil"; }
 
-bool NilStorage::setValue(Storage* storage) { return false; }
-
 ReturnStorage::ReturnStorage(Storage* value) : value(value){};
 
 StorageType ReturnStorage::getType() const { return StorageType::RETURN; }
 
 std::string ReturnStorage::evaluate() const { return value->evaluate(); }
-
-bool ReturnStorage::setValue(Storage* storage) { return false; }
 
 ErrorStorage::ErrorStorage(std::string message) {
     const std::string ERROR_PROMPT = "[ERROR]: ";
@@ -90,8 +62,6 @@ ErrorStorage::ErrorStorage(std::string message) {
 StorageType ErrorStorage::getType() const { return StorageType::ERROR; }
 
 std::string ErrorStorage::evaluate() const { return message; }
-
-bool ErrorStorage::setValue(Storage* storage) { return false; }
 
 std::unordered_map<StorageType, std::string> storageTypeMap = {
     {StorageType::INTEGER, "INTEGER"}, {StorageType::BOOLEAN, "BOOLEAN"},
@@ -114,19 +84,6 @@ FunctionStorage::FunctionStorage(std::vector<Identifier*> arguments,
 
 StorageType FunctionStorage::getType() const { return StorageType::FUNCTION; }
 
-bool FunctionStorage::setValue(Storage* storage) {
-    if (getType() != storage->getType()) {
-        return false;
-    }
-
-    auto cast = dynamic_cast<FunctionStorage*>(storage);
-    this->env = cast->env;
-    this->arguments = cast->arguments;
-    this->code = cast->code;
-
-    return true;
-}
-
 std::string FunctionStorage::evaluate() const {
     std::string result = "[function]:\n    arguments: [";
 
@@ -148,17 +105,6 @@ StringStorage::StringStorage(std::string value) : value(value) {}
 
 std::string StringStorage::evaluate() const { return value; }
 
-bool StringStorage::setValue(Storage* storage) {
-    if (getType() != storage->getType()) {
-        return false;
-    }
-
-    auto cast = dynamic_cast<StringStorage*>(storage);
-    this->value = cast->value;
-
-    return true;
-}
-
 StorageType StringStorage::getType() const { return StorageType::STRING; }
 
 ReferenceStorage::ReferenceStorage(std::string reference, Environment* env)
@@ -169,7 +115,3 @@ std::string ReferenceStorage::evaluate() const {
 }
 
 StorageType ReferenceStorage::getType() const { return StorageType::REFERENCE; }
-
-bool ReferenceStorage::setValue(Storage* storage) {
-    return environment->get(reference)->setValue(storage);
-}
