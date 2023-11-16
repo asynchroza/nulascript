@@ -66,7 +66,8 @@ std::string ErrorStorage::evaluate() const { return message; }
 std::unordered_map<StorageType, std::string> storageTypeMap = {
     {StorageType::INTEGER, "INTEGER"}, {StorageType::BOOLEAN, "BOOLEAN"},
     {StorageType::NIL, "NIL"},         {StorageType::RETURN, "RETURN"},
-    {StorageType::ERROR, "ERROR"},     {StorageType::FUNCTION, "FUNCTION"}};
+    {StorageType::ERROR, "ERROR"},     {StorageType::FUNCTION, "FUNCTION"},
+    {StorageType::STRING, "STRING"}};
 
 std::string parseStorageTypeToString(StorageType sT) {
     auto it = storageTypeMap.find(sT);

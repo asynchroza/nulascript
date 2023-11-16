@@ -58,3 +58,13 @@ def a = func(x, y) {
     x + y;
 }
 ```
+
+#### Examples:
+```
+Nulascript:
+> def a = func() {};
+[ERROR]: Functions with empty bodies are not allowed
+
+> "some string" + 5
+[ERROR]: Type missmatch. Left side is STRING and right side is INTEGER
+```

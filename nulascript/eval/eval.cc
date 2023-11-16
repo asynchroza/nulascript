@@ -274,6 +274,10 @@ Storage* evaluate(Node* node, Environment* env) {
 
     else if (checkBase(node, typeid(Function))) {
         auto func = dynamic_cast<Function*>(node);
+        if (!func->code->hasCode()) {
+            return new ErrorStorage(
+                "Functions with empty bodies are not allowed");
+        }
         return new FunctionStorage(func->arguments, func->code, env);
     }
 
