@@ -96,3 +96,9 @@ std::string FunctionStorage::evaluate() const {
     result += ") {\n  " + code->toString() + "\n}";
     return result;
 }
+
+StringStorage::StringStorage(std::string value) : value(value) {}
+
+std::string StringStorage::evaluate() const { return value; }
+
+StorageType StringStorage::getType() const { return StorageType::STRING; }

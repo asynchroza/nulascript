@@ -8,7 +8,15 @@
 #include <string>
 #include <unordered_map>
 
-enum class StorageType { INTEGER, BOOLEAN, NIL, RETURN, ERROR, FUNCTION };
+enum class StorageType {
+    INTEGER,
+    BOOLEAN,
+    NIL,
+    RETURN,
+    ERROR,
+    FUNCTION,
+    STRING
+};
 
 extern std::unordered_map<StorageType, std::string> storageTypeMap;
 
@@ -90,6 +98,16 @@ class FunctionStorage : public Storage {
   public:
     FunctionStorage(std::vector<Identifier*> arguments, BlockStatement* code,
                     Environment* env);
+    StorageType getType() const override;
+    std::string evaluate() const override;
+};
+
+class StringStorage : public Storage {
+  public:
+    std::string value;
+
+  public:
+    StringStorage(std::string value);
     StorageType getType() const override;
     std::string evaluate() const override;
 };

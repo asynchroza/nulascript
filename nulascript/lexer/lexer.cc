@@ -5,7 +5,6 @@
 Lexer::Lexer(const std::string& input)
     : input(input), pos(0), readPos(0), ch(0), tokenLookup(TokenLookup()) {
     readChar();
-    std::cout << input << std::endl;
 }
 
 void Lexer::readChar() {

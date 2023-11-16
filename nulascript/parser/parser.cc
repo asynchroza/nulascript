@@ -147,6 +147,8 @@ Parser::Parser(Lexer& l) {
     });
     registerPrefixFunction(TokenType::IDENT,
                            [&]() -> Expression* { return parseIdentifier(); });
+    registerPrefixFunction(TokenType::STRING,
+                           [&]() -> Expression* { return parseString(); });
     registerPrefixFunction(TokenType::FUNC,
                            [&]() -> Expression* { return parseFunction(); });
     registerPrefixFunction(TokenType::IF,

@@ -284,6 +284,11 @@ Storage* evaluate(Node* node, Environment* env) {
         return invoke(evaluatedInvoc, arguments);
     }
 
+    else if (checkBase(node, typeid(String))) {
+        auto str = dynamic_cast<String*>(node);
+        return new StringStorage(str->value);
+    }
+
     return createError("No implementation found for this functionality");
 }
 
