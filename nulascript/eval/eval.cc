@@ -253,6 +253,87 @@ Storage* runLoop(std::vector<Storage*> args) {
     return emptyStorage;
 }
 
+bool evaluateConditionalExpression(int64_t val, std::string op,
+                                   int64_t threshold) {
+    if (op == "is" || op == "==") {
+        return val == threshold;
+    } else if (op == ">") {
+        return val > threshold;
+    } else if (op == "<") {
+        return val < threshold;
+    } else if (op == ">=") {
+        return val >= threshold;
+    } else if (op == "<=") {
+        return val <= threshold;
+    }
+
+    return false;
+}
+
+Storage* runForLoop(ForLoop* fl, Environment* env) {
+    IntegerStorage* variable =
+        dynamic_cast<IntegerStorage*>(evaluate(fl->definition.variable, env));
+    if (!variable) {
+        return new ErrorStorage(
+            "Incorrectly provisioned initialization variable for loop");
+    }
+
+    if (!fl->code->hasCode()) {
+        return new ErrorStorage("For loop doesn't have body");
+    }
+
+    BooleanStorage* increment =
+        dynamic_cast<BooleanStorage*>(evaluate(fl->definition.increment, env));
+    if (!variable) {
+        return new ErrorStorage(
+            "Incorrectly provisioned incremental boolean variable for loop");
+    }
+
+    if (increment->value) {
+        Infix* conditional = dynamic_cast<Infix*>(fl->definition.conditional);
+
+        if (!conditional) {
+            return new ErrorStorage(
+                "Incorrectly provisioned conditional statement for loop");
+        }
+
+        Identifier* identifier = dynamic_cast<Identifier*>(conditional->left);
+        if (!identifier) {
+            // TODO: come up with better message;
+            return new ErrorStorage("something 1");
+        }
+
+        Integer* threshold = dynamic_cast<Integer*>(conditional->right);
+        if (!threshold) {
+            // TODO: come up with better message;
+            return new ErrorStorage("something 2");
+        }
+
+        std::cout << env->get(identifier->value)->evaluate() << std::endl;
+        IntegerStorage* initializer =
+            dynamic_cast<IntegerStorage*>(env->get(identifier->token.literal));
+        if (!initializer) {
+            // TODO: come up with better message;
+            return new ErrorStorage("something 3");
+        }
+
+        for (int i = initializer->value; true; i++) {
+            std::cout << "HERE" << std::endl;
+            if (!evaluateConditionalExpression(i, conditional->op,
+                                               threshold->value))
+                break;
+
+            for (auto stmt : fl->code->statements) {
+                evaluate(stmt, env);
+            }
+        }
+    } else {
+        return new ErrorStorage("Decremental loops are not yet implemented");
+    }
+
+    return emptyStorage;
+}
+
 std::unordered_map<std::string, Storage*> standardFunctions = {
     {"log", new StandardFunction([](std::vector<Storage*> args) -> Storage* {
          return printStorage(args);
@@ -392,6 +473,11 @@ Storage* evaluate(Node* node, Environment* env) {
     else if (checkBase(node, typeid(Pointer))) {
         auto pointer = dynamic_cast<Pointer*>(node);
         return env->get(pointer->dereferencedIdentifier);
+    }
+
+    else if (checkBase(node, typeid(ForLoop))) {
+        auto fl = dynamic_cast<ForLoop*>(node);
+        return runForLoop(fl, env);
     }
 
     return createError("No implementation found for this functionality");

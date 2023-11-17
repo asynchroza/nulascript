@@ -692,7 +692,7 @@ TEST(ParserSuite, TestReference) {
 }
 
 TEST(ParserSuite, TestForLoop) {
-    std::string input = "for(def i = 5; i < 5; true) { i = i + 5; }";
+    std::string input = "for(def i = 5; i < 5; true) { def i = i + 5; }";
 
     Lexer l(input);
     Parser p(l);
@@ -714,6 +714,9 @@ TEST(ParserSuite, TestForLoop) {
     }
 
     ASSERT_EQ(fl->definition.variable->toString(), "def i = 5;");
+    auto identifier = dynamic_cast<Identifier*>(fl->definition.variable);
+    ASSERT_EQ(identifier->value, "i");
     ASSERT_EQ(fl->definition.conditional->toString(), "(i < 5)");
     ASSERT_EQ(fl->definition.increment->toString(), "true");
+    ASSERT_EQ(fl->code->toString(), "def i = (i + 5);");
 }
