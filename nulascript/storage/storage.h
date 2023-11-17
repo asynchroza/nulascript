@@ -17,7 +17,8 @@ enum class StorageType {
     FUNCTION,
     STRING,
     REFERENCE,
-    POINTER
+    POINTER,
+    STANDARD_FUNCTION
 };
 
 extern std::unordered_map<StorageType, std::string> storageTypeMap;
@@ -121,6 +122,18 @@ class ReferenceStorage : public Storage {
 
   public:
     ReferenceStorage(std::string reference, Environment* environment);
+    StorageType getType() const override;
+    std::string evaluate() const override;
+};
+
+using TFunction = std::function<Storage*(std::vector<Storage*>)>;
+
+class StandardFunction : public Storage {
+  public:
+    TFunction function;
+
+  public:
+    StandardFunction(TFunction function);
     StorageType getType() const override;
     std::string evaluate() const override;
 };

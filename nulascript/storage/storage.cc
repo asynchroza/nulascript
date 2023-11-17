@@ -115,3 +115,13 @@ std::string ReferenceStorage::evaluate() const {
 }
 
 StorageType ReferenceStorage::getType() const { return StorageType::REFERENCE; }
+
+StandardFunction::StandardFunction(TFunction function) : function(function){};
+
+StorageType StandardFunction::getType() const {
+    return StorageType::STANDARD_FUNCTION;
+}
+
+std::string StandardFunction::evaluate() const {
+    return "[function]: standard library implementation";
+}

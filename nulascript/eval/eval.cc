@@ -191,6 +191,10 @@ Storage* invoke(Storage* invocation, std::vector<Storage*> args) {
             referencedInvocation->reference);
     }
 
+    if (auto defaultInvocation = dynamic_cast<StandardFunction*>(invocation)) {
+        return defaultInvocation->function(args);
+    }
+
     // ????
     // Consider extracting this code into a function and swapping its position
     // with the code above. This will help eliminate redundant casting to
@@ -219,6 +223,24 @@ Storage* invoke(Storage* invocation, std::vector<Storage*> args) {
     return createError(
         "An invocation was executed on an element which is not a function");
 }
+
+// TODO: Move them elsewhere
+// STANDARD FUNCTION DEFINITIONS
+
+Storage* printStorage(std::vector<Storage*> args) {
+    Storage* storage;
+    for (auto arg : args) {
+        std::cout << arg->evaluate() << "\n";
+        storage = arg;
+    }
+
+    return storage;
+}
+
+std::unordered_map<std::string, Storage*> standardFunctions = {
+    {"log", new StandardFunction([](std::vector<Storage*> args) -> Storage* {
+         return printStorage(args);
+     })}};
 
 Storage* evaluate(Node* node, Environment* env) {
     if (checkBase(node, typeid(Program))) {
@@ -287,7 +309,18 @@ Storage* evaluate(Node* node, Environment* env) {
 
     else if (checkBase(node, typeid(Identifier))) {
         auto ident = dynamic_cast<Identifier*>(node);
-        return env->get(ident->value);
+        auto fetched = env->get(ident->value);
+
+        if (dynamic_cast<ErrorStorage*>(fetched)) {
+            auto it = standardFunctions.find(ident->value);
+
+            if (it != standardFunctions.end()) {
+                return it->second;
+            }
+        }
+
+        // return default error object if nothing is found
+        return fetched;
     }
 
     else if (checkBase(node, typeid(Function))) {

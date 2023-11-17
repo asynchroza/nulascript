@@ -35,7 +35,8 @@ void REPL::start() {
                 std::cout << "undefined"
                           << "\n\n";
             } else {
-                std::cout << resolved->evaluate() << "\n\n";
+                std::cout << "\n";
+                // std::cout << resolved->evaluate() << "\n\n";
             }
         }
     }
