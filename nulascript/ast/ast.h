@@ -176,6 +176,25 @@ class Invocation : public Expression {
     std::string toString() override;
 };
 
+struct ForLoopInitialization {
+    LetStatement* variable;
+    Infix* conditional;
+    Boolean* increment;
+};
+
+class ForLoop : public Expression {
+  public:
+    Token token;
+    BlockStatement* code;
+    // loop variables initialization
+    ForLoopInitialization definition;
+
+  public:
+    ForLoop(Token token);
+    std::string tokenLiteral() override;
+    std::string toString() override;
+};
+
 class String : public Expression {
   public:
     Token token;

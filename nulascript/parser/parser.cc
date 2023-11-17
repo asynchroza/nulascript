@@ -167,6 +167,8 @@ Parser::Parser(Lexer& l) {
                            [&]() -> Expression* { return parsePrefix(); });
     registerPrefixFunction(TokenType::ASTERISK,
                            [&]() -> Expression* { return parsePrefix(); });
+    registerPrefixFunction(TokenType::FOR,
+                           [&]() -> Expression* { return parseForLoop(); });
     registerInfixFunction(
         TokenType::MINUS,
         [&](Expression* left) -> Expression* { return parseInfix(left); });
@@ -455,4 +457,43 @@ Reference* Parser::parseReference() {
     getNextToken();
 
     return ref;
+}
+
+ForLoop* Parser::parseForLoop() {
+    ForLoop* fl = new ForLoop(currentToken);
+
+    if (!peekAndLoadExpectedToken(TokenType::LPAR)) {
+        return nullptr;
+    }
+
+    getNextToken();
+    LetStatement* variable = dynamic_cast<LetStatement*>(parseStatement());
+
+    if (!variable)
+        return nullptr;
+    getNextToken();
+
+    Identifier* identifier = dynamic_cast<Identifier*>(parseIdentifier());
+    getNextToken();
+
+    Infix* conditional = parseInfix(identifier);
+    if (!conditional->left || !conditional->right)
+        return nullptr;
+
+    getNextToken();
+    getNextToken();
+
+    Boolean* boolean = dynamic_cast<Boolean*>(parseBoolean());
+    if (!boolean)
+        return nullptr;
+
+    if (!peekAndLoadExpectedToken(TokenType::RPAR) &&
+        !peekAndLoadExpectedToken(TokenType::LBRACE))
+        return nullptr;
+    BlockStatement* block = parseBlock();
+
+    fl->code = block;
+    fl->definition = ForLoopInitialization{variable, conditional, boolean};
+
+    return fl;
 }

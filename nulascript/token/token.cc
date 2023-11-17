@@ -1,13 +1,10 @@
 #include "token.h"
 
 TokenLookup::TokenLookup() {
-    keywords = {
-        {"func", FUNC},     {"def", LET}, {"true", TRUE},
-        {"false", FALSE},   {"if", IF},   {"else", ELSE},
-        {"return", RETURN}, {"is", IS},   {"not", BANG_OR_NOT},
-        // TODO: ^ Interchanged for '!' - negates value. Read as "not equal"
-        // when coupled with "is" identifier - "a is not b"
-    };
+    keywords = {{"func", FUNC},     {"def", LET}, {"true", TRUE},
+                {"false", FALSE},   {"if", IF},   {"else", ELSE},
+                {"return", RETURN}, {"is", IS},   {"not", BANG_OR_NOT},
+                {"for", FOR}};
 }
 
 TokenType TokenLookup::lookupIdent(const std::string& ident) {

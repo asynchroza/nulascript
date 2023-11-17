@@ -690,3 +690,30 @@ TEST(ParserSuite, TestReference) {
     ASSERT_EQ(ref->referencedIdentifier, "something");
     ASSERT_EQ(ref->tokenLiteral(), "&");
 }
+
+TEST(ParserSuite, TestForLoop) {
+    std::string input = "for(def i = 5; i < 5; true) { i = i + 5; }";
+
+    Lexer l(input);
+    Parser p(l);
+    Program* program = p.parseProgram();
+
+    if (program->statements.size() != 1) {
+        FAIL() << "Program got " << program->statements.size()
+               << " statements instead of 1";
+    }
+
+    auto stmt = dynamic_cast<ExpressionStatement*>(program->statements[0]);
+    if (!stmt) {
+        FAIL() << "Not correct type" << std::endl;
+    }
+
+    auto fl = dynamic_cast<ForLoop*>(stmt->expression);
+    if (!fl) {
+        FAIL() << "Not correct type" << std::endl;
+    }
+
+    ASSERT_EQ(fl->definition.variable->toString(), "def i = 5;");
+    ASSERT_EQ(fl->definition.conditional->toString(), "(i < 5)");
+    ASSERT_EQ(fl->definition.increment->toString(), "true");
+}

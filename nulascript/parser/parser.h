@@ -18,7 +18,6 @@ enum class Precedence {
 };
 
 // ! this is not explained in thesis
-// ? should this be Expression or ExpressionStatement
 using ParsePrefixFunction = std::function<Expression*()>;
 using ParseInfixFunction = std::function<Expression*(Expression*)>;
 
@@ -56,7 +55,7 @@ class Parser {
     Function* parseFunction();
     String* parseString();
     Reference* parseReference();
-    Pointer* parsePointer();
+    ForLoop* parseForLoop();
     Expression* parseInvocation(Expression* function);
     std::vector<Expression*> parseInvocationArguments();
     std::vector<Identifier*> parseFunctionArguments();

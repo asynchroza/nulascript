@@ -216,3 +216,9 @@ std::string Pointer::toString() {
 }
 
 std::string Pointer::tokenLiteral() { return token.literal; }
+
+ForLoop::ForLoop(Token token) : token(token) {}
+
+std::string ForLoop::tokenLiteral() { return token.literal; }
+
+std::string ForLoop::toString() { return token.literal; }
