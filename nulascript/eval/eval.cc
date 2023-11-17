@@ -3,6 +3,7 @@
 BooleanStorage* trueStorage = new BooleanStorage(true);
 BooleanStorage* falseStorage = new BooleanStorage(false);
 NilStorage* nilStorage = new NilStorage();
+EmptyStorage* emptyStorage = new EmptyStorage();
 
 Storage* evaluate(Node* node, Environment* env);
 Storage* evaluateProgramStatements(std::vector<Statement*> statements,
@@ -228,18 +229,36 @@ Storage* invoke(Storage* invocation, std::vector<Storage*> args) {
 // STANDARD FUNCTION DEFINITIONS
 
 Storage* printStorage(std::vector<Storage*> args) {
-    Storage* storage;
     for (auto arg : args) {
         std::cout << arg->evaluate() << "\n";
-        storage = arg;
     }
 
-    return storage;
+    return emptyStorage;
+}
+
+// TODO: Deprecate after implementing actual loops
+Storage* runLoop(std::vector<Storage*> args) {
+    auto len = dynamic_cast<IntegerStorage*>(args[0]);
+    auto func = dynamic_cast<FunctionStorage*>(args[1]);
+
+    if (!len && !func) {
+        return new ErrorStorage("Provided arguments do not match required "
+                                "arguments - int & function");
+    }
+
+    for (int i = 0; i < len->value; i++) {
+        invoke(func, std::vector<Storage*>());
+    }
+
+    return emptyStorage;
 }
 
 std::unordered_map<std::string, Storage*> standardFunctions = {
     {"log", new StandardFunction([](std::vector<Storage*> args) -> Storage* {
          return printStorage(args);
+     })},
+    {"loop", new StandardFunction([](std::vector<Storage*> args) -> Storage* {
+         return runLoop(args);
      })}};
 
 Storage* evaluate(Node* node, Environment* env) {

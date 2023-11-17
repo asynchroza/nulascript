@@ -125,3 +125,9 @@ StorageType StandardFunction::getType() const {
 std::string StandardFunction::evaluate() const {
     return "[function]: standard library implementation";
 }
+
+EmptyStorage::EmptyStorage(){};
+
+std::string EmptyStorage::evaluate() const { return ""; }
+
+StorageType EmptyStorage::getType() const { return StorageType::EMPTY; }

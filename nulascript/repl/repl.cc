@@ -34,9 +34,10 @@ void REPL::start() {
             if (resolved->getType() == StorageType::NIL) {
                 std::cout << "undefined"
                           << "\n\n";
-            } else {
+            } else if (resolved->getType() == StorageType::EMPTY) {
                 std::cout << "\n";
-                // std::cout << resolved->evaluate() << "\n\n";
+            } else {
+                std::cout << resolved->evaluate() << "\n\n";
             }
         }
     }

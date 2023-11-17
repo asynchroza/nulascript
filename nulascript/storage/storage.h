@@ -18,7 +18,8 @@ enum class StorageType {
     STRING,
     REFERENCE,
     POINTER,
-    STANDARD_FUNCTION
+    STANDARD_FUNCTION,
+    EMPTY
 };
 
 extern std::unordered_map<StorageType, std::string> storageTypeMap;
@@ -29,6 +30,13 @@ class Storage {
   public:
     virtual StorageType getType() const = 0;
     virtual std::string evaluate() const = 0;
+};
+
+class EmptyStorage : public Storage {
+  public:
+    EmptyStorage();
+    StorageType getType() const override;
+    std::string evaluate() const override;
 };
 
 class Environment {
