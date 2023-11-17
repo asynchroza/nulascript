@@ -7,6 +7,45 @@
 ## About the language:
 - Recursive descent parser (Pratt parser - "top down operator precedence")
 
+### Referencing:
+
+```
+Nulascript:
+> def sayHello = func() { "hello"; }  
+[function]:
+    arguments: []
+    location: "0x12ef04db0"
+
+> sayHello()
+hello
+
+> def sayByeToPerson = func(name) { "bye " + name; }
+[function]:
+    arguments: [name]
+    location: "0x12f904f10"
+
+> sayByeToPerson("Misho")
+bye Misho
+
+> def exampleRef = &sayByeToPerson
+[function]:
+    arguments: [name]
+    location: "0x12f904f10"
+
+> exampleRef("Toni")
+bye Toni
+
+> sayByeToPerson = 5 
+5
+
+> exampleRef()
+[ERROR]: An invocation was executed on an element which is not a function
+
+> exampleRef
+5
+
+```
+
 ### Commands:
 
 - `make install-gtest` - pulls googletest locally

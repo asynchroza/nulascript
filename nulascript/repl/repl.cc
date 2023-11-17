@@ -33,9 +33,9 @@ void REPL::start() {
         if (resolved) {
             if (resolved->getType() == StorageType::NIL) {
                 std::cout << "undefined"
-                          << "\n";
+                          << "\n\n";
             } else {
-                std::cout << resolved->evaluate() << "\n";
+                std::cout << resolved->evaluate() << "\n\n";
             }
         }
     }
