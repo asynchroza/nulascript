@@ -52,11 +52,19 @@ BooleanStorage* evaluateNotExpression(Storage* rightExpression) {
     return falseStorage;
 }
 
-Storage* evaluatePrefix(std::string op, Storage* rightExpression) {
+Storage* evaluatePointerExpression(Storage* rightExpression, Environment* env) {
+    auto ref = dynamic_cast<ReferenceStorage*>(rightExpression);
+    return env->get(ref->reference);
+}
+
+Storage* evaluatePrefix(std::string op, Storage* rightExpression,
+                        Environment* env) {
     if (op == "!" || op == "not") {
         return evaluateNotExpression(rightExpression);
     } else if (op == "-") {
         return evaluateMinusExpression(rightExpression);
+    } else if (op == "*") {
+        return evaluatePointerExpression(rightExpression, env);
     }
 
     return createError("Unknown operator " + op +
@@ -237,7 +245,7 @@ Storage* evaluate(Node* node, Environment* env) {
     else if (checkBase(node, typeid(Prefix))) {
         auto prefix = dynamic_cast<Prefix*>(node);
         auto rightExpression = evaluate(prefix->right, env);
-        return evaluatePrefix(prefix->op, rightExpression);
+        return evaluatePrefix(prefix->op, rightExpression, env);
     }
 
     else if (checkBase(node, typeid(Infix))) {
@@ -328,6 +336,11 @@ Storage* evaluate(Node* node, Environment* env) {
     else if (checkBase(node, typeid(Reference))) {
         auto reference = dynamic_cast<Reference*>(node);
         return new ReferenceStorage(reference->referencedIdentifier, env);
+    }
+
+    else if (checkBase(node, typeid(Pointer))) {
+        auto pointer = dynamic_cast<Pointer*>(node);
+        return env->get(pointer->dereferencedIdentifier);
     }
 
     return createError("No implementation found for this functionality");

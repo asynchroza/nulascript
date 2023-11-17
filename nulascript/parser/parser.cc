@@ -165,6 +165,8 @@ Parser::Parser(Lexer& l) {
                            [&]() -> Expression* { return parsePrefix(); });
     registerPrefixFunction(TokenType::MINUS,
                            [&]() -> Expression* { return parsePrefix(); });
+    registerPrefixFunction(TokenType::ASTERISK,
+                           [&]() -> Expression* { return parsePrefix(); });
     registerInfixFunction(
         TokenType::MINUS,
         [&](Expression* left) -> Expression* { return parseInfix(left); });

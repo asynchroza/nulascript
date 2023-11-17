@@ -208,3 +208,11 @@ std::string Reference::toString() {
 }
 
 std::string Reference::tokenLiteral() { return token.literal; }
+
+Pointer::Pointer(Token token) : token(token){};
+
+std::string Pointer::toString() {
+    return token.literal + dereferencedIdentifier;
+}
+
+std::string Pointer::tokenLiteral() { return token.literal; }

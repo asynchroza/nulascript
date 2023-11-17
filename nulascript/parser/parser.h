@@ -56,6 +56,7 @@ class Parser {
     Function* parseFunction();
     String* parseString();
     Reference* parseReference();
+    Pointer* parsePointer();
     Expression* parseInvocation(Expression* function);
     std::vector<Expression*> parseInvocationArguments();
     std::vector<Identifier*> parseFunctionArguments();

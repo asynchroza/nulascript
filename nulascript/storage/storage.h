@@ -16,7 +16,8 @@ enum class StorageType {
     ERROR,
     FUNCTION,
     STRING,
-    REFERENCE
+    REFERENCE,
+    POINTER
 };
 
 extern std::unordered_map<StorageType, std::string> storageTypeMap;

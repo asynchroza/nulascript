@@ -209,3 +209,15 @@ class Reference : public Expression {
     std::string tokenLiteral() override;
     std::string toString() override;
 };
+
+class Pointer : public Expression {
+  public:
+    Token token;
+    std::string dereferencedIdentifier;
+    Expression* right;
+
+  public:
+    Pointer(Token token);
+    std::string tokenLiteral() override;
+    std::string toString() override;
+};
