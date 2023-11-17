@@ -37,6 +37,7 @@ enum TokenType {
     IS,
     IS_NOT,
     STRING,
+    COLON
 };
 
 struct Token {

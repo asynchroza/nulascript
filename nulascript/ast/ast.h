@@ -221,3 +221,16 @@ class Pointer : public Expression {
     std::string tokenLiteral() override;
     std::string toString() override;
 };
+
+class ModuleInvocation : public Expression {
+  public:
+    Token token;
+    std::string module;
+    std::string member;
+    std::vector<Expression*> arguments;
+
+  public:
+    ModuleInvocation(Token token);
+    std::string tokenLiteral() override;
+    std::string toString() override;
+};

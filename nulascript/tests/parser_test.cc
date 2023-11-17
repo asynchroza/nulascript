@@ -690,3 +690,31 @@ TEST(ParserSuite, TestReference) {
     ASSERT_EQ(ref->referencedIdentifier, "something");
     ASSERT_EQ(ref->tokenLiteral(), "&");
 }
+
+TEST(ParserSuite, TestModuleAccess) {
+    std::string input = ":lib->something(12 + 12, 14 + 14)";
+
+    Lexer l(input);
+    Parser p(l);
+    Program* program = p.parseProgram();
+
+    if (program->statements.size() != 1) {
+        FAIL() << "Program got " << program->statements.size()
+               << " statements instead of 1";
+    }
+
+    auto stmt = dynamic_cast<ExpressionStatement*>(program->statements[0]);
+    if (!stmt) {
+        FAIL() << "Not correct type" << std::endl;
+    }
+
+    auto moduleAccess = dynamic_cast<ModuleInvocation*>(stmt->expression);
+    if (!moduleAccess) {
+        FAIL() << "Not correct type" << std::endl;
+    }
+
+    ASSERT_EQ(moduleAccess->member, "something");
+    ASSERT_EQ(moduleAccess->module, "lib");
+    ASSERT_EQ(moduleAccess->arguments[0]->toString(), "(12 + 12)");
+    ASSERT_EQ(moduleAccess->arguments[1]->toString(), "(14 + 14)");
+}

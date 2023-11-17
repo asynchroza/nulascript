@@ -167,6 +167,8 @@ Parser::Parser(Lexer& l) {
                            [&]() -> Expression* { return parsePrefix(); });
     registerPrefixFunction(TokenType::ASTERISK,
                            [&]() -> Expression* { return parsePrefix(); });
+    registerPrefixFunction(
+        TokenType::COLON, [&]() -> Expression* { return parseModuleAccess(); });
     registerInfixFunction(
         TokenType::MINUS,
         [&](Expression* left) -> Expression* { return parseInfix(left); });
@@ -455,4 +457,37 @@ Reference* Parser::parseReference() {
     getNextToken();
 
     return ref;
+}
+
+Expression* Parser::parseModuleAccess() {
+    Token moduleAccessToken = currentToken;
+
+    if (!peekAndLoadExpectedToken(TokenType::IDENT)) {
+        return nullptr;
+    }
+
+    std::string lib = currentToken.literal;
+
+    if (!peekAndLoadExpectedToken(TokenType::MINUS) ||
+        !peekAndLoadExpectedToken(TokenType::GT) ||
+        !peekAndLoadExpectedToken(TokenType::IDENT)) {
+        return nullptr;
+    }
+
+    std::string member = currentToken.literal;
+
+    // this means it's a function invocation
+    if (isEqualToPeekedTokenType(TokenType::LPAR)) {
+        getNextToken();
+        auto moduleInvocation = new ModuleInvocation(moduleAccessToken);
+        moduleInvocation->module = lib;
+        moduleInvocation->member = member;
+        moduleInvocation->arguments = parseInvocationArguments();
+        return moduleInvocation;
+    }
+
+    return nullptr;
+    // auto moduleMember = new ModuleMember();
+    // moduleMember->module = lib;
+    // moduleMember->member = member;
 }

@@ -133,6 +133,9 @@ Token Lexer::getNextToken() {
     case '|':
         currentToken = newToken(TokenType::PIPE, ch);
         break;
+    case ':':
+        currentToken = newToken(TokenType::COLON, ch);
+        break;
     case '!':
         if (peekNextChar() == '=') {
             readChar();

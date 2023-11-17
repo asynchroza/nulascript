@@ -216,3 +216,13 @@ std::string Pointer::toString() {
 }
 
 std::string Pointer::tokenLiteral() { return token.literal; }
+
+ModuleInvocation::ModuleInvocation(Token token) : token(token){};
+
+std::string ModuleInvocation::toString() {
+    // ! might cause segfault
+    // TODO: Add arguments
+    return module + "->" + member;
+}
+
+std::string ModuleInvocation::tokenLiteral() { return token.literal; }
