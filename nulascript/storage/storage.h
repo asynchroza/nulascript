@@ -4,6 +4,7 @@
 #define STORAGE_H
 
 #include "ast.h"
+#include <functional>
 #include <iostream>
 #include <string>
 #include <unordered_map>
