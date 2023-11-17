@@ -328,8 +328,9 @@ Storage* runForLoop(ForLoop* fl, Environment* env) {
             // reflect increase in environment
             auto loopVariable =
                 dynamic_cast<IntegerStorage*>(env->get(identifier->value));
-            loopVariable->value++;
-            env->set(identifier->value, loopVariable);
+            int64_t increasedValue = loopVariable->value + 1;
+
+            env->set(identifier->value, new IntegerStorage(increasedValue));
         }
     } else {
         return new ErrorStorage("Decremental loops are not yet implemented");
@@ -407,6 +408,8 @@ Storage* evaluate(Node* node, Environment* env) {
             return value;
 
         // identifier as key
+        // auto integer = dynamic_cast<IntegerStorage*>(value);
+        // env->set(let->name->value, integer->copy(value));
         env->set(let->name->value, value);
         return value;
     }
