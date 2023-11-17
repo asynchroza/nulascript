@@ -52,19 +52,18 @@ BooleanStorage* evaluateNotExpression(Storage* rightExpression) {
     return falseStorage;
 }
 
-Storage* evaluatePointerExpression(Storage* rightExpression, Environment* env) {
+Storage* evaluatePointerExpression(Storage* rightExpression) {
     auto ref = dynamic_cast<ReferenceStorage*>(rightExpression);
-    return env->get(ref->reference);
+    return ref->environment->get(ref->reference);
 }
 
-Storage* evaluatePrefix(std::string op, Storage* rightExpression,
-                        Environment* env) {
+Storage* evaluatePrefix(std::string op, Storage* rightExpression) {
     if (op == "!" || op == "not") {
         return evaluateNotExpression(rightExpression);
     } else if (op == "-") {
         return evaluateMinusExpression(rightExpression);
     } else if (op == "*") {
-        return evaluatePointerExpression(rightExpression, env);
+        return evaluatePointerExpression(rightExpression);
     }
 
     return createError("Unknown operator " + op +
@@ -245,7 +244,7 @@ Storage* evaluate(Node* node, Environment* env) {
     else if (checkBase(node, typeid(Prefix))) {
         auto prefix = dynamic_cast<Prefix*>(node);
         auto rightExpression = evaluate(prefix->right, env);
-        return evaluatePrefix(prefix->op, rightExpression, env);
+        return evaluatePrefix(prefix->op, rightExpression);
     }
 
     else if (checkBase(node, typeid(Infix))) {

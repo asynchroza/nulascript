@@ -46,6 +46,30 @@ bye Toni
 
 ```
 
+### Dereferencing:
+
+```
+Nulascript:
+> def somethingToBeReferenced = 15;
+15
+
+> def reference = &somethingToBeReferenced
+15
+
+> reference + 20
+[ERROR]: Type missmatch. Left side is REFERENCE and right side is INTEGER
+
+> *reference + 20
+35
+
+> reference = *reference + 40
+55
+
+> somethingToBeReferenced
+55
+
+```
+
 ### Commands:
 
 - `make install-gtest` - pulls googletest locally
