@@ -178,6 +178,17 @@ std::vector<Storage*> evaluateArgs(std::vector<Expression*> arguments,
 }
 
 Storage* invoke(Storage* invocation, std::vector<Storage*> args) {
+    if (auto referencedInvocation =
+            dynamic_cast<ReferenceStorage*>(invocation)) {
+        invocation = referencedInvocation->environment->get(
+            referencedInvocation->reference);
+    }
+
+    // ????
+    // Consider extracting this code into a function and swapping its position
+    // with the code above. This will help eliminate redundant casting to
+    // ReferenceStorage, as it is anticipated that such occurrences will be less
+    // frequent than regular invocations.
     if (auto castedInvocation = dynamic_cast<FunctionStorage*>(invocation)) {
         auto scope = new Environment();
         scope->setOutsideScope(castedInvocation->env);
