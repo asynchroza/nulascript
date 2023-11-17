@@ -408,8 +408,6 @@ Storage* evaluate(Node* node, Environment* env) {
             return value;
 
         // identifier as key
-        // auto integer = dynamic_cast<IntegerStorage*>(value);
-        // env->set(let->name->value, integer->copy(value));
         env->set(let->name->value, value);
         return value;
     }
