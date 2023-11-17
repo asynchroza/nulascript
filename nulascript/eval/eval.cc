@@ -342,6 +342,21 @@ Storage* evaluate(Node* node, Environment* env) {
         return env->get(pointer->dereferencedIdentifier);
     }
 
+    else if (checkBase(node, typeid(ModuleInvocation))) {
+        auto invocation = dynamic_cast<ModuleInvocation*>(node);
+        auto module = dynamic_cast<Module*>(env->get(invocation->module));
+
+        auto function = dynamic_cast<StandardLibraryFunction*>(
+            module->members.at(invocation->member));
+        std::vector<Storage*> arguments = std::vector<Storage*>();
+
+        for (int i = 0; i < invocation->arguments.size(); i++) {
+            arguments[i] = evaluate(invocation->arguments.at(i), env);
+        }
+
+        return function->evaluateWithArgs(arguments, env);
+    }
+
     return createError("No implementation found for this functionality");
 }
 

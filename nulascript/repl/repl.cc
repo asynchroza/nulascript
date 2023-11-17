@@ -11,6 +11,10 @@ void REPL::start() {
     std::string line;
 
     auto environment = new Environment();
+    // initialize std
+    auto std = new STD(environment);
+    environment->set("lib", std);
+
     while (true) {
         std::cout << REPL::PROMPT;
         if (!std::getline(std::cin, line)) {

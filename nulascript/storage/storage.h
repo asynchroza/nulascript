@@ -17,7 +17,9 @@ enum class StorageType {
     FUNCTION,
     STRING,
     REFERENCE,
-    POINTER
+    POINTER,
+    MODULE,
+    LOG
 };
 
 extern std::unordered_map<StorageType, std::string> storageTypeMap;
@@ -104,6 +106,12 @@ class FunctionStorage : public Storage {
     std::string evaluate() const override;
 };
 
+class StandardLibraryFunction : public Storage {
+  public:
+    virtual Storage* evaluateWithArgs(std::vector<Storage*> arguments,
+                                      Environment* environment) const = 0;
+};
+
 class StringStorage : public Storage {
   public:
     std::string value;
@@ -123,6 +131,45 @@ class ReferenceStorage : public Storage {
     ReferenceStorage(std::string reference, Environment* environment);
     StorageType getType() const override;
     std::string evaluate() const override;
+};
+
+class Module : public Storage {
+  public:
+    std::string name;
+    Environment* environment;
+    std::unordered_map<std::string, Storage*> members;
+
+  public:
+    Module(std::string name, Environment* environment);
+    StorageType getType() const override;
+    std::string evaluate() const override;
+};
+
+class STD : public Module {
+  public:
+    Environment* environment;
+
+  public:
+    STD(Environment* environment);
+};
+
+class LoggedStorage : public Storage {
+  public:
+    std::string result;
+
+  public:
+    LoggedStorage(std::string result);
+    StorageType getType() const override;
+    std::string evaluate() const override;
+};
+
+class ConsoleLog : public StandardLibraryFunction {
+  public:
+    ConsoleLog();
+    StorageType getType() const override;
+    std::string evaluate() const override;
+    LoggedStorage* evaluateWithArgs(std::vector<Storage*> arguments,
+                                    Environment* environment) const override;
 };
 
 #endif // STORAGE_H

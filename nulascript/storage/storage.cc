@@ -1,4 +1,5 @@
 #include "storage.h"
+#include "lexer.h"
 #include <sstream>
 
 Environment::Environment() {}
@@ -115,3 +116,35 @@ std::string ReferenceStorage::evaluate() const {
 }
 
 StorageType ReferenceStorage::getType() const { return StorageType::REFERENCE; }
+
+Module::Module(std::string name, Environment* env)
+    : name(name), environment(env){};
+
+std::string Module::evaluate() const { return name; }
+
+StorageType Module::getType() const { return StorageType::MODULE; }
+
+LoggedStorage::LoggedStorage(std::string result) : result(result){};
+
+StorageType LoggedStorage::getType() const { return StorageType::LOG; }
+
+std::string LoggedStorage::evaluate() const { return result; }
+
+ConsoleLog::ConsoleLog(){};
+
+std::string ConsoleLog::evaluate() const {
+    return "[logging function defined within std]";
+}
+
+StorageType ConsoleLog::getType() const { return StorageType::FUNCTION; }
+
+LoggedStorage* ConsoleLog::evaluateWithArgs(std::vector<Storage*> arguments,
+                                            Environment* environment) const {
+    // TODO: might require fetching from environment
+    return new LoggedStorage(arguments[0]->evaluate());
+}
+
+STD::STD(Environment* env) : Module("standard library", env) {
+    members = std::unordered_map<std::string, Storage*>();
+    members["log"] = new ConsoleLog();
+};
