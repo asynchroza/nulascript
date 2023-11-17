@@ -309,7 +309,6 @@ Storage* runForLoop(ForLoop* fl, Environment* env) {
             return new ErrorStorage("something 2");
         }
 
-        std::cout << env->get(identifier->value)->evaluate() << std::endl;
         IntegerStorage* initializer =
             dynamic_cast<IntegerStorage*>(env->get(identifier->token.literal));
         if (!initializer) {
@@ -318,7 +317,6 @@ Storage* runForLoop(ForLoop* fl, Environment* env) {
         }
 
         for (int i = initializer->value; true; i++) {
-            std::cout << "HERE" << std::endl;
             if (!evaluateConditionalExpression(i, conditional->op,
                                                threshold->value))
                 break;
@@ -326,6 +324,12 @@ Storage* runForLoop(ForLoop* fl, Environment* env) {
             for (auto stmt : fl->code->statements) {
                 evaluate(stmt, env);
             }
+
+            // reflect increase in environment
+            auto loopVariable =
+                dynamic_cast<IntegerStorage*>(env->get(identifier->value));
+            loopVariable->value++;
+            env->set(identifier->value, loopVariable);
         }
     } else {
         return new ErrorStorage("Decremental loops are not yet implemented");

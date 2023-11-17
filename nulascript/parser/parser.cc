@@ -473,7 +473,9 @@ ForLoop* Parser::parseForLoop() {
         return nullptr;
     getNextToken();
 
-    Identifier* identifier = dynamic_cast<Identifier*>(parseIdentifier());
+    Identifier* identifier = new Identifier(currentToken);
+    identifier->value = currentToken.literal;
+
     getNextToken();
 
     Infix* conditional = parseInfix(identifier);

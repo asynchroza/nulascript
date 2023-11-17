@@ -714,9 +714,9 @@ TEST(ParserSuite, TestForLoop) {
     }
 
     ASSERT_EQ(fl->definition.variable->toString(), "def i = 5;");
-    auto identifier = dynamic_cast<Identifier*>(fl->definition.variable);
-    ASSERT_EQ(identifier->value, "i");
     ASSERT_EQ(fl->definition.conditional->toString(), "(i < 5)");
+    auto cast = dynamic_cast<Infix*>(fl->definition.conditional);
+    ASSERT_EQ(cast->left->toString(), "i");
     ASSERT_EQ(fl->definition.increment->toString(), "true");
     ASSERT_EQ(fl->code->toString(), "def i = (i + 5);");
 }

@@ -122,6 +122,18 @@ def a = func(x, y) {
 }
 ```
 
+### Loops
+#### Incremental
+```python
+> for (def i = 5; i < 10; true) { log(i); };
+5
+6
+7
+8
+9
+
+```
+
 #### Examples:
 ```
 Nulascript:
