@@ -490,11 +490,10 @@ ForLoop* Parser::parseForLoop() {
     if (!conditional->left || !conditional->right)
         return nullptr;
 
-    getNextToken();
-
-    if (!peekAndLoadExpectedToken(TokenType::RPAR) &&
-        !peekAndLoadExpectedToken(TokenType::LBRACE))
+    if (!peekAndLoadExpectedToken(TokenType::RPAR) ||
+        !peekAndLoadExpectedToken(TokenType::LBRACE)) {
         return nullptr;
+    }
 
     BlockStatement* block = parseBlock();
     fl->code = block;

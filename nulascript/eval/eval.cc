@@ -267,6 +267,22 @@ bool evaluateConditionalExpression(int64_t val, std::string op,
         return val <= threshold;
     }
 
+    // ! Consider using else instead of having this path
+    return false;
+}
+
+bool getValueBasedOnOperator(int64_t val, std::string op, int64_t increment) {
+    if (op == "+") {
+        return val + increment;
+    } else if (op == "-") {
+        return val - increment;
+    } else if (op == "*") {
+        return val * increment;
+    } else if (op == "/") {
+        return val / increment;
+    }
+
+    // ! Consider using else instead of having this path
     return false;
 }
 
@@ -283,33 +299,49 @@ Storage* runForLoop(ForLoop* fl, Environment* env) {
         variable = dynamic_cast<IntegerStorage*>(expression);
         if (!variable) {
             return new ErrorStorage(
-                "Incorrectly provisioned initialization variable for loop");
+                "[LOOP] Incorrectly provisioned initialization variable");
         }
     }
 
     if (!fl->code->hasCode()) {
-        return new ErrorStorage("For loop doesn't have body");
+        return new ErrorStorage("[LOOP] Doesn't have body");
     }
 
-    BooleanStorage* increment =
-        dynamic_cast<BooleanStorage*>(evaluate(fl->definition.increment, env));
-    if (!variable) {
+    Infix* increment =
+        dynamic_cast<Infix*>(evaluate(fl->definition.increment, env));
+    if (!increment) {
         return new ErrorStorage(
-            "Incorrectly provisioned incremental boolean variable for loop");
+            "[LOOP] Incorrectly provisioned incremental expression");
     }
 
     Infix* conditional = dynamic_cast<Infix*>(fl->definition.conditional);
 
     if (!conditional) {
         return new ErrorStorage(
-            "Incorrectly provisioned conditional statement for loop");
+            "[LOOP] Incorrectly provisioned conditional statement");
     }
 
-    Identifier* identifier = dynamic_cast<Identifier*>(conditional->left);
-    if (!identifier) {
+    // variable identifier -> for (def i = 5; i < 10; -> i + 1)
+    Identifier* incrementalIdent = dynamic_cast<Identifier*>(increment->left);
+    if (!incrementalIdent) {
+        return new ErrorStorage("[LOOP] Provisioned variable identifier in "
+                                "incremental expression is incorrect");
+    }
+
+    Integer* step = dynamic_cast<Integer*>(increment->right);
+    if (!step) {
         // TODO: come up with better message;
         return new ErrorStorage("something 1");
     }
+
+    // variable identifier -> for (def i = 5; -> i < 10; i + 1)
+    Identifier* identifier = dynamic_cast<Identifier*>(conditional->left);
+    if (!identifier) {
+        return new ErrorStorage("[LOOP] Provisioned variable identifier in "
+                                "conditional expression is incorrect");
+    }
+
+    // TODO: Make sure the three provided identifiers match
 
     Integer* threshold = dynamic_cast<Integer*>(conditional->right);
     if (!threshold) {
@@ -338,7 +370,8 @@ Storage* runForLoop(ForLoop* fl, Environment* env) {
         }
     }
 
-    if (increment->value) {
+    // incremental loop
+    if (increment->op == "+" || increment->op == "*") {
         for (int i = initializer->value; true; i++) {
             if (!evaluateConditionalExpression(i, conditional->op,
                                                threshold->value))
@@ -353,14 +386,16 @@ Storage* runForLoop(ForLoop* fl, Environment* env) {
                 auto reference = env->get(identifier->value);
                 auto loopVariable = dynamic_cast<IntegerStorage*>(env->get(
                     dynamic_cast<ReferenceStorage*>(reference)->reference));
-                loopVariable->value++;
+                loopVariable->value = getValueBasedOnOperator(
+                    loopVariable->value, increment->op, step->value);
                 env->set(identifier->value, reference);
             } else {
 
                 auto loopVariable =
                     dynamic_cast<IntegerStorage*>(env->get(identifier->value));
 
-                int64_t increasedValue = loopVariable->value + 1;
+                int64_t increasedValue = getValueBasedOnOperator(
+                    loopVariable->value, increment->op, step->value);
                 env->set(identifier->value, new IntegerStorage(increasedValue));
             }
         }
