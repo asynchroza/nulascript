@@ -28,6 +28,8 @@ void Environment::setOutsideScope(Environment* env) {
     this->outsideScope = env;
 }
 
+void Environment::remove(const std::string& k) { store.erase(k); }
+
 IntegerStorage::IntegerStorage(int64_t value) : value(value) {}
 
 StorageType IntegerStorage::getType() const { return StorageType::INTEGER; }

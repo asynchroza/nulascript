@@ -404,7 +404,7 @@ Storage* runForLoop(ForLoop* fl, Environment* env) {
         }
     }
 
-    // TODO: delete newly created loop variable from environment
+    env->remove(identifier->value);
     return emptyStorage;
 }
 

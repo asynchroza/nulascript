@@ -45,6 +45,7 @@ class Environment {
     Environment();
     Storage* get(const std::string& k);
     Storage* set(const std::string& k, Storage* v);
+    void remove(const std::string& k);
     void setOutsideScope(Environment* env);
 
   private:
