@@ -1,0 +1,9 @@
+def a = 5;
+
+log("This is the value of the referenced variable before the loop: ", a);
+
+for (def b = &a; b < 20; b * 2) {
+    log();
+}
+
+log("This is the value of the referenced variable after the loop: ", a);

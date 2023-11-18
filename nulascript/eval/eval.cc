@@ -229,6 +229,10 @@ Storage* invoke(Storage* invocation, std::vector<Storage*> args) {
 // STANDARD FUNCTION DEFINITIONS
 
 Storage* printStorage(std::vector<Storage*> args) {
+    if (args.size() == 0) {
+        std::cout << "\n";
+    }
+
     for (auto arg : args) {
         std::cout << arg->evaluate() << "\n";
     }

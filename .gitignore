@@ -1,7 +1,8 @@
 googletest
 lib
 CMakeFiles
-bin
+bin/*
+!bin/nulascript
 build/**
 .vscode
 ctests/*
