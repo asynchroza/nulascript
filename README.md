@@ -121,9 +121,14 @@ def a = func(x, y) {
 ```
 
 ### Loops
-#### Incremental
+* Syntax structure of the loop requires the initialization of a variable in the loop header
+* Initialized variable can be either a reference to an integer or an integer
+* There is no need to dereference in the loop header, but it's required in the body
+* Loops work with the following arithmetic operators: `+`, `-`, `*`, `/`
+
+
 ```python
-> for (def i = 5; i < 10; true) { log(i); };
+> for (def i = 5; i < 10; i + 1) { log(i); };
 5
 6
 7
@@ -137,7 +142,7 @@ def a = func(x, y) {
 5
 
 # NB: you don't need to dereference references in loop conditionals
-> for (def b = &a; b < 10; true) { log("hello"); }
+> for (def b = &a; b < 10; i + 1) { log("hello"); }
 hello
 hello
 hello
@@ -146,6 +151,31 @@ hello
 
 > a
 10
+
+> b
+[ERROR]: b is undefined
+```
+
+#### No header dereferencing, but you should do it in the body
+```python
+> for (def b = &a; b < 10; b + 1) { log(*b); }
+5
+6
+7
+8
+9
+```
+
+#### Cheating the system with built-ins
+```python
+def something = func() { log("say hello"); }
+
+> loop(5, something)
+say hello
+say hello
+say hello
+say hello
+say hello
 ```
 
 #### Examples:

@@ -325,10 +325,11 @@ Storage* runForLoop(ForLoop* fl, Environment* env) {
                                 "incremental expression is incorrect");
     }
 
+    // TODO: make it work with identifiers
     Integer* step = dynamic_cast<Integer*>(increment->right);
     if (!step) {
-        // TODO: come up with better message;
-        return new ErrorStorage("something 1");
+        return new ErrorStorage(
+            "[LOOP] Right side of incremental expression is not an integer");
     }
 
     // variable identifier -> for (def i = 5; -> i < 10; i + 1)
@@ -338,12 +339,10 @@ Storage* runForLoop(ForLoop* fl, Environment* env) {
                                 "conditional expression is incorrect");
     }
 
-    // TODO: Make sure the three provided identifiers match
-
     Integer* threshold = dynamic_cast<Integer*>(conditional->right);
     if (!threshold) {
-        // TODO: come up with better message;
-        return new ErrorStorage("something 2");
+        return new ErrorStorage(
+            "[LOOP] Right side of conditional expression is not an integer");
     }
 
     IntegerStorage* initializer;
@@ -351,10 +350,10 @@ Storage* runForLoop(ForLoop* fl, Environment* env) {
         dynamic_cast<IntegerStorage*>(env->get(identifier->token.literal));
 
     if (!initializer) {
-        std::string errMsg = "something 3";
+        std::string errMsg =
+            "[LOOP] Provisioned initialization value is not of type integer";
         if (!checkBase(env->get(identifier->token.literal),
                        typeid(ReferenceStorage))) {
-            // TODO: come up with better message;
             return new ErrorStorage(errMsg);
         }
 
@@ -362,19 +361,30 @@ Storage* runForLoop(ForLoop* fl, Environment* env) {
             dynamic_cast<ReferenceStorage*>(env->get(identifier->token.literal))
                 ->reference));
         if (!initializer) {
-            // TODO: come up with better message;
             return new ErrorStorage(errMsg);
         }
     }
 
     // incremental loop
     for (int i = initializer->value; true; i++) {
-        // TODO: this will break if a reference is used
 
-        int64_t current =
-            dynamic_cast<IntegerStorage*>(env->get(identifier->token.literal))
-                ->value;
-        if (!evaluateConditionalExpression(current, conditional->op,
+        // this handles referencing
+        auto current =
+            dynamic_cast<IntegerStorage*>(env->get(identifier->token.literal));
+        if (!current) {
+            current = dynamic_cast<IntegerStorage*>(
+                env->get(dynamic_cast<ReferenceStorage*>(
+                             env->get(identifier->token.literal))
+                             ->reference));
+
+            // do not run this check if it's been done once
+            if (!current && i != initializer->value) {
+                return new ErrorStorage("[LOOP] Current value is neither a "
+                                        "reference nor an integer");
+            }
+        }
+
+        if (!evaluateConditionalExpression(current->value, conditional->op,
                                            threshold->value))
             break;
 
