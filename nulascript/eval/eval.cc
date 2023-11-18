@@ -271,11 +271,20 @@ bool evaluateConditionalExpression(int64_t val, std::string op,
 }
 
 Storage* runForLoop(ForLoop* fl, Environment* env) {
-    IntegerStorage* variable =
-        dynamic_cast<IntegerStorage*>(evaluate(fl->definition.variable, env));
-    if (!variable) {
-        return new ErrorStorage(
-            "Incorrectly provisioned initialization variable for loop");
+    auto expression = evaluate(fl->definition.variable, env);
+    IntegerStorage* variable;
+    bool shouldReference = false;
+
+    if (checkBase(expression, typeid(ReferenceStorage))) {
+        variable = dynamic_cast<IntegerStorage*>(
+            env->get(dynamic_cast<ReferenceStorage*>(expression)->reference));
+        shouldReference = true;
+    } else {
+        variable = dynamic_cast<IntegerStorage*>(expression);
+        if (!variable) {
+            return new ErrorStorage(
+                "Incorrectly provisioned initialization variable for loop");
+        }
     }
 
     if (!fl->code->hasCode()) {
@@ -308,11 +317,25 @@ Storage* runForLoop(ForLoop* fl, Environment* env) {
         return new ErrorStorage("something 2");
     }
 
-    IntegerStorage* initializer =
+    IntegerStorage* initializer;
+    initializer =
         dynamic_cast<IntegerStorage*>(env->get(identifier->token.literal));
+
     if (!initializer) {
-        // TODO: come up with better message;
-        return new ErrorStorage("something 3");
+        std::string errMsg = "something 3";
+        if (!checkBase(env->get(identifier->token.literal),
+                       typeid(ReferenceStorage))) {
+            // TODO: come up with better message;
+            return new ErrorStorage(errMsg);
+        }
+
+        initializer = dynamic_cast<IntegerStorage*>(env->get(
+            dynamic_cast<ReferenceStorage*>(env->get(identifier->token.literal))
+                ->reference));
+        if (!initializer) {
+            // TODO: come up with better message;
+            return new ErrorStorage(errMsg);
+        }
     }
 
     if (increment->value) {
@@ -326,11 +349,20 @@ Storage* runForLoop(ForLoop* fl, Environment* env) {
             }
 
             // reflect increase in environment
-            auto loopVariable =
-                dynamic_cast<IntegerStorage*>(env->get(identifier->value));
-            int64_t increasedValue = loopVariable->value + 1;
+            if (shouldReference) {
+                auto reference = env->get(identifier->value);
+                auto loopVariable = dynamic_cast<IntegerStorage*>(env->get(
+                    dynamic_cast<ReferenceStorage*>(reference)->reference));
+                loopVariable->value++;
+                env->set(identifier->value, reference);
+            } else {
 
-            env->set(identifier->value, new IntegerStorage(increasedValue));
+                auto loopVariable =
+                    dynamic_cast<IntegerStorage*>(env->get(identifier->value));
+
+                int64_t increasedValue = loopVariable->value + 1;
+                env->set(identifier->value, new IntegerStorage(increasedValue));
+            }
         }
     } else {
         return new ErrorStorage("Decremental loops are not yet implemented");

@@ -131,7 +131,22 @@ def a = func(x, y) {
 7
 8
 9
+```
 
+#### Referencing variables in loops
+```python
+> def a = 5;
+5
+
+> for (def b = &a; b < 10; true) { log("hello"); }
+hello
+hello
+hello
+hello
+hello
+
+> a
+10
 ```
 
 #### Examples:
