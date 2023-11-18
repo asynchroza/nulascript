@@ -271,7 +271,8 @@ bool evaluateConditionalExpression(int64_t val, std::string op,
     return false;
 }
 
-bool getValueBasedOnOperator(int64_t val, std::string op, int64_t increment) {
+int64_t getValueBasedOnOperator(int64_t val, std::string op,
+                                int64_t increment) {
     if (op == "+") {
         return val + increment;
     } else if (op == "-") {
@@ -281,9 +282,6 @@ bool getValueBasedOnOperator(int64_t val, std::string op, int64_t increment) {
     } else if (op == "/") {
         return val / increment;
     }
-
-    // ! Consider using else instead of having this path
-    return false;
 }
 
 Storage* runForLoop(ForLoop* fl, Environment* env) {
@@ -307,8 +305,7 @@ Storage* runForLoop(ForLoop* fl, Environment* env) {
         return new ErrorStorage("[LOOP] Doesn't have body");
     }
 
-    Infix* increment =
-        dynamic_cast<Infix*>(evaluate(fl->definition.increment, env));
+    Infix* increment = dynamic_cast<Infix*>(fl->definition.increment);
     if (!increment) {
         return new ErrorStorage(
             "[LOOP] Incorrectly provisioned incremental expression");
@@ -371,36 +368,40 @@ Storage* runForLoop(ForLoop* fl, Environment* env) {
     }
 
     // incremental loop
-    if (increment->op == "+" || increment->op == "*") {
-        for (int i = initializer->value; true; i++) {
-            if (!evaluateConditionalExpression(i, conditional->op,
-                                               threshold->value))
-                break;
+    for (int i = initializer->value; true; i++) {
+        // TODO: this will break if a reference is used
 
-            for (auto stmt : fl->code->statements) {
-                evaluate(stmt, env);
-            }
+        int64_t current =
+            dynamic_cast<IntegerStorage*>(env->get(identifier->token.literal))
+                ->value;
+        if (!evaluateConditionalExpression(current, conditional->op,
+                                           threshold->value))
+            break;
 
-            // reflect increase in environment
-            if (shouldReference) {
-                auto reference = env->get(identifier->value);
-                auto loopVariable = dynamic_cast<IntegerStorage*>(env->get(
-                    dynamic_cast<ReferenceStorage*>(reference)->reference));
-                loopVariable->value = getValueBasedOnOperator(
-                    loopVariable->value, increment->op, step->value);
-                env->set(identifier->value, reference);
-            } else {
-
-                auto loopVariable =
-                    dynamic_cast<IntegerStorage*>(env->get(identifier->value));
-
-                int64_t increasedValue = getValueBasedOnOperator(
-                    loopVariable->value, increment->op, step->value);
-                env->set(identifier->value, new IntegerStorage(increasedValue));
-            }
+        for (auto stmt : fl->code->statements) {
+            evaluate(stmt, env);
         }
-    } else {
-        return new ErrorStorage("Decremental loops are not yet implemented");
+
+        // reflect increase in environment
+        if (shouldReference) {
+            auto reference = env->get(identifier->value);
+            auto loopVariable = dynamic_cast<IntegerStorage*>(env->get(
+                dynamic_cast<ReferenceStorage*>(reference)->reference));
+
+            loopVariable->value = getValueBasedOnOperator(
+                loopVariable->value, increment->op, step->value);
+
+            env->set(identifier->value, reference);
+
+        } else {
+            auto loopVariable =
+                dynamic_cast<IntegerStorage*>(env->get(identifier->value));
+
+            int64_t increasedValue = getValueBasedOnOperator(
+                loopVariable->value, increment->op, step->value);
+
+            env->set(identifier->value, new IntegerStorage(increasedValue));
+        }
     }
 
     // TODO: delete newly created loop variable from environment
