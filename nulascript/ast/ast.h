@@ -179,7 +179,7 @@ class Invocation : public Expression {
 struct ForLoopInitialization {
     LetStatement* variable;
     Infix* conditional;
-    Boolean* increment;
+    Infix* increment;
 };
 
 class ForLoop : public Expression {

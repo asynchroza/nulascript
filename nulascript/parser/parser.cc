@@ -474,8 +474,6 @@ ForLoop* Parser::parseForLoop() {
     getNextToken();
 
     Identifier* identifier = new Identifier(currentToken);
-    identifier->value = currentToken.literal;
-
     getNextToken();
 
     Infix* conditional = parseInfix(identifier);
@@ -485,19 +483,22 @@ ForLoop* Parser::parseForLoop() {
     getNextToken();
     getNextToken();
 
-    Boolean* boolean = dynamic_cast<Boolean*>(parseBoolean());
-    if (!boolean)
+    Identifier* incrementalIdentifier = new Identifier(currentToken);
+    getNextToken();
+
+    Infix* increment = parseInfix(incrementalIdentifier);
+    if (!conditional->left || !conditional->right)
         return nullptr;
+
+    getNextToken();
 
     if (!peekAndLoadExpectedToken(TokenType::RPAR) &&
         !peekAndLoadExpectedToken(TokenType::LBRACE))
         return nullptr;
 
-    getNextToken();
-
     BlockStatement* block = parseBlock();
     fl->code = block;
-    fl->definition = ForLoopInitialization{variable, conditional, boolean};
+    fl->definition = ForLoopInitialization{variable, conditional, increment};
 
     return fl;
 }
