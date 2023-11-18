@@ -1,0 +1,25 @@
+{
+  "name": "nula",
+  "displayName": "language-support",
+  "description": "language support for nulascript",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.84.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "contributes": {
+    "languages": [{
+      "id": "nulascript",
+      "aliases": ["nulascript", "nulascript"],
+      "extensions": ["nula"],
+      "configuration": "./language-configuration.json"
+    }],
+    "grammars": [{
+      "language": "nulascript",
+      "scopeName": "text.nulascript",
+      "path": "./syntaxes/nulascript.tmLanguage.json"
+    }]
+  }
+}
