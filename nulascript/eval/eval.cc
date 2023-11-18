@@ -289,33 +289,33 @@ Storage* runForLoop(ForLoop* fl, Environment* env) {
             "Incorrectly provisioned incremental boolean variable for loop");
     }
 
+    Infix* conditional = dynamic_cast<Infix*>(fl->definition.conditional);
+
+    if (!conditional) {
+        return new ErrorStorage(
+            "Incorrectly provisioned conditional statement for loop");
+    }
+
+    Identifier* identifier = dynamic_cast<Identifier*>(conditional->left);
+    if (!identifier) {
+        // TODO: come up with better message;
+        return new ErrorStorage("something 1");
+    }
+
+    Integer* threshold = dynamic_cast<Integer*>(conditional->right);
+    if (!threshold) {
+        // TODO: come up with better message;
+        return new ErrorStorage("something 2");
+    }
+
+    IntegerStorage* initializer =
+        dynamic_cast<IntegerStorage*>(env->get(identifier->token.literal));
+    if (!initializer) {
+        // TODO: come up with better message;
+        return new ErrorStorage("something 3");
+    }
+
     if (increment->value) {
-        Infix* conditional = dynamic_cast<Infix*>(fl->definition.conditional);
-
-        if (!conditional) {
-            return new ErrorStorage(
-                "Incorrectly provisioned conditional statement for loop");
-        }
-
-        Identifier* identifier = dynamic_cast<Identifier*>(conditional->left);
-        if (!identifier) {
-            // TODO: come up with better message;
-            return new ErrorStorage("something 1");
-        }
-
-        Integer* threshold = dynamic_cast<Integer*>(conditional->right);
-        if (!threshold) {
-            // TODO: come up with better message;
-            return new ErrorStorage("something 2");
-        }
-
-        IntegerStorage* initializer =
-            dynamic_cast<IntegerStorage*>(env->get(identifier->token.literal));
-        if (!initializer) {
-            // TODO: come up with better message;
-            return new ErrorStorage("something 3");
-        }
-
         for (int i = initializer->value; true; i++) {
             if (!evaluateConditionalExpression(i, conditional->op,
                                                threshold->value))
@@ -336,6 +336,7 @@ Storage* runForLoop(ForLoop* fl, Environment* env) {
         return new ErrorStorage("Decremental loops are not yet implemented");
     }
 
+    // TODO: delete newly created loop variable from environment
     return emptyStorage;
 }
 
