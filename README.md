@@ -9,8 +9,7 @@
 
 ### Referencing:
 
-```
-Nulascript:
+```python
 > def sayHello = func() { "hello"; }  
 [function]:
     arguments: []
@@ -48,8 +47,7 @@ bye Toni
 
 ### Dereferencing:
 
-```
-Nulascript:
+```python
 > def somethingToBeReferenced = 15;
 15
 
@@ -151,8 +149,7 @@ hello
 ```
 
 #### Examples:
-```
-Nulascript:
+```python
 > def a = func() {};
 [ERROR]: Functions with empty bodies are not allowed
 
