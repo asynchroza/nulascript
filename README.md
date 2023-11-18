@@ -138,6 +138,7 @@ def a = func(x, y) {
 > def a = 5;
 5
 
+# NB: you don't need to dereference references in loop conditionals
 > for (def b = &a; b < 10; true) { log("hello"); }
 hello
 hello
