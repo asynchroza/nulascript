@@ -28,3 +28,7 @@ install-gtest:
 	mkdir build; \
 	cd build; \
 	cmake ..
+
+.PHONY: build-interpreter
+build-interpreter:
+	cd nulascript/interpreter/build && cmake . && cmake --build . && cp nulascript ../../../bin

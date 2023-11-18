@@ -11,3 +11,6 @@ nulascript/repl/build/*
 !nulascript/repl/build/CMakeLists.txt
 !nulascript/repl/build/main.cc
 ~$thesis.docx
+nulascript/interpreter/build/*
+!nulascript/interpreter/build/CMakeLists.txt
+!nulascript/interpreter/build/main.cc
