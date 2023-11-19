@@ -29,3 +29,10 @@ log(hello);
 
 log();
 log("We expect the result from this invocation to be 20", hello(10));
+
+def booleanVariable = true;
+
+log(!true);
+log(not true);
+log(!!true);
+log(not not true);
