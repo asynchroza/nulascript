@@ -1,0 +1,15 @@
+
+def closure = func(name) {
+    func(boolean) {
+        if (boolean) {
+            return "Hello " + name + "!";
+        }
+
+        return "Bye " + name + "!";
+    }
+}
+
+def greet = closure("Misho");
+
+log(greet(true));
+log(greet(false));

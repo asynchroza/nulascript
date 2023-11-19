@@ -1,0 +1,12 @@
+
+for (def a = 5; a < 100; a * 2) {
+    log(a);
+}
+
+def referred = 1000;
+
+for (def a = &referred; a > 0; a / 2) {
+    log(a);
+}
+
+log(referred);
