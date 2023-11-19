@@ -9,16 +9,14 @@ for (def a = 5; a < 100; a * 2) {
 def referred = 1000;
 
 # You're not required to dereference references in the initialization header
-for (def a = &referred; a > 0; a / 2) {
+for (def a = &referred; a < 10000; a * 2) {
 
-    # but you're required to do so in the loop's body
-    # a = *a / 2;
-
-    # TODO: Fix bug - happens only when using division when initializing the increment and addition in the body of the loop
-    a = *a + 2;
+    # but you need to do dereference in the body
+    a = *a + *a / 4; # NB: you're not required to dereference the identifier when assigning to it
 
     # Remember? Dereferencing is not required when logging
-    log("The value of the referred variable is: ", referred);
+    log("The value of the referred variable is: ", a);
 }
 
+# 'referred' should reflect the changes applied to the reference 'a'
 log(referred);
