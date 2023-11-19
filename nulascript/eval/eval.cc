@@ -568,6 +568,10 @@ Storage* evaluate(Node* node, Environment* env) {
         return runForLoop(fl, env);
     }
 
+    else if (checkBase(node, typeid(Comment))) {
+        return emptyStorage;
+    }
+
     return createError("No implementation found for this functionality");
 }
 

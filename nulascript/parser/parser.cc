@@ -165,6 +165,8 @@ Parser::Parser(Lexer& l) {
                            [&]() -> Expression* { return parsePrefix(); });
     registerPrefixFunction(TokenType::MINUS,
                            [&]() -> Expression* { return parsePrefix(); });
+    registerPrefixFunction(TokenType::HASHTAG,
+                           [&]() -> Expression* { return parseComment(); });
     registerPrefixFunction(TokenType::ASTERISK,
                            [&]() -> Expression* { return parsePrefix(); });
     registerPrefixFunction(TokenType::FOR,
@@ -500,4 +502,9 @@ ForLoop* Parser::parseForLoop() {
     fl->definition = ForLoopInitialization{variable, conditional, increment};
 
     return fl;
+}
+
+Comment* Parser::parseComment() {
+    auto comment = new Comment(currentToken);
+    return comment;
 }

@@ -20,6 +20,7 @@ class Lexer {
     Token handleComparisonOperators(char opChar, TokenType shortType,
                                     TokenType extendedType);
     Token checkForEqualityOperator(char ch);
+    void skipLine();
     std::string readStringLiteral();
     bool isLetter(char ch);
     bool isDigit(char ch);

@@ -37,7 +37,8 @@ enum TokenType {
     IS,
     IS_NOT,
     STRING,
-    FOR
+    FOR,
+    HASHTAG
 };
 
 struct Token {

@@ -222,3 +222,9 @@ ForLoop::ForLoop(Token token) : token(token) {}
 std::string ForLoop::tokenLiteral() { return token.literal; }
 
 std::string ForLoop::toString() { return token.literal; }
+
+Comment::Comment(Token token) : token(token) {}
+
+std::string Comment::tokenLiteral() { return token.literal; }
+
+std::string Comment::toString() { return token.literal; }

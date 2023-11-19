@@ -70,6 +70,12 @@ void Lexer::skipOverWhitespace() {
     }
 }
 
+void Lexer::skipLine() {
+    while (ch != '\n' && peekNextChar() != 0) {
+        readChar();
+    }
+}
+
 char Lexer::peekNextChar() {
     if (readPos >= input.size()) {
         return 0; // EOF
@@ -151,6 +157,10 @@ Token Lexer::getNextToken() {
     case '>':
         currentToken =
             handleComparisonOperators(ch, TokenType::GT, TokenType::GOE);
+        break;
+    case '#':
+        currentToken = newToken(TokenType::HASHTAG, ch);
+        skipLine();
         break;
     case 0:
         currentToken.literal = "";

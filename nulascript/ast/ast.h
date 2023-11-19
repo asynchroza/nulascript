@@ -240,3 +240,13 @@ class Pointer : public Expression {
     std::string tokenLiteral() override;
     std::string toString() override;
 };
+
+class Comment : public Expression {
+  public:
+    Token token;
+
+  public:
+    Comment(Token token);
+    std::string tokenLiteral() override;
+    std::string toString() override;
+};
