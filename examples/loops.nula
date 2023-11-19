@@ -12,10 +12,10 @@ def referred = 1000;
 for (def a = &referred; a > 0; a / 2) {
 
     # but you're required to do so in the loop's body
-    a = *a / 2;
+    # a = *a / 2;
 
-    # TODO: Fix bug
-    # a = *a + 2;
+    # TODO: Fix bug - happens only when using division when initializing the increment and addition in the body of the loop
+    a = *a + 2;
 
     # Remember? Dereferencing is not required when logging
     log("The value of the referred variable is: ", referred);
