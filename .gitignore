@@ -4,7 +4,8 @@ CMakeFiles
 bin/*
 !bin/nulascript
 build/**
-.vscode
+.vscode/*
+!.vscode/tasks.json
 ctests/*
 !ctests/tests.cc
 !ctests/CMakeLists.txt

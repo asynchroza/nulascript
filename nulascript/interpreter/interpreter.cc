@@ -41,8 +41,6 @@ void Interpreter::interpret(const std::string& filename) {
                       << "\n";
         } else if (resolved->getType() == StorageType::EMPTY) {
             std::cout << "\n";
-        } else {
-            std::cout << resolved->evaluate() << "\n";
         }
     }
 }
