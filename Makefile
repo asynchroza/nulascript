@@ -32,3 +32,7 @@ install-gtest:
 .PHONY: build-interpreter
 build-interpreter:
 	cd nulascript/interpreter/build && cmake . && cmake --build . && cp nulascript ../../../bin
+
+.PHONY: build
+build:
+	make build-interpreter
