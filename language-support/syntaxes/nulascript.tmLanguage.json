@@ -9,6 +9,9 @@
       "include": "#strings"
     },
     {
+      "include": "#comments"
+    },
+    {
       "name": "variable.other.nulascript",
       "match": "\\bfunc\\b"
     },
@@ -40,6 +43,14 @@
 	}
   ],
   "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.line.number-sign.nulascript",
+          "match": "#.*$"
+        }
+      ]
+    },
     "keywords": {
       "patterns": [
         {
