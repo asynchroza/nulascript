@@ -1,4 +1,3 @@
-
 def closure = func(name) {
     func(boolean) {
         if (boolean) {
@@ -11,5 +10,5 @@ def closure = func(name) {
 
 def greet = closure("Misho");
 
-log(greet(true));
-log(greet(false));
+log(greet(true));   # we expect the result to be "Hello Misho!"
+log(greet(false));  # we expect the result to be "Bye Misho!"

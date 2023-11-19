@@ -1,13 +1,24 @@
-# this is a for loop
+# loops.nula
 
+# How to write a simple for loop
 for (def a = 5; a < 100; a * 2) {
     log(a);
 }
 
+# How to use references in a for loop
 def referred = 1000;
 
+# You're not required to dereference references in the initialization header
 for (def a = &referred; a > 0; a / 2) {
-    log(a);
+
+    # but you're required to do so in the loop's body
+    a = *a / 2;
+
+    # TODO: Fix bug
+    # a = *a + 2;
+
+    # Remember? Dereferencing is not required when logging
+    log("The value of the referred variable is: ", referred);
 }
 
 log(referred);
