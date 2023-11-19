@@ -1,3 +1,5 @@
+# closures.nula
+
 def closure = func(name) {
     func(boolean) {
         if (boolean) {

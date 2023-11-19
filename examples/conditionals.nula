@@ -1,0 +1,23 @@
+# condtionals.nula
+
+# ! language supports only if
+
+if (true is true) {
+    log("hello world");
+} else {
+    log("bye world");
+}
+
+log(true is true);          # true
+log(true is false);         # false
+log(true is not true);      # false
+log(true is not false);     # true
+
+log(true == true);          # true
+log(true == false);         # false
+log(true != true);          # false 
+log(true != false);         # true
+
+if (5) {
+    log(5, "is a truthy value");
+}
