@@ -1,4 +1,3 @@
-# test_interpreter.py
 import unittest
 from interpreter import run_interpreter
 
