@@ -7,16 +7,16 @@ Storage* Environment::get(const std::string& k) {
     auto it = store.find(k);
     if (it != store.end()) {
         return it->second;
-    } else {
-        if (outsideScope) {
-            it = outsideScope->store.find(k);
-            if (it != outsideScope->store.end()) {
-                return it->second;
-            }
-        }
-
-        return new ErrorStorage(k + " is undefined");
     }
+
+    if (outsideScope) {
+        it = outsideScope->store.find(k);
+        if (it != outsideScope->store.end()) {
+            return it->second;
+        }
+    }
+
+    return new ErrorStorage(k + " is undefined");
 }
 
 Storage* Environment::set(const std::string& k, Storage* v) {
