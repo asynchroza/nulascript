@@ -36,3 +36,9 @@ build-interpreter:
 .PHONY: build
 build:
 	make build-interpreter
+
+.PHONY: test-interpreter
+test-interpreter:
+	cd functional && \
+	pip install -r requirements.txt && \
+	python functional_tests.py;

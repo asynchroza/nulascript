@@ -16,3 +16,4 @@ nulascript/repl/build/*
 nulascript/interpreter/build/*
 !nulascript/interpreter/build/CMakeLists.txt
 !nulascript/interpreter/build/main.cc
+__pycache__
