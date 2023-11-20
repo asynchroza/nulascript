@@ -1,7 +1,7 @@
 #include "storage.h"
 #include <sstream>
 
-Environment::Environment() {}
+Environment::Environment() : outsideScope(nullptr) {}
 
 Storage* Environment::get(const std::string& k) {
     auto it = store.find(k);
