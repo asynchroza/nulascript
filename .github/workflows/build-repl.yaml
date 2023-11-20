@@ -1,4 +1,4 @@
-name: Build Nulascript REPL
+name: REPL build
 on: 
   push:
     paths:

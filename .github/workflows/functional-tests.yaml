@@ -1,4 +1,4 @@
-name: Interpreter Test Nulascript
+name: Functional tests
 on: 
   push:
 jobs:

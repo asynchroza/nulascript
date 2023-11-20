@@ -4,6 +4,8 @@
 
 [![Build Nulascript REPL](https://github.com/asynchroza/nulascript/actions/workflows/build-repl.yaml/badge.svg)](https://github.com/asynchroza/nulascript/actions/workflows/build-repl.yaml)
 
+[![Interpreter Test Nulascript](https://github.com/asynchroza/nulascript/actions/workflows/interpreter-tests.yaml/badge.svg)](https://github.com/asynchroza/nulascript/actions/workflows/interpreter-tests.yaml)
+
 ## References
 
 ```python
