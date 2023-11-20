@@ -1,16 +1,11 @@
 # logging.nula
 
-# How to log
-log(true);
-log(false);
-log(true is true);
-log(true is not true);
-log(true == true);
-log(true != true);
-
 def something = 5;
 log(something);
 
 # when using the logging function, there's no need to dereference references
 def ref = &something;
 log(ref);
+
+# multiple values spread out on the same line
+log(something, ref);
