@@ -420,10 +420,12 @@ Storage* runForLoop(ForLoop* fl, Environment* env) {
     return emptyStorage;
 }
 
+Storage* loggingFunction(std::vector<Storage*> args) {
+    return printStorage(args);
+}
+
 std::unordered_map<std::string, Storage*> standardFunctions = {
-    {"log", new StandardFunction([](std::vector<Storage*> args) -> Storage* {
-         return printStorage(args);
-     })},
+    {"log", new StandardFunction(&loggingFunction)},
     {"loop", new StandardFunction([](std::vector<Storage*> args) -> Storage* {
          return runLoop(args);
      })}};
