@@ -1,10 +1,10 @@
 # nulascript
 
-[![Unit Tests Nulascript](https://github.com/asynchroza/nulascript/actions/workflows/unit-tests.yaml/badge.svg)](https://github.com/asynchroza/nulascript/actions/workflows/unit-tests.yaml)
+[![Unit tests](https://github.com/asynchroza/nulascript/actions/workflows/unit-tests.yaml/badge.svg)](https://github.com/asynchroza/nulascript/actions/workflows/unit-tests.yaml)
 
-[![Build Nulascript REPL](https://github.com/asynchroza/nulascript/actions/workflows/build-repl.yaml/badge.svg)](https://github.com/asynchroza/nulascript/actions/workflows/build-repl.yaml)
+[![Functional tests](https://github.com/asynchroza/nulascript/actions/workflows/functional-tests.yaml/badge.svg)](https://github.com/asynchroza/nulascript/actions/workflows/functional-tests.yaml)
 
-[![Interpreter Test Nulascript](https://github.com/asynchroza/nulascript/actions/workflows/interpreter-tests.yaml/badge.svg)](https://github.com/asynchroza/nulascript/actions/workflows/interpreter-tests.yaml)
+[![REPL build](https://github.com/asynchroza/nulascript/actions/workflows/build-repl.yaml/badge.svg)](https://github.com/asynchroza/nulascript/actions/workflows/build-repl.yaml)
 
 ## References
 
