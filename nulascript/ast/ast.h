@@ -233,7 +233,6 @@ class Pointer : public Expression {
   public:
     Token token;
     std::string dereferencedIdentifier;
-    Expression* right;
 
   public:
     Pointer(Token token);
