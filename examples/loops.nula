@@ -6,10 +6,10 @@ for (def a = 5; a < 100; a * 2) {
 }
 
 # How to use references in a for loop
-def referred = 1000;
+def referencedVar = 1000;
 
 # You're not required to dereference references in the initialization header
-for (def a = &referred; a < 10000; a * 2) {
+for (def a = &referencedVar; a < 10000; a * 2) {
 
     # but you need to dereference when working with references in the body
     a = *a + *a / 4; # NB: you're not required to dereference the identifier when assigning to it
@@ -18,5 +18,5 @@ for (def a = &referred; a < 10000; a * 2) {
     log("The value of the referred variable is: ", a);
 }
 
-# 'referred' should reflect the changes applied to the reference 'a'
-log(referred);
+# 'referencedVar' should reflect the changes applied to the reference 'a'
+log(referencedVar);
